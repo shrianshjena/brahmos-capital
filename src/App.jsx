@@ -272,7 +272,12 @@ const IMPACT_CFG={BULLISH:{c:A.green,bg:"rgba(48,209,88,0.12)"},MIXED:{c:A.orang
 function ImpactTag({impact}){const c=IMPACT_CFG[impact]||IMPACT_CFG.NEUTRAL;return(<span style={{background:c.bg,color:c.c,borderRadius:6,fontSize:10,fontWeight:600,padding:"2px 8px",letterSpacing:"0.04em"}}>{impact}</span>);}
 
 /* ═══ ASK AI — Shri persona ══════════════════════════════════════ */
-const SHRIANSH_PROMPT=`You are Shri, a seasoned Indian equity research analyst and veteran investor with over 20 years of experience on Dalal Street, formerly Head of India Equity Research at a leading global investment bank. You have covered everything from mid-cap opportunities to Nifty 50 blue chips for HNI and institutional clients, with a deep specialisation in Indian PSU defence stocks, aerospace, and naval manufacturing.
+function buildPrompt(stocks){
+  const priceLines=stocks.map(s=>{
+    const c=CONSENSUS[s.ticker];
+    return `- ${s.ticker}: CMP ₹${s.px.toFixed(0)} | Entry ₹${s.buy} | Return ${s.ret>=0?"+":""}${s.ret.toFixed(1)}% | P/E ${s.pe}x${c?" | Analyst target ₹"+c.target:""}`;
+  }).join("\n");
+  return `You are Shri, a seasoned Indian equity research analyst and veteran investor with over 20 years of experience on Dalal Street, formerly Head of India Equity Research at a leading global investment bank. You have covered everything from mid-cap opportunities to Nifty 50 blue chips for HNI and institutional clients, with a deep specialisation in Indian PSU defence stocks, aerospace, and naval manufacturing.
 
 You speak with directness, intellectual confidence, and genuine conviction — the kind of clear, honest advice you would give a trusted client over a cup of chai at the BSE members' lounge. No corporate fluff. No hedging for compliance. Just your real view, backed by 20 years of watching cycles on Dalal Street.
 
@@ -289,15 +294,15 @@ When someone asks about a stock or sector, provide a professional equity researc
 
 End with a structured VERDICT TABLE: | Metric | Value | Rating |
 
-You have live data for these 25 NSE defence stocks as of 11 March 2026 (all bought March 2025):
-ORIGINAL 9: HAL ₹3,979 (+24.4% | P/E 30x | Target ₹4,960) | BEL ₹454 (+46.6% | P/E 65x | Target ₹520) | MAZDOCK ₹2,371 (+31.7% | P/E 47x | Target ₹2,850) | COCHINSHIP ₹1,457 (+32.5% | P/E 30x | Target ₹1,750) | GRSE ₹2,471 (+30.1% | P/E 42x | Target ₹2,950) | BDL ₹1,314 (+45.9% | P/E 84x | Target ₹1,450) | DATAPATTNS ₹3,471 (+38.8% | P/E 75x | Target ₹3,770) | PARAS ₹721 (+44.3% | P/E 71x | Target ₹820) | ZENTEC ₹1,413 (+57.0% | P/E 45x | Target ₹1,650)
-NEW 16: SOLARINDS ₹15,050 (+43.3% | P/E 94x | explosives/propellants leader) | MTAR ₹3,722 (+132.6% | P/E 170x | propulsion/precision) | BHARATFORG ₹1,848 (+47.8% | P/E 42x | artillery/forgings) | ASTRAMICRO ₹1,030 (+56.1% | P/E 59x | radar/EW) | BEML ₹1,590 (+44.5% | P/E 55x | combat vehicles) | APOLLOMICRO ₹211 (+27.9% | P/E 85x | defence electronics) | MIDHANI ₹350 (+25.0% | P/E 60x | special alloys) | IDEAFORGE ₹510 (+64.5% | P/E 145x | drones/UAV) | PREMEXPLN ₹491 (+53.4% | P/E 62x | explosives) | UNIMECH ₹872 (+55.7% | P/E 68x | aerospace parts) | PTCIND ₹14,200 (+49.5% | P/E 85x | precision castings) | DCXINDIA ₹173 (+15.3% | P/E 48x | cable harness) | DYNAMATECH ₹5,150 (+35.5% | P/E 203x | aerospace structures) | AVANTEL ₹141 (+48.4% | P/E 229x | satcom/naval) | AXISCADES ₹620 (+37.8% | P/E 62x | aerospace R&D) | CYIENTDLM ₹960 (+12.9% | P/E 55x | PCB/electronics)
+LIVE PORTFOLIO DATA as of ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
+${priceLines}
 
-Key macro context: India FY27 defence budget ₹7.85L Cr (+15.2%); Indonesia BrahMos deal signed; US-Israel launched Operation Epic Fury against Iran (Feb 28); Strait of Hormuz disrupted; Global defence spend $2.65T growing at 8.6% CAGR; Nifty India Defence +19% YTD.
+Key macro context: India FY27 defence budget ₹7.85L Cr (+15.2%); Indonesia BrahMos deal signed; US-Israel launched Operation Epic Fury against Iran (Feb 28 2026); Strait of Hormuz disrupted; Global defence spend $2.65T growing at 8.6% CAGR; Nifty India Defence +19% YTD.
 
 Keep responses structured but conversational. End every response with a clear one-line verdict in bold.`;
+}
 
-function AskAIView(){
+function AskAIView({stocks}){
   const [messages,setMessages]=useState([{role:"assistant",content:"Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?"}]);
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
@@ -324,7 +329,7 @@ function AskAIView(){
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           model:"claude-sonnet-4-20250514",max_tokens:1000,
-          system:SHRIANSH_PROMPT,
+          system:buildPrompt(stocks),
           messages:[...messages,userMsg].map(m=>({role:m.role,content:m.content}))
         })
       });
@@ -462,9 +467,9 @@ function ScreenerView({stocks}){
   const [peMax,setPeMax]=useState(100);
   const [retMin,setRetMin]=useState(-100);
   const [sectorF,setSectorF]=useState("All");
-  const sectors=["All",...new Set(STOCKS.map(s=>s.sector))];
+  const sectors=["All",...new Set(stocks.map(s=>s.sector))];
   const toggleSort=k=>{if(sortKey===k)setSortAsc(!sortAsc);else{setSortKey(k);setSortAsc(false);}};
-  const filtered=STOCKS.filter(s=>s.pe<=peMax&&s.ret>=retMin&&(sectorF==="All"||s.sector===sectorF)).sort((a,b)=>sortAsc?(a[sortKey]-b[sortKey]):(b[sortKey]-a[sortKey]));
+  const filtered=stocks.filter(s=>s.pe<=peMax&&s.ret>=retMin&&(sectorF==="All"||s.sector===sectorF)).sort((a,b)=>sortAsc?(a[sortKey]-b[sortKey]):(b[sortKey]-a[sortKey]));
   const cols=[{k:"ticker",l:"Ticker",s:false},{k:"name",l:"Company",s:false},{k:"sector",l:"Sector",s:false},{k:"px",l:"Price"},{k:"day",l:"Today %"},{k:"pe",l:"P/E"},{k:"pb",l:"P/B"},{k:"roe",l:"ROE %"},{k:"mc",l:"Mkt Cap"},{k:"ob",l:"Order Book"},{k:"ret",l:"Return"}];
   const Hdr=({col})=>(<th onClick={col.s===false?null:()=>toggleSort(col.k)} style={{padding:"10px 14px",textAlign:["ticker","name","sector"].includes(col.k)?"left":"right",fontSize:11,color:sortKey===col.k?A.blue:A.t3,fontWeight:500,cursor:col.s===false?"default":"pointer",whiteSpace:"nowrap",userSelect:"none"}}>{col.l}{sortKey===col.k?(sortAsc?" ↑":" ↓"):""}</th>);
   return(
@@ -477,7 +482,7 @@ function ScreenerView({stocks}){
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:12,color:A.t3}}>Max P/E</span><input type="range" min={20} max={100} value={peMax} onChange={e=>setPeMax(+e.target.value)} style={{accentColor:A.blue,width:80}}/><span style={{fontSize:12,color:A.blue,minWidth:30}}>{peMax}x</span></div>
         <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:12,color:A.t3}}>Min Return</span><input type="range" min={-50} max={100} value={retMin} onChange={e=>setRetMin(+e.target.value)} style={{accentColor:A.blue,width:80}}/><span style={{fontSize:12,color:A.blue,minWidth:40}}>{retMin}%</span></div>
-        <span style={{marginLeft:"auto",fontSize:12,color:A.t4}}>{filtered.length}/{STOCKS.length} stocks</span>
+        <span style={{marginLeft:"auto",fontSize:12,color:A.t4}}>{filtered.length}/{stocks.length} stocks</span>
       </div>
       <div style={{background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
         <div style={{overflowX:"auto"}}>
@@ -502,7 +507,7 @@ function EntryCalcView({stocks}){
   };
   const prof=PROFILES[profile];
   const allocation=Object.entries(prof.weights).map(([ticker,w])=>{
-    const s=STOCKS.find(x=>x.ticker===ticker);
+    const s=stocks.find(x=>x.ticker===ticker);
     const c=CONSENSUS[ticker];
     const amount=budget*w;
     const shares=Math.floor(amount/s.px);
@@ -583,7 +588,7 @@ function HeatmapView({stocks}){
   const [metric,setMetric]=useState("pe");
   const metrics={pe:{label:"P/E",desc:"Price-to-Earnings",fmt:v=>v+"x",invert:false},pb:{label:"P/B",desc:"Price-to-Book",fmt:v=>v+"x",invert:false},roe:{label:"ROE %",desc:"Return on Equity",fmt:v=>v+"%",invert:true}};
   const m=metrics[metric];
-  const vals=STOCKS.map(s=>s[metric]);
+  const vals=stocks.map(s=>s[metric]);
   const minV=Math.min(...vals),maxV=Math.max(...vals);
   const getColor=v=>{const norm=(v-minV)/(maxV-minV);const heat=m.invert?1-norm:norm;if(heat<0.33)return A.green;if(heat<0.66)return A.orange;return A.red;};
   const getLabel=v=>{const norm=(v-minV)/(maxV-minV);const heat=m.invert?1-norm:norm;if(heat<0.33)return "CHEAP";if(heat<0.66)return "FAIR";return "RICH";};
@@ -599,7 +604,7 @@ function HeatmapView({stocks}){
         </div>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:18}}>
-        {STOCKS.map(s=>{const v=s[metric];const c=getColor(v);const lbl=getLabel(v);return(<div key={s.ticker} style={{background:A.card,borderRadius:16,padding:20,border:`1px solid ${A.sepLight}`,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 80% 20%,"+c+"22 0%,transparent 60%)",pointerEvents:"none"}}/><div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}><span style={{color:A.blue,fontSize:14,fontWeight:700}}>{s.ticker}</span><span style={{background:c+"22",color:c,borderRadius:6,fontSize:10,fontWeight:700,padding:"3px 9px"}}>{lbl}</span></div><p style={{color:c,fontSize:36,fontWeight:800,letterSpacing:"-0.03em",lineHeight:1,marginBottom:6}}>{m.fmt(v)}</p><p style={{color:A.t3,fontSize:11,marginBottom:12}}>{m.desc}</p><div style={{height:4,background:A.sep,borderRadius:2,marginBottom:4}}><div style={{width:""+(((v-minV)/(maxV-minV))*100)+"%",height:"100%",background:c,borderRadius:2}}/></div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:10,color:A.t4}}>{m.fmt(minV)}</span><span style={{fontSize:10,color:A.t4}}>{m.fmt(maxV)}</span></div></div>);})}
+        {stocks.map(s=>{const v=s[metric];const c=getColor(v);const lbl=getLabel(v);return(<div key={s.ticker} style={{background:A.card,borderRadius:16,padding:20,border:`1px solid ${A.sepLight}`,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 80% 20%,"+c+"22 0%,transparent 60%)",pointerEvents:"none"}}/><div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}><span style={{color:A.blue,fontSize:14,fontWeight:700}}>{s.ticker}</span><span style={{background:c+"22",color:c,borderRadius:6,fontSize:10,fontWeight:700,padding:"3px 9px"}}>{lbl}</span></div><p style={{color:c,fontSize:36,fontWeight:800,letterSpacing:"-0.03em",lineHeight:1,marginBottom:6}}>{m.fmt(v)}</p><p style={{color:A.t3,fontSize:11,marginBottom:12}}>{m.desc}</p><div style={{height:4,background:A.sep,borderRadius:2,marginBottom:4}}><div style={{width:""+(((v-minV)/(maxV-minV))*100)+"%",height:"100%",background:c,borderRadius:2}}/></div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:10,color:A.t4}}>{m.fmt(minV)}</span><span style={{fontSize:10,color:A.t4}}>{m.fmt(maxV)}</span></div></div>);})}
       </div>
       {metric==="pe"&&(<div style={{background:A.card,borderRadius:14,padding:"16px 20px",border:`1px solid ${A.sepLight}`,display:"flex",gap:12,alignItems:"flex-start"}}><Info size={16} color={A.blue} style={{marginTop:1,flexShrink:0}}/><p style={{fontSize:13,color:A.t2,lineHeight:1.65}}><span style={{color:A.t1,fontWeight:600}}>Sector average P/E: 52x</span> · HAL (30x) and Cochin Shipyard (30.5x) trade at the most compelling valuations relative to peers. HDFC Securities issues Reduce on HAL and BDL citing valuation, while preferring BEL (Add), Data Patterns (Buy), and Apollo Micro (Buy). BDL at 83x and Data Patterns at 75x price in aggressive execution — limited margin of safety.</p></div>)}
     </div>
@@ -611,7 +616,7 @@ function ConsensusView({stocks}){
   return(
     <div style={{padding:"24px 28px"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
-        {STOCKS.map(s=>{
+        {stocks.map(s=>{
           const c=CONSENSUS[s.ticker];if(!c)return null;
           const total=c.buy+c.hold+c.sell;
           const upside=((c.target-s.px)/s.px)*100;
@@ -644,7 +649,7 @@ function NewsView(){
   const cats=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS","EXPORTS"];
   const cats2=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS"];
   const catColors={GEOPO:A.red,ORDER:A.blue,DEAL:A.green,BROKER:A.purple,POLICY:A.orange,BUDGET:A.yellow,MARKET:A.teal,RESULTS:A.green,EXPORTS:A.teal};
-  const tickers=["All",...STOCKS.map(s=>s.ticker),"SECTOR"];
+  const tickers=["All",...STOCKS.map(s=>s.ticker),"SECTOR"]; // ticker list is static (fine)
 
   useEffect(()=>{
     async function fetchNews(){
@@ -885,7 +890,7 @@ function DrillView({stocks}){
               {open===sec.name&&(
                 <div style={{marginTop:10,padding:"10px 12px",background:A.bg2,borderRadius:10,border:`1px solid ${A.sepLight}`}}>
                   {sec.keys.map(k=>{
-                    const s=STOCKS.find(x=>x.ticker===k);
+                    const s=stocks.find(x=>x.ticker===k);
                     if(!s)return null;
                     return(
                       <div key={k} style={{display:"flex",justifyContent:"space-between",marginBottom:6,alignItems:"center"}}>
@@ -902,7 +907,7 @@ function DrillView({stocks}){
         })}
       </div>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,alignContent:"start"}}>
-        {STOCKS.map(s=>(
+        {stocks.map(s=>(
           <div key={s.ticker} style={{background:A.card,borderRadius:14,border:`1px solid ${A.sepLight}`,padding:16}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
               <span style={{color:A.blue,fontSize:13,fontWeight:700}}>{s.ticker}</span>
@@ -1043,7 +1048,7 @@ export default function BrahmosCapital(){
           {tab==="consensus"&&<ConsensusView stocks={stocks}/>}
           {tab==="why"      &&<WhyDefenceView/>}
           {tab==="news"     &&<NewsView/>}
-          {tab==="ai"       &&<AskAIView/>}
+          {tab==="ai"       &&<AskAIView stocks={stocks}/>}
           {tab==="calc"     &&<EntryCalcView stocks={stocks}/>}
         </div>
         <div style={{padding:"8px 28px",borderTop:`1px solid ${A.sep}`,background:"rgba(10,10,10,0.95)",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
