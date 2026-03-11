@@ -1,6 +1,5 @@
 export const config = { runtime: "edge" };
 
-// Maps our internal ticker → Yahoo Finance NSE symbol
 const SYMBOL_MAP = {
   HAL:         "HAL.NS",
   BEL:         "BEL.NS",
@@ -12,7 +11,7 @@ const SYMBOL_MAP = {
   PARAS:       "PARAS.NS",
   ZENTEC:      "ZENTEC.NS",
   SOLARINDS:   "SOLARINDS.NS",
-  MTAR:        "MTAR.NS",
+  MTAR:        "MTARTECH.NS",
   BHARATFORG:  "BHARATFORG.NS",
   ASTRAMICRO:  "ASTRAMICRO.NS",
   BEML:        "BEML.NS",
@@ -29,44 +28,47 @@ const SYMBOL_MAP = {
   CYIENTDLM:   "CYIENTDLM.NS",
 };
 
-export default async function handler(req) {
-  const symbols = Object.values(SYMBOL_MAP).join(",");
-  const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}&fields=regularMarketPrice,regularMarketChangePercent,regularMarketPreviousClose&lang=en-US&region=IN`;
+const HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  "Accept": "application/json",
+  "Referer": "https://finance.yahoo.com/",
+};
 
+async function fetchOne(ticker, yfSymbol) {
   try {
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "application/json",
-      },
-    });
-
-    if (!res.ok) throw new Error(`Yahoo Finance responded ${res.status}`);
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yfSymbol}?interval=1d&range=2d`;
+    const res = await fetch(url, { headers: HEADERS });
+    if (!res.ok) return null;
     const data = await res.json();
-    const quotes = data?.quoteResponse?.result || [];
+    const meta = data?.chart?.result?.[0]?.meta;
+    if (!meta) return null;
+    const px = meta.regularMarketPrice;
+    const prev = meta.chartPreviousClose || meta.previousClose;
+    const day = prev ? +( ((px - prev) / prev) * 100 ).toFixed(2) : 0;
+    return { ticker, px: +px.toFixed(2), day };
+  } catch {
+    return null;
+  }
+}
 
-    // Build lookup: Yahoo symbol → { px, day }
-    const lookup = {};
-    for (const q of quotes) {
-      const sym = q.symbol; // e.g. "HAL.NS"
-      lookup[sym] = {
-        px:  +(q.regularMarketPrice?.toFixed(2) ?? 0),
-        day: +(q.regularMarketChangePercent?.toFixed(2) ?? 0),
-      };
+export default async function handler(req) {
+  try {
+    const entries = Object.entries(SYMBOL_MAP);
+    const results = await Promise.all(entries.map(([t, sym]) => fetchOne(t, sym)));
+
+    const prices = {};
+    for (const r of results) {
+      if (r) prices[r.ticker] = { px: r.px, day: r.day };
     }
 
-    // Re-key by our internal ticker names
-    const result = {};
-    for (const [ticker, yfSym] of Object.entries(SYMBOL_MAP)) {
-      if (lookup[yfSym]) result[ticker] = lookup[yfSym];
-    }
+    const found = Object.keys(prices).length;
+    if (found === 0) throw new Error("No prices returned from Yahoo Finance");
 
-    return new Response(JSON.stringify({ ok: true, prices: result, ts: Date.now() }), {
+    return new Response(JSON.stringify({ ok: true, prices, ts: Date.now() }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        // Cache for 5 minutes on Vercel Edge
         "Cache-Control": "s-maxage=300, stale-while-revalidate=60",
       },
     });
