@@ -42,7 +42,7 @@ export default async function handler(req) {
   };
 
   try {
-    const upstream = await fetch("https://api-inference.huggingface.co/v1/chat/completions", {
+    const upstream = await fetch("https://router.huggingface.co/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

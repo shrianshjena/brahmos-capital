@@ -66,7 +66,7 @@ Rules:
 - Return ONLY the JSON array. Nothing else.`;
 
   try {
-    const hfRes = await fetch("https://api-inference.huggingface.co/v1/chat/completions", {
+    const hfRes = await fetch("https://router.huggingface.co/v1/chat/completions", {
       method: "POST",
       headers: { "Content-Type":"application/json", "Authorization":`Bearer ${hfToken}` },
       body: JSON.stringify({
