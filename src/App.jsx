@@ -818,15 +818,15 @@ function HeatmapView({stocks}){
     <div style={{padding:"24px 28px"}}>
       <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20,flexWrap:"wrap"}}>
         <p style={{fontSize:13,fontWeight:600,color:A.t1}}>Valuation Heatmap</p>
-        <div style={{display:"flex",gap:8}}>
-          {Object.entries(metrics).map(([k,v])=>(<button key={k} onClick={()=>setMetric(k)} style={{padding:"6px 16px",borderRadius:20,border:`1px solid ${metric===k?A.blue:A.sep}`,background:metric===k?"rgba(10,132,255,0.15)":"transparent",color:metric===k?A.blue:A.t3,fontSize:12,cursor:"pointer",fontWeight:metric===k?600:400}}>{v.label} · {v.desc}</button>))}
+        <div className="heatmap-tabs" style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+          {Object.entries(metrics).map(([k,v])=>(<button key={k} onClick={()=>setMetric(k)} style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${metric===k?A.blue:A.sep}`,background:metric===k?"rgba(10,132,255,0.15)":"transparent",color:metric===k?A.blue:A.t3,fontSize:12,cursor:"pointer",fontWeight:metric===k?600:400,whiteSpace:"nowrap"}}>{v.label}</button>))}
         </div>
         <div style={{marginLeft:"auto",display:"flex",gap:14,alignItems:"center"}}>
           {[{c:A.green,l:"Cheap"},{c:A.orange,l:"Fair"},{c:A.red,l:"Rich"}].map(({c,l})=>(<div key={l} style={{display:"flex",alignItems:"center",gap:6}}><span style={{width:10,height:10,borderRadius:2,background:c,display:"inline-block"}}/><span style={{fontSize:11,color:A.t3}}>{l}</span></div>))}
         </div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:18}}>
-        {stocks.map(s=>{const v=s[metric];const c=getColor(v);const lbl=getLabel(v);return(<div key={s.ticker} style={{background:A.card,borderRadius:16,padding:20,border:`1px solid ${A.sepLight}`,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 80% 20%,"+c+"22 0%,transparent 60%)",pointerEvents:"none"}}/><div style={{display:"flex",justifyContent:"space-between",marginBottom:12}}><span style={{color:A.blue,fontSize:14,fontWeight:700}}>{s.ticker}</span><span style={{background:c+"22",color:c,borderRadius:6,fontSize:10,fontWeight:700,padding:"3px 9px"}}>{lbl}</span></div><p style={{color:c,fontSize:36,fontWeight:800,letterSpacing:"-0.03em",lineHeight:1,marginBottom:6}}>{m.fmt(v)}</p><p style={{color:A.t3,fontSize:11,marginBottom:12}}>{m.desc}</p><div style={{height:4,background:A.sep,borderRadius:2,marginBottom:4}}><div style={{width:""+(((v-minV)/(maxV-minV))*100)+"%",height:"100%",background:c,borderRadius:2}}/></div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:10,color:A.t4}}>{m.fmt(minV)}</span><span style={{fontSize:10,color:A.t4}}>{m.fmt(maxV)}</span></div></div>);})}
+      <div className="heatmap-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,marginBottom:18}}>
+        {stocks.map(s=>{const v=s[metric];const c=getColor(v);const lbl=getLabel(v);return(<div key={s.ticker} style={{background:A.card,borderRadius:16,padding:20,border:`1px solid ${A.sepLight}`,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 80% 20%,"+c+"22 0%,transparent 60%)",pointerEvents:"none"}}/><div style={{display:"flex",justifyContent:"space-between",marginBottom:12}} className="heatmap-card-inner"><span style={{color:A.blue,fontSize:13,fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",maxWidth:"55%"}}>{s.ticker}</span><span style={{background:c+"22",color:c,borderRadius:6,fontSize:10,fontWeight:700,padding:"3px 8px",flexShrink:0}}>{lbl}</span></div><p className="heatmap-val" style={{color:c,fontSize:34,fontWeight:800,letterSpacing:"-0.03em",lineHeight:1,marginBottom:6}}>{m.fmt(v)}</p><p style={{color:A.t3,fontSize:11,marginBottom:12}}>{m.desc}</p><div style={{height:4,background:A.sep,borderRadius:2,marginBottom:4}}><div style={{width:""+(((v-minV)/(maxV-minV))*100)+"%",height:"100%",background:c,borderRadius:2}}/></div><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:10,color:A.t4}}>{m.fmt(minV)}</span><span style={{fontSize:10,color:A.t4}}>{m.fmt(maxV)}</span></div></div>);})}
       </div>
       {metric==="pe"&&(<div style={{background:A.card,borderRadius:14,padding:"16px 20px",border:`1px solid ${A.sepLight}`,display:"flex",gap:12,alignItems:"flex-start"}}><Info size={16} color={A.blue} style={{marginTop:1,flexShrink:0}}/><p style={{fontSize:13,color:A.t2,lineHeight:1.65}}><span style={{color:A.t1,fontWeight:600}}>Sector average P/E: 52x</span> · HAL (30x) and Cochin Shipyard (30.5x) trade at the most compelling valuations relative to peers. HDFC Securities issues Reduce on HAL and BDL citing valuation, while preferring BEL (Add), Data Patterns (Buy), and Apollo Micro (Buy). BDL at 83x and Data Patterns at 75x price in aggressive execution — limited margin of safety.</p></div>)}
     </div>
@@ -1099,7 +1099,7 @@ function DrillView({stocks}){
   }));
   const sorted=[...DRILL_SECTORS].sort((a,b)=>b.val-a.val);
   return(
-    <div style={{padding:"24px 28px",display:"grid",gridTemplateColumns:"320px 1fr",gap:20}}>
+    <div className="drill-layout" style={{padding:"24px 28px",display:"grid",gridTemplateColumns:"320px 1fr",gap:20}}>
       <div style={{background:A.card,borderRadius:16,padding:22,border:`1px solid ${A.sepLight}`,height:"fit-content"}}>
         <p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:18}}>Sector Allocation</p>
         {sorted.map(sec=>{
@@ -1138,7 +1138,7 @@ function DrillView({stocks}){
           );
         })}
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,alignContent:"start"}}>
+      <div className="drill-stock-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,alignContent:"start"}}>
         {stocks.map(s=>(
           <div key={s.ticker} style={{background:A.card,borderRadius:14,border:`1px solid ${A.sepLight}`,padding:16}}>
             <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
@@ -1170,7 +1170,7 @@ function DrillView({stocks}){
 const NAV_GROUPS=[
   {group:"PORTFOLIO",items:[{id:"portfolio",label:"Portfolio",Icon:Layers},{id:"geo",label:"Geopolitical",Icon:Globe},{id:"drill",label:"Drill-Down",Icon:BarChart2}]},
   {group:"RESEARCH",items:[{id:"screener",label:"Screener",Icon:Search},{id:"heatmap",label:"Valuation Map",Icon:TrendingUp},{id:"consensus",label:"Consensus",Icon:Star},{id:"why",label:"Why Defence?",Icon:BookOpen}]},
-  {group:"LIVE",items:[{id:"news",label:"News Feed",Icon:Newspaper}]},
+  {group:"LATEST UPDATES",items:[{id:"news",label:"News Feed",Icon:Newspaper}]},
   {group:"AI ANALYST",items:[{id:"ai",label:"Ask Shri",Icon:MessageSquare}]},
   {group:"TOOLS",items:[{id:"calc",label:"Entry Calculator",Icon:Calculator}]},
 ];
@@ -1318,8 +1318,29 @@ export default function BrahmosCapital(){
 .hamburger{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(84,84,88,0.4);cursor:pointer;flex-shrink:0;}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
 @media(max-width:768px){
+  /* Entry calc */
   .calc-grid{grid-template-columns:1fr!important;}
   .entry-params{width:100%!important;}
+  /* Allocation table: hide weight bar col, show as simple rows */
+  .alloc-table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+
+  /* Heatmap: 2-col on tablet, fix text overflow */
+  .heatmap-grid{grid-template-columns:repeat(2,1fr)!important;gap:10px!important;}
+  .heatmap-val{font-size:26px!important;}
+  .heatmap-card-inner{display:flex!important;}
+  .heatmap-tabs{gap:6px!important;}
+  .heatmap-tabs button{font-size:11px!important;padding:5px 10px!important;}
+
+  /* DrillView: stack vertically */
+  .drill-layout{grid-template-columns:1fr!important;padding:14px 12px!important;}
+  .drill-stock-grid{grid-template-columns:1fr!important;gap:8px!important;}
+}
+@media(max-width:480px){
+  /* Heatmap: 1-col on phones */
+  .heatmap-grid{grid-template-columns:1fr!important;}
+  .heatmap-val{font-size:32px!important;}
+  /* Drill: single col already, just tighter padding */
+  .drill-layout{padding:10px 8px!important;}
 }`}</style>
       {/* SIDEBAR */}
       {sidebarOpen&&<div className="sidebar-overlay" onClick={()=>setSidebarOpen(false)}/>}
@@ -1364,7 +1385,7 @@ export default function BrahmosCapital(){
               <span className="ask-dot" style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
             <span className="topbar-date" style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
-            <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>NSE LIVE</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
           </div>
         </div>
         {tab==="portfolio"&&<div className="kpi-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
