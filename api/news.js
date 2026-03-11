@@ -70,9 +70,14 @@ function parseRSS(xml) {
                      block.match(/<title>([\s\S]*?)<\/title>/))?.[1]?.trim() || "";
     const link    = (block.match(/<link>([\s\S]*?)<\/link>/))?.[1]?.trim() || "#";
     const pubDate = (block.match(/<pubDate>([\s\S]*?)<\/pubDate>/))?.[1]?.trim() || "";
-    const desc    = (block.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/) ||
-                     block.match(/<description>([\s\S]*?)<\/description>/))?.[1]
-                     ?.replace(/<[^>]+>/g,"").trim() || "";
+    const rawDesc = (block.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/) ||
+                     block.match(/<description>([\s\S]*?)<\/description>/))?.[1] || "";
+    // Decode HTML entities, then strip any remaining HTML tags
+    const desc = rawDesc
+      .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")
+      .replace(/&quot;/g,'"'). replace(/&#39;/g,"'").replace(/&apos;/g,"'")
+      .replace(/<[^>]+>/g,"")   // strip real HTML tags
+      .replace(/\s+/g," ").trim() || "";
     // Parse source from Google News title "Headline - Source"
     const sourceMatch = title.match(/ - ([^-]+)$/);
     const source = sourceMatch ? sourceMatch[1].trim() : "Financial News";

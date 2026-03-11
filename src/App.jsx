@@ -97,6 +97,9 @@ const CONSENSUS_STATIC={
   AVANTEL:   {buy:7, hold:5, sell:6, target:155,  brokers:["Motilal","YES Sec","BOB Cap","Monarch","Nirmal Bang"]},
 };
 
+// Alias so existing Screener/EntryCalc/Consensus code keeps working
+const CONSENSUS = CONSENSUS_STATIC;
+
 const NEWS=[
   // --- March 11 ---
   {id:1, date:"11 Mar 2026",cat:"GEOPO",  impact:"BULLISH",hot:true, tickers:["BDL","ZENTEC","PARAS"],
@@ -334,7 +337,7 @@ function AskAIView({stocks}){
         })
       });
       const data=await res.json();
-      const text=data.content?.[0]?.text;const cleaned=text&&!text.startsWith("API Error")&&!text.includes("quota")&&!text.includes("not found")?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes.";const finalText=cleaned;
+      const ok=data.ok!==false;const text=data.content?.[0]?.text||"";const finalText=(ok&&text)?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes.";
       setMessages(m=>[...m,{role:"assistant",content:finalText}]);
     }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes."}]);}
     setLoading(false);
@@ -617,7 +620,7 @@ function ConsensusView({stocks,consensus,aiStatus}){
     <div style={{padding:"24px 28px"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
         {stocks.map(s=>{
-          const c=CONSENSUS[s.ticker];if(!c)return null;
+          const c=(consensus||CONSENSUS_STATIC)[s.ticker];if(!c)return null;
           const total=c.buy+c.hold+c.sell;
           const upside=((c.target-s.px)/s.px)*100;
           const rec=c.buy/total>0.6?"BUY":c.sell/total>0.4?"SELL":"HOLD";
