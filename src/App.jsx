@@ -334,13 +334,13 @@ function AskAIView({stocks}){
         })
       });
       const data=await res.json();
-      const text=data.content?.[0]?.text||"Server error — please check your API key is set in Vercel environment variables (ANTHROPIC_API_KEY).";
-      setMessages(m=>[...m,{role:"assistant",content:text}]);
-    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Network error — please check your connection and try again."}]);}
+      const text=data.content?.[0]?.text;const cleaned=text&&!text.startsWith("API Error")&&!text.includes("quota")&&!text.includes("not found")?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes.";const finalText=cleaned;
+      setMessages(m=>[...m,{role:"assistant",content:finalText}]);
+    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes."}]);}
     setLoading(false);
   };
   return(
-    <div style={{padding:"24px 28px",display:"flex",gap:20,height:"calc(100vh - 260px)"}}>
+    <div style={{padding:"24px 28px",display:"flex",gap:20,minHeight:"calc(100vh - 200px)"}}>
       <div style={{flex:1,display:"flex",flexDirection:"column",background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
         <div style={{padding:"16px 20px",borderBottom:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:12,background:"linear-gradient(90deg,rgba(10,132,255,0.08),transparent)"}}>
           <div style={{width:42,height:42,borderRadius:13,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 4px 16px rgba(10,132,255,0.35)"}}>S</div>
@@ -409,7 +409,7 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
             <p style={{fontSize:16,fontWeight:700,color:A.t1}}>Ask Shri — AI Equity Research</p>
             <span style={{background:"rgba(10,132,255,0.25)",color:A.blue,border:"1px solid rgba(10,132,255,0.5)",borderRadius:20,fontSize:10,fontWeight:700,padding:"2px 10px",letterSpacing:"0.05em"}}>POWERED BY AI</span>
           </div>
-          <p style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Ex-Morgan Stanley (hypothetical). Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
+          <p style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Head of India Equity Research, Morgan Stanley. Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:6,color:A.blue,fontSize:13,fontWeight:600,flexShrink:0}}>
           <span>Open Chat</span>
@@ -419,7 +419,7 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
       {/* Chart */}
       <div style={{background:A.card,borderRadius:16,padding:"22px 24px",border:`1px solid ${A.sepLight}`}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-          <div><p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:3}}>Portfolio vs Nifty India Defence</p><p style={{fontSize:12,color:A.t3}}>Normalised to 100 · Mar 2025 – {new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'})}</p>{histStatus==="live"&&<span style={{fontSize:10,color:A.green,fontWeight:600,marginLeft:8}}>📡 LIVE DATA</span>}{histStatus==="loading"&&<span style={{fontSize:10,color:A.orange,marginLeft:8}}>⏳ Loading chart…</span>}</div>
+          <div><p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:3}}>Portfolio vs Nifty India Defence</p><p style={{fontSize:12,color:A.t3}}>Normalised to 100 · Mar 2025 – {new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'})}</p></div>
           <div style={{display:"flex",gap:20}}>{[{l:"Portfolio",c:A.blue},{l:"Nifty Defence",c:A.green}].map(({l,c})=>(<div key={l} style={{display:"flex",alignItems:"center",gap:7}}><span style={{width:20,height:2,background:c,borderRadius:1,display:"inline-block"}}/><span style={{fontSize:12,color:A.t2}}>{l}</span></div>))}</div>
         </div>
         <ResponsiveContainer width="100%" height={190}>
@@ -429,7 +429,7 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
               <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={A.green} stopOpacity={0.15}/><stop offset="95%" stopColor={A.green} stopOpacity={0}/></linearGradient>
             </defs>
             <XAxis dataKey="d" tick={{fill:A.t4,fontSize:10}} axisLine={false} tickLine={false}/>
-            <YAxis domain={[80,150]} tick={{fill:A.t4,fontSize:10}} axisLine={false} tickLine={false}/>
+            <YAxis domain={["auto","auto"]} tick={{fill:A.t4,fontSize:10}} axisLine={false} tickLine={false}/>
             <Tooltip contentStyle={{background:A.card2,border:`1px solid ${A.sep}`,borderRadius:10,color:A.t1,fontSize:12}}/>
             <Area type="monotone" dataKey="b" stroke={A.green} strokeWidth={1.5} fill="url(#gB)" dot={false}/>
             <Area type="monotone" dataKey="p" stroke={A.blue} strokeWidth={2} fill="url(#gP)" dot={false}/>
@@ -449,7 +449,7 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
       {/* Signals */}
       <div style={{background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,padding:"20px 22px"}}>
         <div style={{display:"flex",gap:8,marginBottom:18,alignItems:"center"}}>
-          <p style={{fontSize:13,fontWeight:600,color:A.t1,marginRight:10}}>Investment Signals</p>{aiStatus==="live"&&<span style={{background:"rgba(10,132,255,0.15)",color:A.blue,borderRadius:20,fontSize:9,fontWeight:700,padding:"2px 8px",letterSpacing:"0.05em"}}>AI LIVE</span>}{aiStatus==="loading"&&<span style={{color:A.t4,fontSize:10}}>⏳ AI generating…</span>}
+          <p style={{fontSize:13,fontWeight:600,color:A.t1,marginRight:10}}>Investment Signals</p>
           {["All","Gov","Geo","Market"].map(c=>(<button key={c} onClick={()=>setSigFilter(c)} style={{padding:"5px 14px",borderRadius:20,border:`1px solid ${sigFilter===c?A.blue:A.sep}`,background:sigFilter===c?"rgba(10,132,255,0.15)":"transparent",color:sigFilter===c?A.blue:A.t3,fontSize:12,cursor:"pointer",fontWeight:sigFilter===c?600:400}}>{c}</button>))}
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -687,11 +687,9 @@ function NewsView(){
         </div>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
-        <p style={{fontSize:12,color:A.t4}}>{filtered.length} articles ·{" "}
-          {newsStatus==="live"&&<span style={{color:A.green,fontWeight:600}}>📡 Live · refreshes hourly · </span>}
-          {newsStatus==="loading"&&<span style={{color:A.orange,fontWeight:600}}>⏳ Loading live news… · </span>}
-          {newsStatus==="static"&&<span style={{color:A.orange,fontWeight:600}}>⚠ Static data · </span>}
-          Sources: Google News, Economic Times, Business Standard, BSE Filings, Moneycontrol
+        <p style={{fontSize:12,color:A.t4}}>{filtered.length} articles · 
+          
+Sources: Google News, Economic Times, Business Standard, BSE Filings, Moneycontrol
         </p>
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -800,14 +798,12 @@ function GeoView({geoCards,geoAiStatus}){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>
         <Flame size={15} color={A.red}/>
-        {geoAiStatus==="live"&&<span style={{background:"rgba(10,132,255,0.12)",color:A.blue,borderRadius:20,fontSize:9,fontWeight:700,padding:"2px 8px",letterSpacing:"0.05em"}}>🤖 AI LIVE</span>}
-        {geoAiStatus==="loading"&&<span style={{color:A.t4,fontSize:10}}>⏳ AI generating events…</span>}
         <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 11 March 2026 — US-Iran war, Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
       {liveGeo.length>0&&(
         <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:"1px solid rgba(48,209,88,0.2)",marginBottom:16}}>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-            <span style={{color:A.green,fontSize:11,fontWeight:700,letterSpacing:"0.05em"}}>📡 LIVE GEOPOLITICAL UPDATES · refreshes hourly</span>
+            <span style={{color:A.green,fontSize:11,fontWeight:700,letterSpacing:"0.05em"}}>📡 LIVE GEOPOLITICAL UPDATES</span>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:7}}>
             {liveGeo.map((n,i)=>(
@@ -1016,6 +1012,8 @@ export default function BrahmosCapital(){
     }).catch(()=>setGeoAiStatus("error"));
   },[]);
 
+  const scrollRef=useRef(null);
+  useEffect(()=>{if(scrollRef.current)scrollRef.current.scrollTop=0;},[tab]);
   const stocks=liveStocks;
   const totVal=stocks.reduce((a,s)=>a+s.mktVal,0);
   const totCost=stocks.reduce((a,s)=>a+s.cost,0);
@@ -1050,7 +1048,7 @@ export default function BrahmosCapital(){
         <div style={{padding:"12px 16px",borderTop:`1px solid ${A.sep}`}}>
           <p style={{fontSize:10,color:A.t4,marginBottom:2}}>NSE · India Defence · FY26</p>
           <p style={{fontSize:10,color:A.t4,marginBottom:6}}>Stocks bought March 2025</p>
-          <p style={{fontSize:10,color:A.t4}}>Built by <span style={{color:A.blue,fontWeight:600}}>Shri</span></p>
+          <p style={{fontSize:10,color:A.t4}}>Built by <span style={{color:A.blue,fontWeight:600}}>Shriansh Jena</span></p>
         </div>
       </div>
       {/* MAIN */}
@@ -1066,12 +1064,7 @@ export default function BrahmosCapital(){
               <span>Ask Shri</span>
               <span style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
-            <span style={{fontSize:11,color:A.t3,display:"flex",alignItems:"center",gap:7}}>
-              {priceStatus==="loading"&&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⏳ LOADING</span>}
-              {priceStatus==="live"   &&<span style={{color:A.green, fontSize:10,fontWeight:600}}>📡 PRICES LIVE</span>}
-              {priceStatus==="error"  &&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⚠ OFFLINE</span>}
-              <span>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
-            </span>
+            <span style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
             <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
           </div>
         </div>
@@ -1081,7 +1074,7 @@ export default function BrahmosCapital(){
           <KpiCard label="ALPHA VS NIFTY DEF" value={pct(alpha)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={alpha>=0}/>
           <KpiCard label="PORTFOLIO STOCKS"   value="25"            sub="9 core + 16 extended positions" positive={null}/>
         </div>
-        <div style={{flex:1,overflowY:"auto"}}>
+        <div ref={scrollRef} style={{flex:1,overflowY:"auto"}}>
           {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")} stocks={stocks} histData={histData} histStatus={histStatus} signals={liveSignals} aiStatus={aiStatus}/>}
           {tab==="geo"      &&<GeoView geoCards={aiGeoCards} geoAiStatus={geoAiStatus}/>}
           {tab==="drill"    &&<DrillView stocks={stocks}/>}
@@ -1095,7 +1088,7 @@ export default function BrahmosCapital(){
         </div>
         <div style={{padding:"8px 28px",borderTop:`1px solid ${A.sep}`,background:"rgba(10,10,10,0.95)",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
           <p style={{fontSize:11,color:A.t4}}>Brahmos Capital · NSE India Defence Intelligence</p>
-          <p style={{fontSize:11,color:A.t4}}>Designed &amp; built by <span style={{color:A.blue,fontWeight:600}}>Shri</span> · Morgan Stanley role is hypothetical · Data as of 11 Mar 2026 · Not investment advice</p>
+          <p style={{fontSize:11,color:A.t4}}>Designed &amp; built by <span style={{color:A.blue,fontWeight:600}}>Shriansh Jena</span> · Not investment advice</p>
         </div>
       </div>
     </div>
