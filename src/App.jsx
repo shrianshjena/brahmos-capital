@@ -386,7 +386,9 @@ function AskAIView(){
 }
 
 /* ═══ PORTFOLIO ════════════════════════════════════════════════════════════ */
-function PortfolioView({onAskAI}){
+function PortfolioView({onAskAI,stocks}){
+  const totValP=stocks.reduce((a,s)=>a+s.mktVal,0);
+  const stocksWt=stocks.map(s=>({...s,wt:(s.mktVal/totValP)*100}));
   const SIGNALS=[{id:1,ticker:"HAL",type:"STRONG BUY",cat:"Gov",conf:88,date:"4 Mar 2026",title:"MoD Awards ₹5,083 Cr Contract",detail:"6 ALH Mk-III helicopters (₹2,901 Cr) + Shtil naval missiles (₹2,182 Cr). Order book strengthens."},{id:2,ticker:"BDL",type:"STRONG BUY",cat:"Geo",conf:85,date:"10 Mar 2026",title:"Indonesia Signs BrahMos Deal",detail:"India's largest-ever defence export. BDL is key propulsion & warhead supplier."},{id:3,ticker:"MAZDOCK",type:"BUY",cat:"Gov",conf:74,date:"5 Mar 2026",title:"₹99,000 Cr Submarine Pipeline",detail:"Navy finalising 6 P-75I submarines. Transformative decade-long contract."},{id:4,ticker:"GRSE",type:"BUY",cat:"Market",conf:70,date:"1 Mar 2026",title:"Record Q3 Execution",detail:"Order book ₹22,500 Cr provides 3+ year revenue visibility. Target upgrades."},{id:5,ticker:"ZENTEC",type:"BUY",cat:"Geo",conf:72,date:"8 Mar 2026",title:"Anti-Drone Tailwind Post Epic Fury",detail:"Emergency C-UAV procurement accelerated. ZENTEC primary domestic beneficiary."},{id:6,ticker:"COCHINSHIP",type:"BUY",cat:"Market",conf:68,date:"7 Mar 2026",title:"Compelling Valuation at P/E 30x",detail:"P/E 30.5x vs sector avg 52x. NGOPV execution strong, margin recovery underway."},{id:7,ticker:"BEL",type:"HOLD",cat:"Market",conf:55,date:"6 Mar 2026",title:"Stretched at 65x — Await Pullback",detail:"₹570Bn FY26 target achievable, but P/E 65x limits near-term upside. Entry: ₹380–400."},{id:8,ticker:"DATAPATTNS",type:"REDUCE",cat:"Market",conf:63,date:"3 Mar 2026",title:"P/E 75x Prices in Perfection",detail:"Strong franchise but HDFC Sec flags execution risk. Trim 20–30% on strength."},{id:9,ticker:"HAL",type:"WATCH",cat:"Gov",conf:40,date:"23 Feb 2026",title:"Tejas Ground Incident — Monitor",detail:"Minor ground incident confirmed by HAL. Safety record intact. Watch export pipeline."}];
   const [sigFilter,setSigFilter]=useState("All");
   const catColor={Gov:A.blue,Geo:A.orange,Market:A.t3};
@@ -435,7 +437,7 @@ function PortfolioView({onAskAI}){
         <div style={{overflowX:"auto"}}>
           <table style={{width:"100%",borderCollapse:"collapse",minWidth:920}}>
             <thead><tr style={{borderBottom:`1px solid ${A.sepLight}`}}>{["Ticker","Company","Sector","Shares","Avg Cost","Price","Mkt Value","Weight","Return","Today","Trend"].map(h=>(<th key={h} style={{padding:"10px 16px",textAlign:["Ticker","Company","Sector"].includes(h)?"left":"right",fontSize:11,color:A.t3,fontWeight:500,whiteSpace:"nowrap"}}>{h}</th>))}</tr></thead>
-            <tbody>{STOCKS.map((s,i)=>(<tr key={s.ticker} style={{borderBottom:`1px solid ${A.sepLight}`,background:i%2===0?"transparent":"rgba(255,255,255,0.018)"}}><td style={{padding:"11px 16px"}}><span style={{color:A.blue,fontSize:13,fontWeight:600}}>{s.ticker}</span></td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,whiteSpace:"nowrap"}}>{s.name}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12}}>{s.sub}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{s.shares}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{money(s.buy)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{money(s.px)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{inr(s.mktVal)}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{s.wt.toFixed(1)}%</td><td style={{padding:"11px 16px",textAlign:"right"}}><span style={{color:s.ret>=0?A.green:A.red,fontSize:12,fontWeight:500}}>{pct(s.ret)}</span></td><td style={{padding:"11px 16px",textAlign:"right"}}><div style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:4}}>{s.day>=0?<ArrowUpRight size={12} color={A.green}/>:<ArrowDownRight size={12} color={A.red}/>}<span style={{color:s.day>=0?A.green:A.red,fontSize:12}}>{pct(s.day)}</span></div></td><td style={{padding:"8px 16px"}}><Spark data={s.spark} color={s.ret>=0?A.blue:A.red}/></td></tr>))}</tbody>
+            <tbody>{stocksWt.map((s,i)=>(<tr key={s.ticker} style={{borderBottom:`1px solid ${A.sepLight}`,background:i%2===0?"transparent":"rgba(255,255,255,0.018)"}}><td style={{padding:"11px 16px"}}><span style={{color:A.blue,fontSize:13,fontWeight:600}}>{s.ticker}</span></td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,whiteSpace:"nowrap"}}>{s.name}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12}}>{s.sub}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{s.shares}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{money(s.buy)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{money(s.px)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{inr(s.mktVal)}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{s.wt.toFixed(1)}%</td><td style={{padding:"11px 16px",textAlign:"right"}}><span style={{color:s.ret>=0?A.green:A.red,fontSize:12,fontWeight:500}}>{pct(s.ret)}</span></td><td style={{padding:"11px 16px",textAlign:"right"}}><div style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:4}}>{s.day>=0?<ArrowUpRight size={12} color={A.green}/>:<ArrowDownRight size={12} color={A.red}/>}<span style={{color:s.day>=0?A.green:A.red,fontSize:12}}>{pct(s.day)}</span></div></td><td style={{padding:"8px 16px"}}><Spark data={s.spark} color={s.ret>=0?A.blue:A.red}/></td></tr>))}</tbody>
           </table>
         </div>
       </div>
@@ -454,7 +456,7 @@ function PortfolioView({onAskAI}){
 }
 
 /* ═══ SCREENER ═════════════════════════════════════════════════════════════ */
-function ScreenerView(){
+function ScreenerView({stocks}){
   const [sortKey,setSortKey]=useState("mc");
   const [sortAsc,setSortAsc]=useState(false);
   const [peMax,setPeMax]=useState(100);
@@ -490,7 +492,7 @@ function ScreenerView(){
 }
 
 /* ═══ ENTRY CALCULATOR ═════════════════════════════════════════════════════ */
-function EntryCalcView(){
+function EntryCalcView({stocks}){
   const [budget,setBudget]=useState(500000);
   const [profile,setProfile]=useState("Moderate");
   const PROFILES={
@@ -577,7 +579,7 @@ function WhyDefenceView(){
 }
 
 /* ═══ HEATMAP ══════════════════════════════════════════════════════════════ */
-function HeatmapView(){
+function HeatmapView({stocks}){
   const [metric,setMetric]=useState("pe");
   const metrics={pe:{label:"P/E",desc:"Price-to-Earnings",fmt:v=>v+"x",invert:false},pb:{label:"P/B",desc:"Price-to-Book",fmt:v=>v+"x",invert:false},roe:{label:"ROE %",desc:"Return on Equity",fmt:v=>v+"%",invert:true}};
   const m=metrics[metric];
@@ -605,7 +607,7 @@ function HeatmapView(){
 }
 
 /* ═══ CONSENSUS ════════════════════════════════════════════════════════════ */
-function ConsensusView(){
+function ConsensusView({stocks}){
   return(
     <div style={{padding:"24px 28px"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
@@ -761,33 +763,30 @@ function GeoView(){
 }
 
 /* ═══ DRILL DOWN ═══════════════════════════════════════════════════════════ */
-const DRILL_SECTORS=[
-  {name:"Naval / Shipbuilding",  keys:["MAZDOCK","COCHINSHIP","GRSE"],                    color:A.blue},
-  {name:"Electronics / C4ISR",   keys:["BEL","ASTRAMICRO","DATAPATTNS","APOLLOMICRO","CYIENTDLM","DCXINDIA","AVANTEL"],color:A.purple},
-  {name:"Aerospace",             keys:["HAL","MTAR","UNIMECH","PTCIND","DYNAMATECH","AXISCADES"],color:A.orange},
-  {name:"Missiles / Munitions",  keys:["BDL","SOLARINDS","PREMEXPLN"],                    color:A.red},
-  {name:"Vehicles & Materials",  keys:["BEML","MIDHANI","BHARATFORG"],                    color:A.teal},
-  {name:"Optics / Space / Drones",keys:["PARAS","IDEAFORGE"],                             color:A.yellow},
-  {name:"Training / Anti-Drone", keys:["ZENTEC"],                                         color:A.green},
-  {name:"Munitions / Explosives",keys:["SOLARINDS","PREMEXPLN"],color:A.orange},
-  {name:"Artillery / Drones",   keys:["BHARATFORG","IDEAFORGE"],color:A.red},
-  {name:"Aerospace Components", keys:["MTARTECH","DYNAMATIC","UNIMECHAE","AXISCADES"],color:A.teal},
-  {name:"Heavy Equipment",      keys:["BEML"],color:A.purple},
-  {name:"Special Materials",    keys:["MIDHANI","PTCIND"],color:A.yellow},
-].map(sec=>({...sec,
-  val:sec.keys.reduce((a,k)=>a+(STOCKS.find(s=>s.ticker===k)?.mktVal||0),0),
-  ret:(()=>{const v=sec.keys.map(k=>STOCKS.find(s=>s.ticker===k)?.ret||0);return v.reduce((a,x)=>a+x,0)/v.length;})()
-}));
+const DRILL_SECTORS_DEF=[
+  {name:"Naval / Shipbuilding",    keys:["MAZDOCK","COCHINSHIP","GRSE"],                         color:A.blue},
+  {name:"Electronics / C4ISR",     keys:["BEL","ASTRAMICRO","DATAPATTNS","APOLLOMICRO","CYIENTDLM","DCXINDIA","AVANTEL"],color:A.purple},
+  {name:"Aerospace",               keys:["HAL","MTAR","UNIMECH","PTCIND","DYNAMATECH","AXISCADES"],color:A.orange},
+  {name:"Missiles / Munitions",    keys:["BDL","SOLARINDS","PREMEXPLN"],                         color:A.red},
+  {name:"Vehicles & Materials",    keys:["BEML","MIDHANI","BHARATFORG"],                         color:A.teal},
+  {name:"Optics / Space / Drones", keys:["PARAS","IDEAFORGE"],                                   color:A.yellow},
+  {name:"Training / Anti-Drone",   keys:["ZENTEC"],                                              color:A.green},
+];
 
-function DrillView(){
+function DrillView({stocks}){
   const [open,setOpen]=useState(null);
+  const totValD=stocks.reduce((a,s)=>a+s.mktVal,0);
+  const DRILL_SECTORS=DRILL_SECTORS_DEF.map(sec=>({...sec,
+    val:sec.keys.reduce((a,k)=>a+(stocks.find(s=>s.ticker===k)?.mktVal||0),0),
+    ret:(()=>{const v=sec.keys.map(k=>stocks.find(s=>s.ticker===k)?.ret||0);return v.reduce((a,x)=>a+x,0)/v.length;})()
+  }));
   const sorted=[...DRILL_SECTORS].sort((a,b)=>b.val-a.val);
   return(
     <div style={{padding:"24px 28px",display:"grid",gridTemplateColumns:"320px 1fr",gap:20}}>
       <div style={{background:A.card,borderRadius:16,padding:22,border:`1px solid ${A.sepLight}`,height:"fit-content"}}>
         <p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:18}}>Sector Allocation</p>
         {sorted.map(sec=>{
-          const w=(sec.val/TOTVAL)*100;
+          const w=(sec.val/totValD)*100;
           return(
             <div key={sec.name} style={{marginBottom:16,cursor:"pointer"}} onClick={()=>setOpen(open===sec.name?null:sec.name)}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
@@ -861,6 +860,40 @@ const NAV_GROUPS=[
 
 export default function BrahmosCapital(){
   const [tab,setTab]=useState("portfolio");
+  const [liveStocks,setLiveStocks]=useState(STOCKS);
+  const [priceStatus,setPriceStatus]=useState("loading");
+
+  useEffect(()=>{
+    async function fetchPrices(){
+      try{
+        const res=await fetch("/api/stocks");
+        const data=await res.json();
+        if(data.ok&&data.prices){
+          setLiveStocks(STOCKS.map(s=>{
+            const live=data.prices[s.ticker];
+            if(!live||!live.px)return s;
+            const px=live.px;
+            const day=live.day??s.day;
+            return{...s,px,day,mktVal:s.shares*px,ret:((px-s.buy)/s.buy)*100,spark:mkSpark(s.seed,px>s.buy)};
+          }));
+          setPriceStatus("live");
+        }else{
+          setPriceStatus("error");
+        }
+      }catch{
+        setPriceStatus("error");
+      }
+    }
+    fetchPrices();
+    const id=setInterval(fetchPrices,5*60*1000);
+    return()=>clearInterval(id);
+  },[]);
+
+  const stocks=liveStocks;
+  const totVal=stocks.reduce((a,s)=>a+s.mktVal,0);
+  const totCost=stocks.reduce((a,s)=>a+s.cost,0);
+  const totRet=((totVal-totCost)/totCost)*100;
+  const alpha=totRet-BENCH;
   const allItems=NAV_GROUPS.flatMap(g=>g.items);
   const currentLabel=allItems.find(i=>i.id===tab)?.label||"";
   return(
@@ -906,27 +939,32 @@ export default function BrahmosCapital(){
               <span>Ask Shri</span>
               <span style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
-            <span style={{fontSize:11,color:A.t3}}>NSE · 11 Mar 2026</span>
+            <span style={{fontSize:11,color:A.t3,display:"flex",alignItems:"center",gap:7}}>
+              {priceStatus==="loading"&&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⏳ LOADING</span>}
+              {priceStatus==="live"   &&<span style={{color:A.green, fontSize:10,fontWeight:600}}>📡 LIVE</span>}
+              {priceStatus==="error"  &&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⚠ OFFLINE</span>}
+              <span>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
+            </span>
             <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
-          <KpiCard label="TOTAL VALUE"        value={inr(TOTVAL)}   sub={"Cost basis "+inr(TOTCOST)+" · Mar 2025"} positive={null}/>
-          <KpiCard label="TOTAL RETURN"       value={pct(TOTRET)}   sub={inr(TOTVAL-TOTCOST)+" unrealised gain"} positive={TOTRET>=0}/>
-          <KpiCard label="ALPHA VS NIFTY DEF" value={pct(ALPHA)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={ALPHA>=0}/>
+          <KpiCard label="TOTAL VALUE"        value={inr(totVal)}   sub={"Cost basis "+inr(totCost)+" · Mar 2025"} positive={null}/>
+          <KpiCard label="TOTAL RETURN"       value={pct(totRet)}   sub={inr(totVal-totCost)+" unrealised gain"} positive={totRet>=0}/>
+          <KpiCard label="ALPHA VS NIFTY DEF" value={pct(alpha)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={alpha>=0}/>
           <KpiCard label="PORTFOLIO STOCKS"   value="25"            sub="9 core + 16 extended positions" positive={null}/>
         </div>
         <div style={{flex:1,overflowY:"auto"}}>
-          {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")}/>}
+          {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")} stocks={stocks}/>}
           {tab==="geo"      &&<GeoView/>}
-          {tab==="drill"    &&<DrillView/>}
-          {tab==="screener" &&<ScreenerView/>}
-          {tab==="heatmap"  &&<HeatmapView/>}
-          {tab==="consensus"&&<ConsensusView/>}
+          {tab==="drill"    &&<DrillView stocks={stocks}/>}
+          {tab==="screener" &&<ScreenerView stocks={stocks}/>}
+          {tab==="heatmap"  &&<HeatmapView stocks={stocks}/>}
+          {tab==="consensus"&&<ConsensusView stocks={stocks}/>}
           {tab==="why"      &&<WhyDefenceView/>}
           {tab==="news"     &&<NewsView/>}
           {tab==="ai"       &&<AskAIView/>}
-          {tab==="calc"     &&<EntryCalcView/>}
+          {tab==="calc"     &&<EntryCalcView stocks={stocks}/>}
         </div>
         <div style={{padding:"8px 28px",borderTop:`1px solid ${A.sep}`,background:"rgba(10,10,10,0.95)",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
           <p style={{fontSize:11,color:A.t4}}>Brahmos Capital · NSE India Defence Intelligence</p>
