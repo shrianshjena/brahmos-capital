@@ -307,7 +307,7 @@ Keep responses structured but conversational. End every response with a clear on
 
 
 /* ═══ MARKDOWN RENDERER ════════════════════════════════════════════════════ */
-function MarkdownMsg({text,isUser}){
+function MarkdownMsg({text}){
   if(!text)return null;
   const lines=text.split("\n");
   const elements=[];
@@ -315,19 +315,19 @@ function MarkdownMsg({text,isUser}){
   while(i<lines.length){
     const line=lines[i];
     // Table block
-    if(line.trim().startsWith("|")&&i+1<lines.length&&lines[i+1].trim().match(/^\|[-|\s]+\|$/)){
+    if(line.trim().startsWith("|")&&i+1<lines.length&&lines[i+1].trim().match(/^\|[-|\s:]+\|$/)){
       const headers=line.split("|").filter(c=>c.trim()).map(c=>c.trim());
-      i+=2; // skip header + separator
+      i+=2;
       const rows=[];
       while(i<lines.length&&lines[i].trim().startsWith("|")){
         rows.push(lines[i].split("|").filter(c=>c.trim()).map(c=>c.trim()));
         i++;
       }
       elements.push(
-        <div key={i} style={{overflowX:"auto",margin:"10px 0"}}>
+        <div key={`t${i}`} style={{overflowX:"auto",margin:"12px 0"}}>
           <table style={{borderCollapse:"collapse",width:"100%",fontSize:12}}>
             <thead><tr>{headers.map((h,j)=>(
-              <th key={j} style={{padding:"7px 12px",background:"rgba(10,132,255,0.15)",color:"#0A84FF",fontWeight:600,textAlign:"left",borderBottom:"1px solid rgba(84,84,88,0.4)",whiteSpace:"nowrap"}}>{h}</th>
+              <th key={j} style={{padding:"7px 12px",background:"rgba(10,132,255,0.15)",color:"#0A84FF",fontWeight:600,textAlign:"left",borderBottom:"1px solid rgba(84,84,88,0.4)",whiteSpace:"nowrap"}}><InlineText t={h}/></th>
             ))}</tr></thead>
             <tbody>{rows.map((row,ri)=>(
               <tr key={ri} style={{borderBottom:"1px solid rgba(84,84,88,0.2)",background:ri%2===0?"transparent":"rgba(255,255,255,0.03)"}}>
@@ -341,52 +341,67 @@ function MarkdownMsg({text,isUser}){
       );
       continue;
     }
-    // H3 heading
+    // H4/H5 — treat same as H3 (AI often uses #### for sub-sections)
+    if(line.startsWith("#### ")||line.startsWith("##### ")){
+      const txt=line.replace(/^#{4,6}\s+/,"");
+      elements.push(<p key={i} style={{fontSize:12,fontWeight:700,color:"rgba(10,132,255,0.85)",marginTop:12,marginBottom:4}}><InlineText t={txt}/></p>);
+      i++;continue;
+    }
+    // H3
     if(line.startsWith("### ")){
-      elements.push(<p key={i} style={{fontSize:13,fontWeight:700,color:"#0A84FF",marginTop:14,marginBottom:6}}>{line.slice(4)}</p>);
+      elements.push(<p key={i} style={{fontSize:13,fontWeight:700,color:"#0A84FF",marginTop:14,marginBottom:5}}><InlineText t={line.slice(4)}/></p>);
       i++;continue;
     }
-    // H2 heading
+    // H2
     if(line.startsWith("## ")){
-      elements.push(<p key={i} style={{fontSize:14,fontWeight:700,color:"#FFFFFF",marginTop:16,marginBottom:6,borderBottom:"1px solid rgba(84,84,88,0.3)",paddingBottom:4}}>{line.slice(3)}</p>);
+      elements.push(<p key={i} style={{fontSize:14,fontWeight:700,color:"#FFFFFF",marginTop:16,marginBottom:6,borderBottom:"1px solid rgba(84,84,88,0.3)",paddingBottom:4}}><InlineText t={line.slice(3)}/></p>);
       i++;continue;
     }
-    // Bullet point
-    if(line.trim().startsWith("- ")||line.trim().startsWith("* ")){
+    // H1
+    if(line.startsWith("# ")){
+      elements.push(<p key={i} style={{fontSize:15,fontWeight:700,color:"#FFFFFF",marginTop:16,marginBottom:8}}><InlineText t={line.slice(2)}/></p>);
+      i++;continue;
+    }
+    // Numbered list — detect indent level
+    const numMatch=line.match(/^(\s*)(\d+)\.\s+(.+)/);
+    if(numMatch){
+      const indent=numMatch[1].length;
       elements.push(
-        <div key={i} style={{display:"flex",gap:8,marginBottom:4,paddingLeft:4}}>
-          <span style={{color:"#0A84FF",flexShrink:0,marginTop:2}}>•</span>
-          <span style={{color:"rgba(235,235,245,0.85)",fontSize:13,lineHeight:1.65}}><InlineText t={line.trim().slice(2)}/></span>
+        <div key={i} style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:3,paddingLeft:indent?20:0}}>
+          <span style={{color:"#0A84FF",flexShrink:0,fontWeight:700,fontSize:12,minWidth:20,textAlign:"right"}}>{numMatch[2]}.</span>
+          <span style={{color:"rgba(235,235,245,0.9)",fontSize:13,lineHeight:1.65}}><InlineText t={numMatch[3]}/></span>
         </div>
       );
       i++;continue;
     }
-    // Numbered list
-    const numMatch=line.trim().match(/^(\d+)\.\s+(.+)/);
-    if(numMatch){
+    // Bullet point — detect indent for nesting
+    const bulletMatch=line.match(/^(\s*)([-*])\s+(.+)/);
+    if(bulletMatch){
+      const indent=bulletMatch[1].length;
+      const nested=indent>=2;
       elements.push(
-        <div key={i} style={{display:"flex",gap:8,marginBottom:4,paddingLeft:4}}>
-          <span style={{color:"#0A84FF",flexShrink:0,fontWeight:600,fontSize:12,minWidth:18}}>{numMatch[1]}.</span>
-          <span style={{color:"rgba(235,235,245,0.85)",fontSize:13,lineHeight:1.65}}><InlineText t={numMatch[2]}/></span>
+        <div key={i} style={{display:"flex",alignItems:"baseline",gap:7,marginBottom:3,paddingLeft:nested?24:6}}>
+          <span style={{color:nested?"rgba(10,132,255,0.6)":"#0A84FF",flexShrink:0,fontSize:nested?9:11,lineHeight:1,marginTop:1}}>{nested?"◦":"•"}</span>
+          <span style={{color:"rgba(235,235,245,0.85)",fontSize:13,lineHeight:1.65}}><InlineText t={bulletMatch[3]}/></span>
         </div>
       );
       i++;continue;
     }
     // Horizontal rule
-    if(line.trim().match(/^[-*]{3,}$/)){
+    if(line.trim().match(/^[-*]{3,}$/)&&!line.trim().match(/\w/)){
       elements.push(<hr key={i} style={{border:"none",borderTop:"1px solid rgba(84,84,88,0.3)",margin:"10px 0"}}/>);
       i++;continue;
     }
-    // Empty line = spacer
+    // Empty line = small spacer
     if(!line.trim()){
-      elements.push(<div key={i} style={{height:6}}/>);
+      if(i>0&&elements.length>0)elements.push(<div key={i} style={{height:5}}/>);
       i++;continue;
     }
     // Regular paragraph
     elements.push(<p key={i} style={{color:"rgba(235,235,245,0.9)",fontSize:13,lineHeight:1.75,marginBottom:2}}><InlineText t={line}/></p>);
     i++;
   }
-  return <div>{elements}</div>;
+  return <div style={{paddingTop:2}}>{elements}</div>;
 }
 
 // Inline text: parses **bold**, *italic*, `code`
