@@ -53,7 +53,7 @@ const BENCH=19.0; const ALPHA=TOTRET-BENCH;
 STOCKS.forEach(s=>{s.wt=(s.mktVal/TOTVAL)*100;});
 const SECT_PE_AVG=52;
 
-const CONSENSUS={
+const CONSENSUS_STATIC={
   HAL:       {buy:20,hold:5, sell:2, target:4960,brokers:["Motilal","HDFC Sec","Kotak","Nomura","CLSA"]},
   BEL:       {buy:15,hold:8, sell:4, target:520, brokers:["Motilal","Emkay","Axis","ICICI Sec","JM Fin"]},
   MAZDOCK:   {buy:16,hold:4, sell:2, target:2850,brokers:["Kotak","Motilal","Nuvama","CLSA","Jefferies"]},
@@ -274,7 +274,7 @@ function ImpactTag({impact}){const c=IMPACT_CFG[impact]||IMPACT_CFG.NEUTRAL;retu
 /* ═══ ASK AI — Shri persona ══════════════════════════════════════ */
 function buildPrompt(stocks){
   const priceLines=stocks.map(s=>{
-    const c=CONSENSUS[s.ticker];
+    const c=(consensus||CONSENSUS_STATIC)[s.ticker];
     return `- ${s.ticker}: CMP ₹${s.px.toFixed(0)} | Entry ₹${s.buy} | Return ${s.ret>=0?"+":""}${s.ret.toFixed(1)}% | P/E ${s.pe}x${c?" | Analyst target ₹"+c.target:""}`;
   }).join("\n");
   return `You are Shri, a seasoned Indian equity research analyst and veteran investor with over 20 years of experience on Dalal Street, formerly Head of India Equity Research at a leading global investment bank. You have covered everything from mid-cap opportunities to Nifty 50 blue chips for HNI and institutional clients, with a deep specialisation in Indian PSU defence stocks, aerospace, and naval manufacturing.
@@ -391,13 +391,13 @@ function AskAIView({stocks}){
 }
 
 /* ═══ PORTFOLIO ════════════════════════════════════════════════════════════ */
-function PortfolioView({onAskAI,stocks}){
+const SIGNALS_STATIC=[{id:1,ticker:"HAL",type:"STRONG BUY",cat:"Gov",conf:88,date:"4 Mar 2026",title:"MoD Awards ₹5,083 Cr Contract",detail:"6 ALH Mk-III helicopters (₹2,901 Cr) + Shtil naval missiles (₹2,182 Cr). Order book strengthens."},{id:2,ticker:"BDL",type:"STRONG BUY",cat:"Geo",conf:85,date:"10 Mar 2026",title:"Indonesia Signs BrahMos Deal",detail:"India's largest-ever defence export. BDL is key propulsion & warhead supplier."},{id:3,ticker:"MAZDOCK",type:"BUY",cat:"Gov",conf:74,date:"5 Mar 2026",title:"₹99,000 Cr Submarine Pipeline",detail:"Navy finalising 6 P-75I submarines. Transformative decade-long contract."},{id:4,ticker:"GRSE",type:"BUY",cat:"Market",conf:70,date:"1 Mar 2026",title:"Record Q3 Execution",detail:"Order book ₹22,500 Cr provides 3+ year revenue visibility. Target upgrades."},{id:5,ticker:"ZENTEC",type:"BUY",cat:"Geo",conf:72,date:"8 Mar 2026",title:"Anti-Drone Tailwind Post Epic Fury",detail:"Emergency C-UAV procurement accelerated. ZENTEC primary domestic beneficiary."},{id:6,ticker:"COCHINSHIP",type:"BUY",cat:"Market",conf:68,date:"7 Mar 2026",title:"Compelling Valuation at P/E 30x",detail:"P/E 30.5x vs sector avg 52x. NGOPV execution strong, margin recovery underway."},{id:7,ticker:"BEL",type:"HOLD",cat:"Market",conf:55,date:"6 Mar 2026",title:"Stretched at 65x — Await Pullback",detail:"₹570Bn FY26 target achievable, but P/E 65x limits near-term upside. Entry: ₹380–400."},{id:8,ticker:"DATAPATTNS",type:"REDUCE",cat:"Market",conf:63,date:"3 Mar 2026",title:"P/E 75x Prices in Perfection",detail:"Strong franchise but HDFC Sec flags execution risk. Trim 20–30% on strength."},{id:9,ticker:"HAL",type:"WATCH",cat:"Gov",conf:40,date:"23 Feb 2026",title:"Tejas Ground Incident — Monitor",detail:"Minor ground incident confirmed by HAL. Safety record intact. Watch export pipeline."}];
+function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
   const totValP=stocks.reduce((a,s)=>a+s.mktVal,0);
   const stocksWt=stocks.map(s=>({...s,wt:(s.mktVal/totValP)*100}));
-  const SIGNALS=[{id:1,ticker:"HAL",type:"STRONG BUY",cat:"Gov",conf:88,date:"4 Mar 2026",title:"MoD Awards ₹5,083 Cr Contract",detail:"6 ALH Mk-III helicopters (₹2,901 Cr) + Shtil naval missiles (₹2,182 Cr). Order book strengthens."},{id:2,ticker:"BDL",type:"STRONG BUY",cat:"Geo",conf:85,date:"10 Mar 2026",title:"Indonesia Signs BrahMos Deal",detail:"India's largest-ever defence export. BDL is key propulsion & warhead supplier."},{id:3,ticker:"MAZDOCK",type:"BUY",cat:"Gov",conf:74,date:"5 Mar 2026",title:"₹99,000 Cr Submarine Pipeline",detail:"Navy finalising 6 P-75I submarines. Transformative decade-long contract."},{id:4,ticker:"GRSE",type:"BUY",cat:"Market",conf:70,date:"1 Mar 2026",title:"Record Q3 Execution",detail:"Order book ₹22,500 Cr provides 3+ year revenue visibility. Target upgrades."},{id:5,ticker:"ZENTEC",type:"BUY",cat:"Geo",conf:72,date:"8 Mar 2026",title:"Anti-Drone Tailwind Post Epic Fury",detail:"Emergency C-UAV procurement accelerated. ZENTEC primary domestic beneficiary."},{id:6,ticker:"COCHINSHIP",type:"BUY",cat:"Market",conf:68,date:"7 Mar 2026",title:"Compelling Valuation at P/E 30x",detail:"P/E 30.5x vs sector avg 52x. NGOPV execution strong, margin recovery underway."},{id:7,ticker:"BEL",type:"HOLD",cat:"Market",conf:55,date:"6 Mar 2026",title:"Stretched at 65x — Await Pullback",detail:"₹570Bn FY26 target achievable, but P/E 65x limits near-term upside. Entry: ₹380–400."},{id:8,ticker:"DATAPATTNS",type:"REDUCE",cat:"Market",conf:63,date:"3 Mar 2026",title:"P/E 75x Prices in Perfection",detail:"Strong franchise but HDFC Sec flags execution risk. Trim 20–30% on strength."},{id:9,ticker:"HAL",type:"WATCH",cat:"Gov",conf:40,date:"23 Feb 2026",title:"Tejas Ground Incident — Monitor",detail:"Minor ground incident confirmed by HAL. Safety record intact. Watch export pipeline."}];
   const [sigFilter,setSigFilter]=useState("All");
   const catColor={Gov:A.blue,Geo:A.orange,Market:A.t3};
-  const sigItems=SIGNALS.filter(s=>sigFilter==="All"||s.cat===sigFilter);
+  const sigItems=(signals||SIGNALS_STATIC).filter(s=>sigFilter==="All"||s.cat===sigFilter);
   return(
     <div style={{padding:"24px 28px",display:"flex",flexDirection:"column",gap:20}}>
       {/* ASK AI HERO BANNER */}
@@ -419,11 +419,11 @@ function PortfolioView({onAskAI,stocks}){
       {/* Chart */}
       <div style={{background:A.card,borderRadius:16,padding:"22px 24px",border:`1px solid ${A.sepLight}`}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-          <div><p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:3}}>Portfolio vs Nifty India Defence</p><p style={{fontSize:12,color:A.t3}}>Normalised to 100 · Mar 2025 – Mar 2026</p></div>
+          <div><p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:3}}>Portfolio vs Nifty India Defence</p><p style={{fontSize:12,color:A.t3}}>Normalised to 100 · Mar 2025 – {new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'})}</p>{histStatus==="live"&&<span style={{fontSize:10,color:A.green,fontWeight:600,marginLeft:8}}>📡 LIVE DATA</span>}{histStatus==="loading"&&<span style={{fontSize:10,color:A.orange,marginLeft:8}}>⏳ Loading chart…</span>}</div>
           <div style={{display:"flex",gap:20}}>{[{l:"Portfolio",c:A.blue},{l:"Nifty Defence",c:A.green}].map(({l,c})=>(<div key={l} style={{display:"flex",alignItems:"center",gap:7}}><span style={{width:20,height:2,background:c,borderRadius:1,display:"inline-block"}}/><span style={{fontSize:12,color:A.t2}}>{l}</span></div>))}</div>
         </div>
         <ResponsiveContainer width="100%" height={190}>
-          <AreaChart data={PCHART} margin={{top:5,right:4,left:-18,bottom:0}}>
+          <AreaChart data={histData||PCHART} margin={{top:5,right:4,left:-18,bottom:0}}>
             <defs>
               <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={A.blue} stopOpacity={0.3}/><stop offset="95%" stopColor={A.blue} stopOpacity={0}/></linearGradient>
               <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={A.green} stopOpacity={0.15}/><stop offset="95%" stopColor={A.green} stopOpacity={0}/></linearGradient>
@@ -449,7 +449,7 @@ function PortfolioView({onAskAI,stocks}){
       {/* Signals */}
       <div style={{background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,padding:"20px 22px"}}>
         <div style={{display:"flex",gap:8,marginBottom:18,alignItems:"center"}}>
-          <p style={{fontSize:13,fontWeight:600,color:A.t1,marginRight:10}}>Investment Signals</p>
+          <p style={{fontSize:13,fontWeight:600,color:A.t1,marginRight:10}}>Investment Signals</p>{aiStatus==="live"&&<span style={{background:"rgba(10,132,255,0.15)",color:A.blue,borderRadius:20,fontSize:9,fontWeight:700,padding:"2px 8px",letterSpacing:"0.05em"}}>AI LIVE</span>}{aiStatus==="loading"&&<span style={{color:A.t4,fontSize:10}}>⏳ AI generating…</span>}
           {["All","Gov","Geo","Market"].map(c=>(<button key={c} onClick={()=>setSigFilter(c)} style={{padding:"5px 14px",borderRadius:20,border:`1px solid ${sigFilter===c?A.blue:A.sep}`,background:sigFilter===c?"rgba(10,132,255,0.15)":"transparent",color:sigFilter===c?A.blue:A.t3,fontSize:12,cursor:"pointer",fontWeight:sigFilter===c?600:400}}>{c}</button>))}
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -612,7 +612,7 @@ function HeatmapView({stocks}){
 }
 
 /* ═══ CONSENSUS ════════════════════════════════════════════════════════════ */
-function ConsensusView({stocks}){
+function ConsensusView({stocks,consensus,aiStatus}){
   return(
     <div style={{padding:"24px 28px"}}>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
@@ -728,7 +728,7 @@ function NewsView(){
 }
 
 /* ═══ GEO ══════════════════════════════════════════════════════════════════ */
-function GeoView(){
+function GeoView({geoCards,geoAiStatus}){
   const [liveGeo,setLiveGeo]=useState([]);
   const [geoStatus,setGeoStatus]=useState("loading");
 
@@ -753,7 +753,8 @@ function GeoView(){
     const id=setInterval(fetchGeo,60*60*1000);
     return()=>clearInterval(id);
   },[]);
-  const GEO=[
+  const colorFromType=t=>({red:A.red,orange:A.orange,blue:A.blue,green:A.green,teal:A.teal,yellow:A.yellow}[t]||A.t3);
+  const GEO_STATIC=[
     {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–11 Mar 2026",hot:true,
      title:"Operation Epic Fury: US-Israel vs Iran — Full-Scale War",
      detail:"The US and Israel launched 900 strikes in 12 hours on 28 February 2026, killing Supreme Leader Khamenei. Iran retaliated with hundreds of missiles and thousands of drones across the Gulf, UAE, Qatar, and oil infrastructure. The Strait of Hormuz was disrupted, 150 ships stalled. As of 11 March, Trump signals potential short-term ceasefire — but structural defence procurement impact is irreversible.",
@@ -799,6 +800,8 @@ function GeoView(){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>
         <Flame size={15} color={A.red}/>
+        {geoAiStatus==="live"&&<span style={{background:"rgba(10,132,255,0.12)",color:A.blue,borderRadius:20,fontSize:9,fontWeight:700,padding:"2px 8px",letterSpacing:"0.05em"}}>🤖 AI LIVE</span>}
+        {geoAiStatus==="loading"&&<span style={{color:A.t4,fontSize:10}}>⏳ AI generating events…</span>}
         <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 11 March 2026 — US-Iran war, Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
       {liveGeo.length>0&&(
@@ -820,7 +823,7 @@ function GeoView(){
         </div>
       )}
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-        {GEO.map(e=>(<div key={e.id} style={{background:A.card,border:"1px solid "+(e.hot?"rgba(255,69,58,0.3)":A.sepLight),borderRadius:16,padding:22,position:"relative",overflow:"hidden"}}>
+        {(geoCards||GEO_STATIC).map(e=>(<div key={e.id} style={{background:A.card,border:"1px solid "+(e.hot?"rgba(255,69,58,0.3)":A.sepLight),borderRadius:16,padding:22,position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,"+e.color+",transparent)"}}/>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:12}}>
             <div style={{flex:1,paddingRight:16}}>
@@ -947,6 +950,13 @@ export default function BrahmosCapital(){
   const [tab,setTab]=useState("portfolio");
   const [liveStocks,setLiveStocks]=useState(STOCKS);
   const [priceStatus,setPriceStatus]=useState("loading");
+  const [histData,setHistData]=useState(PCHART);
+  const [histStatus,setHistStatus]=useState("loading");
+  const [liveSignals,setLiveSignals]=useState(SIGNALS_STATIC);
+  const [liveCons,setLiveCons]=useState(CONSENSUS_STATIC);
+  const [aiGeoCards,setAiGeoCards]=useState(null);
+  const [aiStatus,setAiStatus]=useState("loading");
+  const [geoAiStatus,setGeoAiStatus]=useState("loading");
 
   useEffect(()=>{
     async function fetchPrices(){
@@ -972,6 +982,38 @@ export default function BrahmosCapital(){
     fetchPrices();
     const id=setInterval(fetchPrices,5*60*1000);
     return()=>clearInterval(id);
+  },[]);
+
+  // ── Live portfolio history chart ──────────────────────────────────────────
+  useEffect(()=>{
+    fetch("/api/history").then(r=>r.json()).then(d=>{
+      if(d.ok&&d.chart&&d.chart.length>2){setHistData(d.chart);setHistStatus("live");}
+      else{setHistStatus("error");}
+    }).catch(()=>setHistStatus("error"));
+  },[]);
+
+  // ── AI-generated signals + consensus (cached 4h on Vercel edge) ──────────
+  useEffect(()=>{
+    fetch("/api/ai-content").then(r=>r.json()).then(d=>{
+      if(d.ok&&d.signals&&d.consensus){
+        setLiveSignals(d.signals);
+        setLiveCons(d.consensus);
+        setAiStatus("live");
+      }else{setAiStatus("error");}
+    }).catch(()=>setAiStatus("error"));
+  },[]);
+
+  // ── AI-generated geopolitical event cards (cached 2h on Vercel edge) ─────
+  useEffect(()=>{
+    fetch("/api/ai-geo").then(r=>r.json()).then(d=>{
+      if(d.ok&&d.events&&d.events.length>0){
+        // Normalise: ensure each event has a .color field for rendering
+        const colorMap={red:"#FF453A",orange:"#FF9F0A",blue:"#0A84FF",green:"#30D158",teal:"#5AC8FA",yellow:"#FFD60A"};
+        const events=d.events.map((e,i)=>({...e,id:i+1,color:e.color||(colorMap[e.colorType]||colorMap.blue)}));
+        setAiGeoCards(events);
+        setGeoAiStatus("live");
+      }else{setGeoAiStatus("error");}
+    }).catch(()=>setGeoAiStatus("error"));
   },[]);
 
   const stocks=liveStocks;
@@ -1040,12 +1082,12 @@ export default function BrahmosCapital(){
           <KpiCard label="PORTFOLIO STOCKS"   value="25"            sub="9 core + 16 extended positions" positive={null}/>
         </div>
         <div style={{flex:1,overflowY:"auto"}}>
-          {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")} stocks={stocks}/>}
-          {tab==="geo"      &&<GeoView/>}
+          {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")} stocks={stocks} histData={histData} histStatus={histStatus} signals={liveSignals} aiStatus={aiStatus}/>}
+          {tab==="geo"      &&<GeoView geoCards={aiGeoCards} geoAiStatus={geoAiStatus}/>}
           {tab==="drill"    &&<DrillView stocks={stocks}/>}
           {tab==="screener" &&<ScreenerView stocks={stocks}/>}
           {tab==="heatmap"  &&<HeatmapView stocks={stocks}/>}
-          {tab==="consensus"&&<ConsensusView stocks={stocks}/>}
+          {tab==="consensus"&&<ConsensusView stocks={stocks} consensus={liveCons} aiStatus={aiStatus}/>}
           {tab==="why"      &&<WhyDefenceView/>}
           {tab==="news"     &&<NewsView/>}
           {tab==="ai"       &&<AskAIView stocks={stocks}/>}
