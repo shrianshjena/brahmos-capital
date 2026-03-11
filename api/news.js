@@ -75,7 +75,8 @@ function parseRSS(xml) {
     // Decode HTML entities, then strip any remaining HTML tags
     const desc = rawDesc
       .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")
-      .replace(/&quot;/g,'"'). replace(/&#39;/g,"'").replace(/&apos;/g,"'")
+      .replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&apos;/g,"'")
+      .replace(/&nbsp;/g," ").replace(/&#[0-9]+;/g," ").replace(/&[a-z]+;/g," ")
       .replace(/<[^>]+>/g,"")   // strip real HTML tags
       .replace(/\s+/g," ").trim() || "";
     // Parse source from Google News title "Headline - Source"
