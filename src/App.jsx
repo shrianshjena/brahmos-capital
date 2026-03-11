@@ -319,7 +319,7 @@ function AskAIView(){
     setMessages(m=>[...m,userMsg]);
     setInput("");setLoading(true);
     try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
+      const res=await fetch("/api/chat",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
@@ -329,9 +329,9 @@ function AskAIView(){
         })
       });
       const data=await res.json();
-      const text=data.content?.[0]?.text||"Connectivity issue. Please try again.";
+      const text=data.content?.[0]?.text||"Server error — please check your API key is set in Vercel environment variables (ANTHROPIC_API_KEY).";
       setMessages(m=>[...m,{role:"assistant",content:text}]);
-    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Network error. Please retry."}]);}
+    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Network error — please check your connection and try again."}]);}
     setLoading(false);
   };
   return(
