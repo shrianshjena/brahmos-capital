@@ -305,6 +305,127 @@ Key macro context: India FY27 defence budget ₹7.85L Cr (+15.2%); Indonesia Bra
 Keep responses structured but conversational. End every response with a clear one-line verdict in bold.`;
 }
 
+
+/* ═══ MARKDOWN RENDERER ════════════════════════════════════════════════════ */
+function MarkdownMsg({text,isUser}){
+  if(!text)return null;
+  const lines=text.split("\n");
+  const elements=[];
+  let i=0;
+  while(i<lines.length){
+    const line=lines[i];
+    // Table block
+    if(line.trim().startsWith("|")&&i+1<lines.length&&lines[i+1].trim().match(/^\|[-|\s]+\|$/)){
+      const headers=line.split("|").filter(c=>c.trim()).map(c=>c.trim());
+      i+=2; // skip header + separator
+      const rows=[];
+      while(i<lines.length&&lines[i].trim().startsWith("|")){
+        rows.push(lines[i].split("|").filter(c=>c.trim()).map(c=>c.trim()));
+        i++;
+      }
+      elements.push(
+        <div key={i} style={{overflowX:"auto",margin:"10px 0"}}>
+          <table style={{borderCollapse:"collapse",width:"100%",fontSize:12}}>
+            <thead><tr>{headers.map((h,j)=>(
+              <th key={j} style={{padding:"7px 12px",background:"rgba(10,132,255,0.15)",color:"#0A84FF",fontWeight:600,textAlign:"left",borderBottom:"1px solid rgba(84,84,88,0.4)",whiteSpace:"nowrap"}}>{h}</th>
+            ))}</tr></thead>
+            <tbody>{rows.map((row,ri)=>(
+              <tr key={ri} style={{borderBottom:"1px solid rgba(84,84,88,0.2)",background:ri%2===0?"transparent":"rgba(255,255,255,0.03)"}}>
+                {row.map((cell,ci)=>(
+                  <td key={ci} style={{padding:"6px 12px",color:ci===0?"#FFFFFF":"rgba(235,235,245,0.75)",fontSize:11}}><InlineText t={cell}/></td>
+                ))}
+              </tr>
+            ))}</tbody>
+          </table>
+        </div>
+      );
+      continue;
+    }
+    // H3 heading
+    if(line.startsWith("### ")){
+      elements.push(<p key={i} style={{fontSize:13,fontWeight:700,color:"#0A84FF",marginTop:14,marginBottom:6}}>{line.slice(4)}</p>);
+      i++;continue;
+    }
+    // H2 heading
+    if(line.startsWith("## ")){
+      elements.push(<p key={i} style={{fontSize:14,fontWeight:700,color:"#FFFFFF",marginTop:16,marginBottom:6,borderBottom:"1px solid rgba(84,84,88,0.3)",paddingBottom:4}}>{line.slice(3)}</p>);
+      i++;continue;
+    }
+    // Bullet point
+    if(line.trim().startsWith("- ")||line.trim().startsWith("* ")){
+      elements.push(
+        <div key={i} style={{display:"flex",gap:8,marginBottom:4,paddingLeft:4}}>
+          <span style={{color:"#0A84FF",flexShrink:0,marginTop:2}}>•</span>
+          <span style={{color:"rgba(235,235,245,0.85)",fontSize:13,lineHeight:1.65}}><InlineText t={line.trim().slice(2)}/></span>
+        </div>
+      );
+      i++;continue;
+    }
+    // Numbered list
+    const numMatch=line.trim().match(/^(\d+)\.\s+(.+)/);
+    if(numMatch){
+      elements.push(
+        <div key={i} style={{display:"flex",gap:8,marginBottom:4,paddingLeft:4}}>
+          <span style={{color:"#0A84FF",flexShrink:0,fontWeight:600,fontSize:12,minWidth:18}}>{numMatch[1]}.</span>
+          <span style={{color:"rgba(235,235,245,0.85)",fontSize:13,lineHeight:1.65}}><InlineText t={numMatch[2]}/></span>
+        </div>
+      );
+      i++;continue;
+    }
+    // Horizontal rule
+    if(line.trim().match(/^[-*]{3,}$/)){
+      elements.push(<hr key={i} style={{border:"none",borderTop:"1px solid rgba(84,84,88,0.3)",margin:"10px 0"}}/>);
+      i++;continue;
+    }
+    // Empty line = spacer
+    if(!line.trim()){
+      elements.push(<div key={i} style={{height:6}}/>);
+      i++;continue;
+    }
+    // Regular paragraph
+    elements.push(<p key={i} style={{color:"rgba(235,235,245,0.9)",fontSize:13,lineHeight:1.75,marginBottom:2}}><InlineText t={line}/></p>);
+    i++;
+  }
+  return <div>{elements}</div>;
+}
+
+// Inline text: parses **bold**, *italic*, `code`
+function InlineText({t}){
+  if(!t)return null;
+  const parts=[];
+  let remaining=t;
+  let key=0;
+  while(remaining.length>0){
+    // Bold
+    const boldMatch=remaining.match(/^(.*?)\*\*(.+?)\*\*(.*)/s);
+    if(boldMatch){
+      if(boldMatch[1])parts.push(<span key={key++}>{boldMatch[1]}</span>);
+      parts.push(<strong key={key++} style={{color:"#FFFFFF",fontWeight:700}}>{boldMatch[2]}</strong>);
+      remaining=boldMatch[3];
+      continue;
+    }
+    // Code
+    const codeMatch=remaining.match(/^(.*?)`(.+?)`(.*)/s);
+    if(codeMatch){
+      if(codeMatch[1])parts.push(<span key={key++}>{codeMatch[1]}</span>);
+      parts.push(<code key={key++} style={{background:"rgba(10,132,255,0.15)",color:"#0A84FF",borderRadius:4,padding:"1px 5px",fontSize:11,fontFamily:"monospace"}}>{codeMatch[2]}</code>);
+      remaining=codeMatch[3];
+      continue;
+    }
+    // Italic
+    const italicMatch=remaining.match(/^(.*?)\*(.+?)\*(.*)/s);
+    if(italicMatch){
+      if(italicMatch[1])parts.push(<span key={key++}>{italicMatch[1]}</span>);
+      parts.push(<em key={key++} style={{color:"rgba(235,235,245,0.8)"}}>{italicMatch[2]}</em>);
+      remaining=italicMatch[3];
+      continue;
+    }
+    parts.push(<span key={key++}>{remaining}</span>);
+    break;
+  }
+  return <>{parts}</>;
+}
+
 function AskAIView({stocks}){
   const [messages,setMessages]=useState([{role:"assistant",content:"Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?"}]);
   const [input,setInput]=useState("");
@@ -327,19 +448,31 @@ function AskAIView({stocks}){
     setMessages(m=>[...m,userMsg]);
     setInput("");setLoading(true);
     try{
+      // Use ref pattern to get current messages at time of fetch
+      const currentMsgs=[...messages,userMsg];
+      // Trim to last 8 messages to prevent token overflow
+      const trimmed=currentMsgs.slice(-8);
+      const prompt=buildPrompt(stocks);
       const res=await fetch("/api/chat",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          model:"claude-sonnet-4-20250514",max_tokens:1000,
-          system:buildPrompt(stocks),
-          messages:[...messages,userMsg].map(m=>({role:m.role,content:m.content}))
+          system:prompt,
+          max_tokens:900,
+          messages:trimmed.map(m=>({role:m.role,content:m.content}))
         })
       });
+      if(!res.ok)throw new Error("HTTP "+res.status);
       const data=await res.json();
-      const ok=data.ok!==false;const text=data.content?.[0]?.text||"";const finalText=(ok&&text)?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes.";
+      const ok=data.ok!==false;
+      const text=(data.content?.[0]?.text||"").trim();
+      const finalText=(ok&&text.length>10)?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly.";
       setMessages(m=>[...m,{role:"assistant",content:finalText}]);
-    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again in a few minutes."}]);}
+    }catch(e){
+      // Log for debugging
+      console.error("Ask Shri error:",e.message);
+      setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly."}]);
+    }
     setLoading(false);
   };
   return(
@@ -361,8 +494,11 @@ function AskAIView({stocks}){
         <div style={{flex:1,overflowY:"auto",padding:"20px",display:"flex",flexDirection:"column",gap:14}}>
           {messages.map((m,i)=>(
             <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start"}}>
-              <div style={{maxWidth:"82%",padding:"13px 16px",borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",background:m.role==="user"?"rgba(10,132,255,0.2)":A.card2,border:`1px solid ${m.role==="user"?"rgba(10,132,255,0.3)":A.sepLight}`}}>
-                <p style={{fontSize:13,color:A.t1,lineHeight:1.7,whiteSpace:"pre-wrap"}}>{m.content}</p>
+              <div style={{maxWidth:"86%",padding:"13px 16px",borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",background:m.role==="user"?"rgba(10,132,255,0.2)":A.card2,border:`1px solid ${m.role==="user"?"rgba(10,132,255,0.3)":A.sepLight}`}}>
+                {m.role==="user"
+                  ?<p style={{fontSize:13,color:A.t1,lineHeight:1.7}}>{m.content}</p>
+                  :<MarkdownMsg text={m.content} isUser={false}/>
+                }
               </div>
             </div>
           ))}
