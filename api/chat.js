@@ -20,7 +20,6 @@ export default async function handler(req) {
 
   const { system, messages, max_tokens } = body;
 
-  // Convert Anthropic message format → Gemini format
   const geminiContents = messages.map(m => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }]
@@ -32,7 +31,8 @@ export default async function handler(req) {
     generationConfig: { maxOutputTokens: max_tokens || 1000, temperature: 0.7 }
   };
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // gemini-2.0-flash is the current free model (replaced 1.5-flash)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   const upstream = await fetch(url, {
     method: "POST",
@@ -42,7 +42,6 @@ export default async function handler(req) {
 
   const data = await upstream.json();
 
-  // Convert Gemini response → Anthropic-style response so frontend doesn't change
   let text = "Sorry, I couldn't generate a response. Please try again.";
   if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
     text = data.candidates[0].content.parts[0].text;
