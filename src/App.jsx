@@ -277,7 +277,7 @@ function ImpactTag({impact}){const c=IMPACT_CFG[impact]||IMPACT_CFG.NEUTRAL;retu
 /* ═══ ASK AI — Shri persona ══════════════════════════════════════ */
 function buildPrompt(stocks){
   const priceLines=stocks.map(s=>{
-    const c=(consensus||CONSENSUS_STATIC)[s.ticker];
+    const c=CONSENSUS_STATIC[s.ticker];
     return `- ${s.ticker}: CMP ₹${s.px.toFixed(0)} | Entry ₹${s.buy} | Return ${s.ret>=0?"+":""}${s.ret.toFixed(1)}% | P/E ${s.pe}x${c?" | Analyst target ₹"+c.target:""}`;
   }).join("\n");
   return `You are Shri, a seasoned Indian equity research analyst and veteran investor with over 20 years of experience on Dalal Street, formerly Head of India Equity Research at a leading global investment bank. You have covered everything from mid-cap opportunities to Nifty 50 blue chips for HNI and institutional clients, with a deep specialisation in Indian PSU defence stocks, aerospace, and naval manufacturing.
@@ -343,7 +343,7 @@ function AskAIView({stocks}){
     setLoading(false);
   };
   return(
-    <div style={{padding:"24px 28px",display:"flex",gap:20,minHeight:"calc(100vh - 200px)"}}>
+    <div className="chat-layout" style={{padding:"24px 28px",display:"flex",gap:20,minHeight:"calc(100vh - 200px)"}}>
       <div style={{flex:1,display:"flex",flexDirection:"column",background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
         <div style={{padding:"16px 20px",borderBottom:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:12,background:"linear-gradient(90deg,rgba(10,132,255,0.08),transparent)"}}>
           <div style={{width:42,height:42,borderRadius:13,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 4px 16px rgba(10,132,255,0.35)"}}>S</div>
@@ -378,10 +378,10 @@ function AskAIView({stocks}){
           </button>
         </div>
       </div>
-      <div style={{width:268,display:"flex",flexDirection:"column",gap:10}}>
+      <div className="quick-panel" style={{width:268,display:"flex",flexDirection:"column",gap:10}}>
         <div style={{background:A.card,borderRadius:16,padding:18,border:`1px solid ${A.sepLight}`,flex:1}}>
           <p style={{fontSize:11,fontWeight:600,color:A.t3,marginBottom:14,letterSpacing:"0.05em"}}>QUICK RESEARCH NOTES</p>
-          <div style={{display:"flex",flexDirection:"column",gap:7}}>
+          <div className="quick-panel-inner" style={{display:"flex",flexDirection:"column",gap:7}}>
             {QUICK.map(q=>(<button key={q} onClick={()=>ask(q)} style={{padding:"10px 12px",borderRadius:10,border:`1px solid ${A.sep}`,background:"transparent",color:A.t2,fontSize:12,cursor:"pointer",textAlign:"left",lineHeight:1.5}} onMouseEnter={e=>{e.currentTarget.style.borderColor=A.blue;e.currentTarget.style.color=A.t1;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=A.sep;e.currentTarget.style.color=A.t2;}}>{q}</button>))}
           </div>
         </div>
@@ -520,7 +520,7 @@ function EntryCalcView({stocks}){
   const totalInvested=allocation.reduce((a,x)=>a+x.invested,0);
   return(
     <div style={{padding:"24px 28px"}}>
-      <div style={{display:"grid",gridTemplateColumns:"380px 1fr",gap:20}}>
+      <div className="calc-grid" style={{display:"grid",gridTemplateColumns:"380px 1fr",gap:20}}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div style={{background:A.card,borderRadius:16,padding:22,border:`1px solid ${A.sepLight}`}}>
             <p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:18}}>Investment Parameters</p>
@@ -618,7 +618,7 @@ function HeatmapView({stocks}){
 function ConsensusView({stocks,consensus,aiStatus}){
   return(
     <div style={{padding:"24px 28px"}}>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
+      <div className="consensus-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
         {stocks.map(s=>{
           const c=(consensus||CONSENSUS_STATIC)[s.ticker];if(!c)return null;
           const total=c.buy+c.hold+c.sell;
@@ -710,7 +710,18 @@ Sources: Google News, Economic Times, Business Standard, BSE Filings, Moneycontr
                     <span style={{fontSize:11,color:A.t4}}>· {n.source}</span>
                   </div>
                   <p style={{color:A.t1,fontSize:14,fontWeight:600,lineHeight:1.4,marginBottom:8}}>{n.headline}</p>
-                  <p style={{color:A.t2,fontSize:12,lineHeight:1.65}}>{n.body}</p>
+                  {(()=>{
+                    // Google News RSS descriptions are often just "Headline Source" — skip if duplicate
+                    const b=(n.body||"").trim();
+                    const h=(n.headline||"").trim();
+                    // Similarity check: body starts with headline, or body is mostly overlap
+                    const clean=b.replace(h,"").replace(n.source||"","").trim();
+                    if(!clean||clean.length<30){
+                      // Body adds nothing — show nothing (headline + source already shown above)
+                      return null;
+                    }
+                    return <p style={{color:A.t2,fontSize:12,lineHeight:1.65,marginBottom:4}}>{b}</p>;
+                  })()}
                 </div>
               </div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:10}}>
@@ -947,6 +958,7 @@ const NAV_GROUPS=[
 
 export default function BrahmosCapital(){
   const [tab,setTab]=useState("portfolio");
+  const [sidebarOpen,setSidebarOpen]=useState(false);
   const [liveStocks,setLiveStocks]=useState(STOCKS);
   const [priceStatus,setPriceStatus]=useState("loading");
   const [histData,setHistData]=useState(PCHART);
@@ -1026,9 +1038,37 @@ export default function BrahmosCapital(){
   const currentLabel=allItems.find(i=>i.id===tab)?.label||"";
   return(
     <div style={{display:"flex",height:"100vh",background:A.bg,fontFamily:"-apple-system,'SF Pro Display',BlinkMacSystemFont,'Helvetica Neue',sans-serif",color:A.t1,overflow:"hidden",WebkitFontSmoothing:"antialiased"}}>
-      <style>{`*{box-sizing:border-box;margin:0;padding:0;}button{font-family:inherit;outline:none;}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(84,84,88,0.5);border-radius:3px;}tr:hover td{background:rgba(255,255,255,0.024)!important;}input[type=range]{height:3px;}input[type=number]{-moz-appearance:textfield;}`}</style>
+      <style>{`*{box-sizing:border-box;margin:0;padding:0;}button{font-family:inherit;outline:none;}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(84,84,88,0.5);border-radius:3px;}tr:hover td{background:rgba(255,255,255,0.024)!important;}input[type=range]{height:3px;}input[type=number]{-moz-appearance:textfield;}
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important;padding:10px 14px!important;}
+  .sidebar{position:fixed!important;left:-220px!important;top:0!important;height:100vh!important;z-index:200!important;transition:left 0.25s ease!important;}
+  .sidebar.open{left:0!important;}
+  .sidebar-overlay{display:block!important;}
+  .topbar{padding:0 14px!important;}
+  .topbar-date{display:none!important;}
+  .main-content{padding:14px!important;}
+  .chat-layout{flex-direction:column!important;height:auto!important;min-height:calc(100vh - 200px)!important;}
+  .quick-panel{width:100%!important;flex-direction:row!important;overflow-x:auto!important;}
+  .quick-panel-inner{flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;}
+  .consensus-grid{grid-template-columns:1fr!important;}
+  .calc-grid{grid-template-columns:1fr!important;}
+  .entry-params{width:100%!important;}
+  .portfolio-table{font-size:11px!important;}
+  .screener-table td,.screener-table th{padding:8px 8px!important;font-size:10px!important;}
+  .footer-bar{flex-direction:column!important;gap:4px!important;text-align:center!important;padding:6px 14px!important;}
+  .hamburger{display:flex!important;}
+  .ask-shri-btn span:last-of-type{display:none!important;}
+}
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr 1fr!important;}
+  .geo-cards{grid-template-columns:1fr!important;}
+}
+.hamburger{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(84,84,88,0.4);cursor:pointer;flex-shrink:0;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}`}</style>
       {/* SIDEBAR */}
-      <div style={{width:210,background:"rgba(10,10,10,0.98)",borderRight:`1px solid ${A.sep}`,display:"flex",flexDirection:"column",flexShrink:0}}>
+      {sidebarOpen&&<div className="sidebar-overlay" onClick={()=>setSidebarOpen(false)}/>}
+      <div className={"sidebar"+(sidebarOpen?" open":"")} style={{width:210,background:"rgba(10,10,10,0.98)",borderRight:`1px solid ${A.sep}`,display:"flex",flexDirection:"column",flexShrink:0}}>
         <div style={{padding:"18px 16px",borderBottom:`1px solid ${A.sep}`,display:"flex",alignItems:"center",gap:10}}>
           <div style={{width:30,height:30,borderRadius:9,background:"linear-gradient(135deg,#0A84FF,#007AFF)",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:`0 3px 12px ${A.blueGlow}`}}><Activity size={15} color="#fff" strokeWidth={2.5}/></div>
           <div><p style={{fontSize:14,fontWeight:700,letterSpacing:"-0.01em",color:A.t1,lineHeight:1}}>Brahmos</p><p style={{fontSize:10,color:A.t4,marginTop:1}}>Defence Intelligence</p></div>
@@ -1038,7 +1078,7 @@ export default function BrahmosCapital(){
             <div key={g.group} style={{marginBottom:16}}>
               <p style={{fontSize:9,color:g.group==="AI ANALYST"?A.blue:A.t4,letterSpacing:"0.1em",fontWeight:600,padding:"0 10px",marginBottom:4}}>{g.group}</p>
               {g.items.map(n=>(
-                <button key={n.id} onClick={()=>setTab(n.id)} style={{width:"100%",display:"flex",alignItems:"center",gap:9,padding:"8px 10px",borderRadius:9,marginBottom:1,background:tab===n.id?(n.id==="ai"?"rgba(10,132,255,0.2)":"rgba(10,132,255,0.15)"):"transparent",border:tab===n.id&&n.id==="ai"?"1px solid rgba(10,132,255,0.4)":"none",color:tab===n.id?A.blue:n.id==="ai"?A.blue:A.t3,fontSize:12,fontWeight:tab===n.id||n.id==="ai"?600:400,cursor:"pointer",transition:"all 0.12s"}}>
+                <button key={n.id} onClick={()=>{setTab(n.id);setSidebarOpen(false);}} style={{width:"100%",display:"flex",alignItems:"center",gap:9,padding:"8px 10px",borderRadius:9,marginBottom:1,background:tab===n.id?(n.id==="ai"?"rgba(10,132,255,0.2)":"rgba(10,132,255,0.15)"):"transparent",border:tab===n.id&&n.id==="ai"?"1px solid rgba(10,132,255,0.4)":"none",color:tab===n.id?A.blue:n.id==="ai"?A.blue:A.t3,fontSize:12,fontWeight:tab===n.id||n.id==="ai"?600:400,cursor:"pointer",transition:"all 0.12s"}}>
                   <n.Icon size={14} strokeWidth={tab===n.id?2.2:1.8}/>
                   <span>{n.label}</span>
                   {tab===n.id&&<ChevronRight size={11} style={{marginLeft:"auto"}}/>}
@@ -1056,8 +1096,9 @@ export default function BrahmosCapital(){
       </div>
       {/* MAIN */}
       <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
-        <div style={{height:52,padding:"0 28px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(10,10,10,0.95)",backdropFilter:"saturate(180%) blur(20px)",borderBottom:`1px solid ${A.sep}`,flexShrink:0}}>
-          <div style={{display:"flex",alignItems:"baseline",gap:10}}>
+        <div className="topbar" style={{height:52,padding:"0 28px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(10,10,10,0.95)",backdropFilter:"saturate(180%) blur(20px)",borderBottom:`1px solid ${A.sep}`,flexShrink:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <button className="hamburger" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Menu"><span style={{fontSize:18,lineHeight:1,color:"#fff"}}>☰</span></button>
             <span style={{fontSize:17,fontWeight:700,letterSpacing:"-0.02em"}}>Brahmos Capital</span>
             <span style={{fontSize:12,color:A.t3}}>· {currentLabel}</span>
           </div>
@@ -1067,11 +1108,11 @@ export default function BrahmosCapital(){
               <span>Ask Shri</span>
               <span style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
-            <span style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
+            <span className="topbar-date" style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
             <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
           </div>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
+        <div className="kpi-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
           <KpiCard label="TOTAL VALUE"        value={inr(totVal)}   sub={"Cost basis "+inr(totCost)+" · Mar 2025"} positive={null}/>
           <KpiCard label="TOTAL RETURN"       value={pct(totRet)}   sub={inr(totVal-totCost)+" unrealised gain"} positive={totRet>=0}/>
           <KpiCard label="ALPHA VS NIFTY DEF" value={pct(alpha)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={alpha>=0}/>
@@ -1089,9 +1130,9 @@ export default function BrahmosCapital(){
           {tab==="ai"       &&<AskAIView stocks={stocks}/>}
           {tab==="calc"     &&<EntryCalcView stocks={stocks}/>}
         </div>
-        <div style={{padding:"8px 28px",borderTop:`1px solid ${A.sep}`,background:"rgba(10,10,10,0.95)",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
+        <div className="footer-bar" style={{padding:"8px 28px",borderTop:`1px solid ${A.sep}`,background:"rgba(10,10,10,0.95)",display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
           <p style={{fontSize:11,color:A.t4}}>Brahmos Capital · NSE India Defence Intelligence</p>
-          <p style={{fontSize:11,color:A.t4}}>Designed &amp; built by <span style={{color:A.blue,fontWeight:600}}>Shriansh Jena</span> · Not investment advice</p>
+          <p style={{fontSize:11,color:A.t4}}>Designed &amp; built by <span style={{color:A.blue,fontWeight:600}}>Shriansh Jena</span> · Morgan Stanley role is hypothetical · Not investment advice</p>
         </div>
       </div>
     </div>
