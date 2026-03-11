@@ -266,7 +266,7 @@ const money=v=>`₹${v.toLocaleString("en-IN",{maximumFractionDigits:2})}`;
 
 function Spark({data,color}){return(<div style={{width:72,height:28}}><ResponsiveContainer width="100%" height="100%"><LineChart data={data} margin={{top:2,right:2,left:2,bottom:2}}><Line type="monotone" dataKey="v" stroke={color} dot={false} strokeWidth={1.5}/></LineChart></ResponsiveContainer></div>);}
 
-function KpiCard({label,value,sub,positive}){return(<div style={{background:A.card,borderRadius:16,padding:"20px 22px",border:`1px solid ${A.sepLight}`,flex:1}}><p style={{fontSize:11,color:A.t3,marginBottom:8,letterSpacing:"0.04em",fontWeight:500}}>{label}</p><p style={{fontSize:28,fontWeight:700,letterSpacing:"-0.02em",lineHeight:1,marginBottom:6,color:positive===false?A.red:positive===true?A.green:A.t1}}>{value}</p><p style={{fontSize:12,color:A.t3}}>{sub}</p></div>);}
+function KpiCard({label,value,sub,positive}){return(<div style={{background:A.card,borderRadius:16,padding:"20px 22px",border:`1px solid ${A.sepLight}`,flex:1}}><p style={{fontSize:11,color:A.t3,marginBottom:8,letterSpacing:"0.04em",fontWeight:500}}>{label}</p><p className="kpi-value" style={{fontSize:28,fontWeight:700,letterSpacing:"-0.02em",lineHeight:1,marginBottom:6,color:positive===false?A.red:positive===true?A.green:A.t1}}>{value}</p><p style={{fontSize:12,color:A.t3}}>{sub}</p></div>);}
 
 const BADGE_CFG={"STRONG BUY":{bg:"rgba(48,209,88,0.18)",color:A.green,border:"rgba(48,209,88,0.4)"},"BUY":{bg:"rgba(48,209,88,0.10)",color:A.green,border:"rgba(48,209,88,0.25)"},"HOLD":{bg:"rgba(255,159,10,0.15)",color:A.orange,border:"rgba(255,159,10,0.3)"},"REDUCE":{bg:"rgba(255,69,58,0.15)",color:A.red,border:"rgba(255,69,58,0.3)"},"WATCH":{bg:"rgba(10,132,255,0.15)",color:A.blue,border:"rgba(10,132,255,0.3)"}};
 function Badge({type}){const c=BADGE_CFG[type]||BADGE_CFG["HOLD"];return(<span style={{background:c.bg,color:c.color,border:`1px solid ${c.border}`,borderRadius:6,fontSize:10,fontWeight:700,padding:"3px 9px",letterSpacing:"0.05em",whiteSpace:"nowrap"}}>{type}</span>);}
@@ -275,34 +275,77 @@ const IMPACT_CFG={BULLISH:{c:A.green,bg:"rgba(48,209,88,0.12)"},MIXED:{c:A.orang
 function ImpactTag({impact}){const c=IMPACT_CFG[impact]||IMPACT_CFG.NEUTRAL;return(<span style={{background:c.bg,color:c.c,borderRadius:6,fontSize:10,fontWeight:600,padding:"2px 8px",letterSpacing:"0.04em"}}>{impact}</span>);}
 
 /* ═══ ASK AI — Shri persona ══════════════════════════════════════ */
+// Full company names for every ticker — prevents model hallucinating wrong companies
+const TICKER_FULL={
+  HAL:"Hindustan Aeronautics Limited (HAL) — PSU, aircraft MRO, helicopters, Tejas fighter",
+  BEL:"Bharat Electronics Limited (BEL) — PSU defence electronics, radar, EW, C4ISR. NOT Bharat Heavy Electricals.",
+  MAZDOCK:"Mazagon Dock Shipbuilders (MAZDOCK) — naval shipyard, submarines (Scorpene), destroyers",
+  COCHINSHIP:"Cochin Shipyard (COCHINSHIP) — commercial & naval shipbuilding, NGOPV programme",
+  GRSE:"Garden Reach Shipbuilders (GRSE) — naval patrol vessels, corvettes, frigates",
+  BDL:"Bharat Dynamics Limited (BDL) — missiles, torpedoes, countermeasures. BDL ≠ BHEL. BHEL (Bharat Heavy Electricals Limited) is a power sector PSU — it is NOT in this portfolio and is a completely different company.",
+  DATAPATTNS:"Data Patterns India (DATAPATTNS) — defence electronics, radar subsystems, avionics",
+  PARAS:"Paras Defence & Space Technologies (PARAS) — optics, EMP shielding, space components",
+  ZENTEC:"Zen Technologies (ZENTEC) — military training simulators, counter-drone (C-UAV) systems",
+  SOLARINDS:"Solar Industries India (SOLARINDS) — industrial & defence explosives, propellants, ammunition",
+  MTAR:"MTAR Technologies (MTAR) — precision aerospace components, propulsion systems, nuclear",
+  BHARATFORG:"Bharat Forge (BHARATFORG) — forgings, artillery barrels, UAV structures, EV components",
+  ASTRAMICRO:"Astra Microwave Products (ASTRAMICRO) — radar subsystems, electronic warfare modules",
+  BEML:"BEML Ltd (BEML) — combat vehicles, metro railcars, mining equipment",
+  APOLLOMICRO:"Apollo Micro Systems (APOLLOMICRO) — embedded defence electronics, power conditioning",
+  MIDHANI:"Mishra Dhatu Nigam (MIDHANI) — special alloys, titanium, superalloys for defence/space",
+  IDEAFORGE:"Ideaforge Technology (IDEAFORGE) — military-grade drones, UAV systems for armed forces",
+  PREMEXPLN:"Premier Explosives (PREMEXPLN) — industrial & rocket propellant explosives",
+  UNIMECH:"Unimech Aerospace (UNIMECH) — aerospace precision machined components, tooling",
+  PTCIND:"PTC Industries (PTCIND) — aerospace investment castings, titanium components",
+  DCXINDIA:"DCX Systems (DCXINDIA) — cable harness assemblies, defence electronics integration",
+  DYNAMATECH:"Dynamatic Technologies (DYNAMATECH) — aerospace structures, hydraulics, UAV airframes",
+  AVANTEL:"Avantel Ltd (AVANTEL) — satellite communications, naval sonar systems",
+  AXISCADES:"Axiscades Technologies (AXISCADES) — aerospace engineering services, design & R&D",
+  CYIENTDLM:"Cyient DLM (CYIENTDLM) — PCB assemblies, defence electronics manufacturing",
+};
+
 function buildPrompt(stocks){
   const priceLines=stocks.map(s=>{
     const c=CONSENSUS_STATIC[s.ticker];
-    return `- ${s.ticker}: CMP ₹${s.px.toFixed(0)} | Entry ₹${s.buy} | Return ${s.ret>=0?"+":""}${s.ret.toFixed(1)}% | P/E ${s.pe}x${c?" | Analyst target ₹"+c.target:""}`;
+    const fullName=TICKER_FULL[s.ticker]||s.name;
+    return `- ${s.ticker} | ${fullName} | CMP ₹${s.px.toFixed(0)} | Entry ₹${s.buy} | Return ${s.ret>=0?"+":""}${s.ret.toFixed(1)}% | P/E ${s.pe}x${c?" | Target ₹"+c.target:""}`;
   }).join("\n");
-  return `You are Shri, a seasoned Indian equity research analyst and veteran investor with over 20 years of experience on Dalal Street, formerly Head of India Equity Research at a leading global investment bank. You have covered everything from mid-cap opportunities to Nifty 50 blue chips for HNI and institutional clients, with a deep specialisation in Indian PSU defence stocks, aerospace, and naval manufacturing.
+  return `You are Shri, a seasoned Indian equity research analyst with 20+ years on Dalal Street, formerly Head of India Equity Research at Morgan Stanley. You have covered everything from mid-cap gems to Nifty 50 blue chips for HNI and institutional clients, with deep expertise in Indian PSU defence, aerospace, and naval stocks.
 
-You speak with directness, intellectual confidence, and genuine conviction — the kind of clear, honest advice you would give a trusted client over a cup of chai at the BSE members' lounge. No corporate fluff. No hedging for compliance. Just your real view, backed by 20 years of watching cycles on Dalal Street.
+You speak with directness and conviction — the kind of straight talk you'd give a trusted client over chai at the BSE members' lounge. No fluff. No compliance hedging. Real views backed by 20 years of watching Dalal Street cycles.
 
-When someone asks about a stock or sector, provide a professional equity research note covering:
+⚠️ TICKER DISAMBIGUATION — always use these exact company names, never confuse them:
+- BDL = Bharat Dynamics Limited (missiles/torpedoes). BDL is NOT BHEL. BHEL = Bharat Heavy Electricals (power sector, not in portfolio).
+- BEL = Bharat Electronics Limited (defence electronics). Not to be confused with any other BEL.
+- MTAR = MTAR Technologies (precision aerospace). Not MTR Foods.
+- BEML = BEML Ltd (defence vehicles). Not BHEL.
+Always state the full company name at the start of your analysis to confirm you have the right company.
 
-1. VALUATION CHECK — Assess P/E, P/B, EV/EBITDA vs sector peers on NSE/BSE. Is it fairly valued, overheated, or a hidden bargain?
-2. BUSINESS QUALITY & MOAT — Durable competitive advantage? Rate: Weak / Moderate / Strong with reasoning.
-3. REVENUE & EARNINGS TRAJECTORY — 5-year revenue/earnings growth trend. Improving or deteriorating?
-4. BALANCE SHEET HEALTH — D/E ratio, interest coverage, promoter pledge. Any red flags?
-5. DIVIDEND TRACK RECORD — Consistent/sustainable or occasional?
-6. 12-MONTH PRICE TARGETS — Realistic bull case and bear case based on fundamentals.
-7. RISK RATING (1–10) — Promoter quality, regulatory risk, sector tailwinds/headwinds, liquidity.
-8. ENTRY ZONE & STOP-LOSS — Reasonable entry range and disciplined stop-loss level.
+RESPONSE STYLE — adapt based on question type:
 
-End with a structured VERDICT TABLE: | Metric | Value | Rating |
+FOR STOCK-SPECIFIC ANALYSIS: Give a full equity research note:
+1. VALUATION — P/E, P/B vs NSE defence sector peers. Overheated, fair, or bargain?
+2. BUSINESS QUALITY & MOAT — Rate Weak/Moderate/Strong with reasoning.
+3. REVENUE & EARNINGS — Growth trajectory. Improving or deteriorating?
+4. BALANCE SHEET — D/E ratio, interest coverage, red flags?
+5. 12-MONTH TARGETS — Bull and bear case with reasoning.
+6. RISK RATING (1–10) — Key risks and tailwinds.
+7. ENTRY ZONE & STOP-LOSS — Where to enter, where to cut.
+End with: verdict table | Metric | Value | Rating | and a **bold one-line verdict**.
 
-LIVE PORTFOLIO DATA as of ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
+FOR MACRO/GEOPOLITICAL QUESTIONS (Iran war, budget, global events):
+Answer as a portfolio strategist — which stocks benefit most, which face headwinds, overall portfolio impact. No need to force a stock-by-stock format.
+
+FOR PORTFOLIO STRATEGY (profit booking, allocation, rotation):
+Give a direct tactical recommendation. Reference specific tickers and their current returns.
+
+FOR COMPARISONS (Stock A vs Stock B):
+Side-by-side analysis on valuation, moat, growth, risk. Pick one clearly with reasoning.
+
+LIVE PORTFOLIO — ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
 ${priceLines}
 
-Key macro context: India FY27 defence budget ₹7.85L Cr (+15.2%); Indonesia BrahMos deal signed; US-Israel launched Operation Epic Fury against Iran (Feb 28 2026); Strait of Hormuz disrupted; Global defence spend $2.65T growing at 8.6% CAGR; Nifty India Defence +19% YTD.
-
-Keep responses structured but conversational. End every response with a clear one-line verdict in bold.`;
+Macro context: India FY27 defence budget ₹7.85L Cr (+15.2% YoY); Indonesia BrahMos deal ~$375M signed; US-Israel Operation Epic Fury against Iran (Feb 28 2026) — Strait of Hormuz disrupted; Global defence spend $2.65T at 8.6% CAGR; Nifty India Defence index +19% YTD.`;
 }
 
 
@@ -441,8 +484,10 @@ function InlineText({t}){
   return <>{parts}</>;
 }
 
+const GREETING="Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?";
+
 function AskAIView({stocks}){
-  const [messages,setMessages]=useState([{role:"assistant",content:"Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?"}]);
+  const [messages,setMessages]=useState([{role:"assistant",content:GREETING}]);
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
@@ -457,22 +502,21 @@ function AskAIView({stocks}){
     "Best entry point for someone new to this sector?",
   ];
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[messages]);
-  const ask=async(q)=>{
-    if(!q.trim())return;
+  // freshHistory: optional — pass a clean history array to avoid stale closure (used by quick buttons)
+  const ask=async(q, freshHistory)=>{
+    if(!q.trim()||loading)return;
+    const baseHistory=freshHistory||messages;
     const userMsg={role:"user",content:q};
-    setMessages(m=>[...m,userMsg]);
+    const currentMsgs=[...baseHistory,userMsg];
+    setMessages(currentMsgs);
     setInput("");setLoading(true);
     try{
-      // Use ref pattern to get current messages at time of fetch
-      const currentMsgs=[...messages,userMsg];
-      // Trim to last 8 messages to prevent token overflow
       const trimmed=currentMsgs.slice(-8);
-      const prompt=buildPrompt(stocks);
       const res=await fetch("/api/chat",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
-          system:prompt,
+          system:buildPrompt(stocks),
           max_tokens:900,
           messages:trimmed.map(m=>({role:m.role,content:m.content}))
         })
@@ -484,7 +528,6 @@ function AskAIView({stocks}){
       const finalText=(ok&&text.length>10)?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly.";
       setMessages(m=>[...m,{role:"assistant",content:finalText}]);
     }catch(e){
-      // Log for debugging
       console.error("Ask Shri error:",e.message);
       setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly."}]);
     }
@@ -492,7 +535,7 @@ function AskAIView({stocks}){
   };
   return(
     <div className="chat-layout" style={{padding:"24px 28px",display:"flex",gap:20,minHeight:"calc(100vh - 200px)"}}>
-      <div style={{flex:1,display:"flex",flexDirection:"column",background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
+      <div className="chat-main" style={{flex:1,display:"flex",flexDirection:"column",background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
         <div style={{padding:"16px 20px",borderBottom:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:12,background:"linear-gradient(90deg,rgba(10,132,255,0.08),transparent)"}}>
           <div style={{width:42,height:42,borderRadius:13,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 4px 16px rgba(10,132,255,0.35)"}}>S</div>
           <div>
@@ -533,10 +576,13 @@ function AskAIView({stocks}){
         <div style={{background:A.card,borderRadius:16,padding:18,border:`1px solid ${A.sepLight}`,flex:1}}>
           <p style={{fontSize:11,fontWeight:600,color:A.t3,marginBottom:14,letterSpacing:"0.05em"}}>QUICK RESEARCH NOTES</p>
           <div className="quick-panel-inner" style={{display:"flex",flexDirection:"column",gap:7}}>
-            {QUICK.map(q=>(<button key={q} onClick={()=>ask(q)} style={{padding:"10px 12px",borderRadius:10,border:`1px solid ${A.sep}`,background:"transparent",color:A.t2,fontSize:12,cursor:"pointer",textAlign:"left",lineHeight:1.5}} onMouseEnter={e=>{e.currentTarget.style.borderColor=A.blue;e.currentTarget.style.color=A.t1;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=A.sep;e.currentTarget.style.color=A.t2;}}>{q}</button>))}
+            {QUICK.map(q=>(<button key={q} onClick={()=>{
+  if(loading)return;
+  ask(q,[{role:"assistant",content:GREETING}]);
+}} style={{padding:"10px 12px",borderRadius:10,border:`1px solid ${A.sep}`,background:"transparent",color:A.t2,fontSize:12,cursor:"pointer",textAlign:"left",lineHeight:1.5}} onMouseEnter={e=>{e.currentTarget.style.borderColor=A.blue;e.currentTarget.style.color=A.t1;}} onMouseLeave={e=>{e.currentTarget.style.borderColor=A.sep;e.currentTarget.style.color=A.t2;}}>{q}</button>))}
           </div>
         </div>
-        <div style={{background:A.card,borderRadius:14,padding:14,border:`1px solid ${A.sepLight}`}}>
+        <div className="quick-disclaimer" style={{background:A.card,borderRadius:14,padding:14,border:`1px solid ${A.sepLight}`}}>
           <div style={{display:"flex",gap:8,alignItems:"flex-start"}}><AlertCircle size={13} color={A.orange} style={{marginTop:1,flexShrink:0}}/><p style={{fontSize:11,color:A.t4,lineHeight:1.6}}>Equity research notes are for informational purposes only. Not investment advice. SEBI regulations apply.</p></div>
         </div>
       </div>
@@ -555,17 +601,17 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
   return(
     <div style={{padding:"24px 28px",display:"flex",flexDirection:"column",gap:20}}>
       {/* ASK AI HERO BANNER */}
-      <div onClick={onAskAI} style={{background:"linear-gradient(135deg,rgba(10,132,255,0.22) 0%,rgba(94,92,230,0.18) 60%,rgba(10,132,255,0.08) 100%)",borderRadius:18,padding:"22px 28px",border:"1px solid rgba(10,132,255,0.4)",cursor:"pointer",position:"relative",overflow:"hidden",display:"flex",alignItems:"center",gap:22}} onMouseEnter={e=>e.currentTarget.style.borderColor="rgba(10,132,255,0.7)"} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(10,132,255,0.4)"}>
+      <div className="hero-banner" onClick={onAskAI} style={{background:"linear-gradient(135deg,rgba(10,132,255,0.22) 0%,rgba(94,92,230,0.18) 60%,rgba(10,132,255,0.08) 100%)",borderRadius:18,padding:"22px 28px",border:"1px solid rgba(10,132,255,0.4)",cursor:"pointer",position:"relative",overflow:"hidden",display:"flex",alignItems:"center",gap:22}} onMouseEnter={e=>e.currentTarget.style.borderColor="rgba(10,132,255,0.7)"} onMouseLeave={e=>e.currentTarget.style.borderColor="rgba(10,132,255,0.4)"}>
         <div style={{position:"absolute",top:-30,right:-30,width:180,height:180,borderRadius:"50%",background:"radial-gradient(circle,rgba(10,132,255,0.15),transparent 70%)",pointerEvents:"none"}}/>
-        <div style={{width:54,height:54,borderRadius:16,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,boxShadow:"0 6px 24px rgba(10,132,255,0.4)"}}>S</div>
+        <div className="hero-icon" style={{width:54,height:54,borderRadius:16,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,boxShadow:"0 6px 24px rgba(10,132,255,0.4)"}}>S</div>
         <div style={{flex:1}}>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:5}}>
-            <p style={{fontSize:16,fontWeight:700,color:A.t1}}>Ask Shri — AI Equity Research</p>
-            <span style={{background:"rgba(10,132,255,0.25)",color:A.blue,border:"1px solid rgba(10,132,255,0.5)",borderRadius:20,fontSize:10,fontWeight:700,padding:"2px 10px",letterSpacing:"0.05em"}}>POWERED BY AI</span>
+            <p className="hero-title" style={{fontSize:16,fontWeight:700,color:A.t1}}>Ask Shri — AI Equity Research</p>
+            <span className="hero-badge" style={{background:"rgba(10,132,255,0.25)",color:A.blue,border:"1px solid rgba(10,132,255,0.5)",borderRadius:20,fontSize:10,fontWeight:700,padding:"2px 10px",letterSpacing:"0.05em"}}>POWERED BY AI</span>
           </div>
-          <p style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Head of India Equity Research, Morgan Stanley. Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
+          <p className="hero-desc" style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Head of India Equity Research, Morgan Stanley. Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
         </div>
-        <div style={{display:"flex",alignItems:"center",gap:6,color:A.blue,fontSize:13,fontWeight:600,flexShrink:0}}>
+        <div className="hero-cta" style={{display:"flex",alignItems:"center",gap:6,color:A.blue,fontSize:13,fontWeight:600,flexShrink:0}}>
           <span>Open Chat</span>
           <ChevronRight size={16}/>
         </div>
@@ -593,7 +639,7 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
       {/* Positions table */}
       <div style={{background:A.card,borderRadius:16,border:`1px solid ${A.sepLight}`,overflow:"hidden"}}>
         <div style={{padding:"16px 22px",borderBottom:`1px solid ${A.sepLight}`}}><p style={{fontSize:13,fontWeight:600,color:A.t1}}>Positions · Bought March 2025</p></div>
-        <div style={{overflowX:"auto"}}>
+        <div className="table-wrap" style={{overflowX:"auto"}}>
           <table style={{width:"100%",borderCollapse:"collapse",minWidth:920}}>
             <thead><tr style={{borderBottom:`1px solid ${A.sepLight}`}}>{["Ticker","Company","Sector","Shares","Avg Cost","Price","Mkt Value","Weight","Return","Today","Trend"].map(h=>(<th key={h} style={{padding:"10px 16px",textAlign:["Ticker","Company","Sector"].includes(h)?"left":"right",fontSize:11,color:A.t3,fontWeight:500,whiteSpace:"nowrap"}}>{h}</th>))}</tr></thead>
             <tbody>{stocksWt.map((s,i)=>(<tr key={s.ticker} style={{borderBottom:`1px solid ${A.sepLight}`,background:i%2===0?"transparent":"rgba(255,255,255,0.018)"}}><td style={{padding:"11px 16px"}}><span style={{color:A.blue,fontSize:13,fontWeight:600}}>{s.ticker}</span></td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,whiteSpace:"nowrap"}}>{s.name}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12}}>{s.sub}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{s.shares}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{money(s.buy)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{money(s.px)}</td><td style={{padding:"11px 16px",color:A.t1,fontSize:13,textAlign:"right"}}>{inr(s.mktVal)}</td><td style={{padding:"11px 16px",color:A.t3,fontSize:12,textAlign:"right"}}>{s.wt.toFixed(1)}%</td><td style={{padding:"11px 16px",textAlign:"right"}}><span style={{color:s.ret>=0?A.green:A.red,fontSize:12,fontWeight:500}}>{pct(s.ret)}</span></td><td style={{padding:"11px 16px",textAlign:"right"}}><div style={{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:4}}>{s.day>=0?<ArrowUpRight size={12} color={A.green}/>:<ArrowDownRight size={12} color={A.red}/>}<span style={{color:s.day>=0?A.green:A.red,fontSize:12}}>{pct(s.day)}</span></div></td><td style={{padding:"8px 16px"}}><Spark data={s.spark} color={s.ret>=0?A.blue:A.red}/></td></tr>))}</tbody>
@@ -627,8 +673,8 @@ function ScreenerView({stocks}){
   const cols=[{k:"ticker",l:"Ticker",s:false},{k:"name",l:"Company",s:false},{k:"sector",l:"Sector",s:false},{k:"px",l:"Price"},{k:"day",l:"Today %"},{k:"pe",l:"P/E"},{k:"pb",l:"P/B"},{k:"roe",l:"ROE %"},{k:"mc",l:"Mkt Cap"},{k:"ob",l:"Order Book"},{k:"ret",l:"Return"}];
   const Hdr=({col})=>(<th onClick={col.s===false?null:()=>toggleSort(col.k)} style={{padding:"10px 14px",textAlign:["ticker","name","sector"].includes(col.k)?"left":"right",fontSize:11,color:sortKey===col.k?A.blue:A.t3,fontWeight:500,cursor:col.s===false?"default":"pointer",whiteSpace:"nowrap",userSelect:"none"}}>{col.l}{sortKey===col.k?(sortAsc?" ↑":" ↓"):""}</th>);
   return(
-    <div style={{padding:"24px 28px"}}>
-      <div style={{background:A.card,borderRadius:14,padding:"16px 20px",border:`1px solid ${A.sepLight}`,marginBottom:16,display:"flex",gap:24,alignItems:"center",flexWrap:"wrap"}}>
+    <div className="view-pad" style={{padding:"24px 28px"}}>
+      <div className="filter-bar" style={{background:A.card,borderRadius:14,padding:"16px 20px",border:`1px solid ${A.sepLight}`,marginBottom:16,display:"flex",gap:24,alignItems:"center",flexWrap:"wrap"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}><Filter size={13} color={A.t3}/><span style={{fontSize:12,color:A.t3}}>Filters:</span></div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <span style={{fontSize:12,color:A.t3}}>Sector</span>
@@ -730,7 +776,7 @@ function WhyDefenceView(){
         <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:8}}><Flame size={18} color={A.red}/><p style={{fontSize:15,fontWeight:700,color:A.t1}}>The Global Security Crisis & India's Defence Investment Case</p></div>
         <p style={{fontSize:13,color:A.t2,lineHeight:1.75,maxWidth:1000}}>2026 has fundamentally rewritten the global security calculus. A full-scale US-Israel war against Iran, a 4th-year Russia-Ukraine conflict, an expanding Gaza front, and a credible Taiwan Strait threat have collectively made the 2010s' era of globalised peace irreversible. Global military spending has hit $2.65 trillion — growing at 8.6% CAGR. India, sitting at the intersection of every major flashpoint, is transforming from the world's largest arms importer to a serious defence exporter. The case for Indian defence stocks has never been stronger — and here is exactly why.</p>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+      <div className="geo-card-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
         {THESIS.map((t,i)=>(<div key={i} style={{background:A.card,borderRadius:16,padding:22,border:`1px solid ${A.sepLight}`,position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,"+t.color+",transparent)"}}/><div style={{display:"flex",alignItems:"flex-start",gap:14,marginBottom:12}}><span style={{fontSize:26,lineHeight:1}}>{t.icon}</span><div><p style={{fontSize:13,fontWeight:700,color:A.t1,marginBottom:4}}>{t.title}</p><span style={{background:"rgba(255,255,255,0.08)",color:t.color,borderRadius:6,fontSize:11,fontWeight:600,padding:"3px 9px"}}>{t.stat}</span></div></div><p style={{color:A.t2,fontSize:12,lineHeight:1.7}}>{t.body}</p></div>))}
       </div>
     </div>
@@ -1192,28 +1238,60 @@ export default function BrahmosCapital(){
       <style>{`*{box-sizing:border-box;margin:0;padding:0;}button{font-family:inherit;outline:none;}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(84,84,88,0.5);border-radius:3px;}tr:hover td{background:rgba(255,255,255,0.024)!important;}input[type=range]{height:3px;}input[type=number]{-moz-appearance:textfield;}
 /* ── MOBILE ── */
 @media(max-width:768px){
-  .kpi-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important;padding:10px 14px!important;}
+  /* Sidebar: hidden off-screen, slides in */
   .sidebar{position:fixed!important;left:-220px!important;top:0!important;height:100vh!important;z-index:200!important;transition:left 0.25s ease!important;}
   .sidebar.open{left:0!important;}
   .sidebar-overlay{display:block!important;}
-  .topbar{padding:0 14px!important;}
+  /* Topbar */
+  .topbar{padding:0 12px!important;height:48px!important;}
+  .topbar-title{font-size:14px!important;}
+  .topbar-label{display:none!important;}
   .topbar-date{display:none!important;}
-  .main-content{padding:14px!important;}
-  .chat-layout{flex-direction:column!important;height:auto!important;min-height:calc(100vh - 200px)!important;}
-  .quick-panel{width:100%!important;flex-direction:row!important;overflow-x:auto!important;}
-  .quick-panel-inner{flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;}
+  .topbar-ask-btn{padding:5px 10px!important;font-size:11px!important;}
+  .topbar-ask-btn .ask-label{display:none!important;}
+  /* KPI cards */
+  .kpi-grid{grid-template-columns:repeat(2,1fr)!important;gap:8px!important;padding:10px 12px!important;}
+  .kpi-value{font-size:20px!important;}
+  .kpi-sub{font-size:9px!important;}
+  /* Chat */
+  .chat-layout{flex-direction:column!important;min-height:0!important;padding:12px 10px!important;}
+  .chat-main{height:58vh!important;min-height:280px!important;flex:none!important;}
+  /* Quick panel: horizontal scroll strip */
+  .quick-panel{width:100%!important;flex-direction:column!important;gap:8px!important;}
+  .quick-panel-inner{flex-direction:row!important;flex-wrap:nowrap!important;overflow-x:auto!important;padding-bottom:4px!important;gap:6px!important;}
+  .quick-panel-inner button{min-width:160px!important;white-space:normal!important;font-size:11px!important;padding:8px 10px!important;}
+  .quick-disclaimer{display:none!important;}
+  /* Hero banner */
+  .hero-banner{padding:14px 16px!important;gap:12px!important;}
+  .hero-icon{width:38px!important;height:38px!important;font-size:18px!important;flex-shrink:0!important;}
+  .hero-title{font-size:13px!important;}
+  .hero-desc{font-size:11px!important;}
+  .hero-badge{display:none!important;}
+  .hero-cta{display:none!important;}
+  /* Tables: horizontal scroll */
+  .table-wrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;}
+  table{min-width:600px!important;font-size:11px!important;}
+  table th,table td{padding:7px 9px!important;font-size:10px!important;}
+  /* Consensus */
   .consensus-grid{grid-template-columns:1fr!important;}
+  /* Entry calc */
   .calc-grid{grid-template-columns:1fr!important;}
-  .entry-params{width:100%!important;}
-  .portfolio-table{font-size:11px!important;}
-  .screener-table td,.screener-table th{padding:8px 8px!important;font-size:10px!important;}
-  .footer-bar{flex-direction:column!important;gap:4px!important;text-align:center!important;padding:6px 14px!important;}
+  /* Content padding */
+  .view-pad{padding:14px 12px!important;}
+  /* Filters wrap */
+  .filter-bar{flex-wrap:wrap!important;gap:8px!important;}
+  /* Footer */
+  .footer-bar{flex-direction:column!important;gap:3px!important;text-align:center!important;padding:6px 12px!important;font-size:10px!important;}
+  /* Hamburger */
   .hamburger{display:flex!important;}
-  .ask-shri-btn span:last-of-type{display:none!important;}
+  /* GEO cards */
+  .geo-card-grid{grid-template-columns:1fr!important;}
+  /* Ask Shri btn in topbar */
+  .topbar-ask-btn .ask-dot{display:none!important;}
 }
 @media(max-width:480px){
-  .kpi-grid{grid-template-columns:1fr 1fr!important;}
-  .geo-cards{grid-template-columns:1fr!important;}
+  .kpi-grid{grid-template-columns:1fr 1fr!important;gap:6px!important;padding:8px!important;}
+  .kpi-value{font-size:18px!important;}
 }
 .hamburger{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(84,84,88,0.4);cursor:pointer;flex-shrink:0;}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}`}</style>
@@ -1250,14 +1328,14 @@ export default function BrahmosCapital(){
         <div className="topbar" style={{height:52,padding:"0 28px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(10,10,10,0.95)",backdropFilter:"saturate(180%) blur(20px)",borderBottom:`1px solid ${A.sep}`,flexShrink:0}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <button className="hamburger" onClick={()=>setSidebarOpen(o=>!o)} aria-label="Menu"><span style={{fontSize:18,lineHeight:1,color:"#fff"}}>☰</span></button>
-            <span style={{fontSize:17,fontWeight:700,letterSpacing:"-0.02em"}}>Brahmos Capital</span>
-            <span style={{fontSize:12,color:A.t3}}>· {currentLabel}</span>
+            <span className="topbar-title" style={{fontSize:17,fontWeight:700,letterSpacing:"-0.02em"}}>Brahmos Capital</span>
+            <span className="topbar-label" style={{fontSize:12,color:A.t3}}>· {currentLabel}</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:16}}>
-            <button onClick={()=>setTab("ai")} style={{display:"flex",alignItems:"center",gap:7,padding:"6px 14px",borderRadius:20,background:"rgba(10,132,255,0.15)",border:"1px solid rgba(10,132,255,0.4)",color:A.blue,fontSize:12,fontWeight:600,cursor:"pointer"}}>
+            <button className="topbar-ask-btn" onClick={()=>setTab("ai")} style={{display:"flex",alignItems:"center",gap:7,padding:"6px 14px",borderRadius:20,background:"rgba(10,132,255,0.15)",border:"1px solid rgba(10,132,255,0.4)",color:A.blue,fontSize:12,fontWeight:600,cursor:"pointer"}}>
               <MessageSquare size={13}/>
-              <span>Ask Shri</span>
-              <span style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
+              <span className="ask-label">Ask Shri</span>
+              <span className="ask-dot" style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
             <span className="topbar-date" style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
             <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
