@@ -639,22 +639,56 @@ function ConsensusView({stocks}){
 function NewsView(){
   const [catF,setCatF]=useState("All");
   const [tickerF,setTickerF]=useState("All");
-  const cats=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS"];
+  const [liveNews,setLiveNews]=useState([]);
+  const [newsStatus,setNewsStatus]=useState("loading");
+  const cats=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS","EXPORTS"];
+  const cats2=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS"];
   const catColors={GEOPO:A.red,ORDER:A.blue,DEAL:A.green,BROKER:A.purple,POLICY:A.orange,BUDGET:A.yellow,MARKET:A.teal,RESULTS:A.green,EXPORTS:A.teal};
   const tickers=["All",...STOCKS.map(s=>s.ticker),"SECTOR"];
-  const filtered=NEWS.filter(n=>(catF==="All"||n.cat===catF)&&(tickerF==="All"||n.tickers.includes(tickerF)));
+
+  useEffect(()=>{
+    async function fetchNews(){
+      try{
+        const res=await fetch("/api/news");
+        const data=await res.json();
+        if(data.ok&&data.articles?.length){
+          setLiveNews(data.articles);
+          setNewsStatus("live");
+        }else{
+          setNewsStatus("static");
+        }
+      }catch{
+        setNewsStatus("static");
+      }
+    }
+    fetchNews();
+    // Refresh every 60 minutes
+    const id=setInterval(fetchNews,60*60*1000);
+    return()=>clearInterval(id);
+  },[]);
+
+  // Merge: live articles first, then static fallback for anything not covered
+  const allNews=[...liveNews,...NEWS.filter(n=>!liveNews.some(l=>l.headline.slice(0,30)===n.headline.slice(0,30)))];
+  const filtered=allNews.filter(n=>(catF==="All"||n.cat===catF)&&(tickerF==="All"||n.tickers.includes(tickerF)));
   return(
     <div style={{padding:"24px 28px"}}>
       <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:`1px solid ${A.sepLight}`,marginBottom:16}}>
         <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
-          {cats.map(c=>(<button key={c} onClick={()=>setCatF(c)} style={{padding:"4px 12px",borderRadius:20,border:"1px solid "+(catF===c?(catColors[c]||A.blue):A.sep),background:catF===c?((catColors[c]||A.blue)+"22"):"transparent",color:catF===c?(catColors[c]||A.blue):A.t3,fontSize:11,cursor:"pointer",fontWeight:catF===c?600:400}}>{c}</button>))}
+          {cats2.map(c=>(<button key={c} onClick={()=>setCatF(c)} style={{padding:"4px 12px",borderRadius:20,border:"1px solid "+(catF===c?(catColors[c]||A.blue):A.sep),background:catF===c?((catColors[c]||A.blue)+"22"):"transparent",color:catF===c?(catColors[c]||A.blue):A.t3,fontSize:11,cursor:"pointer",fontWeight:catF===c?600:400}}>{c}</button>))}
         </div>
         <div style={{display:"flex",gap:5,flexWrap:"wrap",alignItems:"center"}}>
           <span style={{fontSize:11,color:A.t4,marginRight:4}}>Stock filter:</span>
           {tickers.map(t=>(<button key={t} onClick={()=>setTickerF(t)} style={{padding:"3px 10px",borderRadius:20,border:"1px solid "+(tickerF===t?A.blue:A.sep),background:tickerF===t?"rgba(10,132,255,0.15)":"transparent",color:tickerF===t?A.blue:A.t3,fontSize:10,cursor:"pointer"}}>{t}</button>))}
         </div>
       </div>
-      <p style={{fontSize:12,color:A.t4,marginBottom:14}}>{filtered.length} articles · Sources: Moneycontrol, Business Standard, Economic Times, India TV News, Goodreturns, BSE Filings, MoD, Motilal / HDFC / ICICI Securities, Reuters, Britannica</p>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+        <p style={{fontSize:12,color:A.t4}}>{filtered.length} articles ·{" "}
+          {newsStatus==="live"&&<span style={{color:A.green,fontWeight:600}}>📡 Live · refreshes hourly · </span>}
+          {newsStatus==="loading"&&<span style={{color:A.orange,fontWeight:600}}>⏳ Loading live news… · </span>}
+          {newsStatus==="static"&&<span style={{color:A.orange,fontWeight:600}}>⚠ Static data · </span>}
+          Sources: Google News, Economic Times, Business Standard, BSE Filings, Moneycontrol
+        </p>
+      </div>
       <div style={{display:"flex",flexDirection:"column",gap:10}}>
         {filtered.map(n=>{
           const catColor=catColors[n.cat]||A.blue;
@@ -673,8 +707,12 @@ function NewsView(){
                   <p style={{color:A.t2,fontSize:12,lineHeight:1.65}}>{n.body}</p>
                 </div>
               </div>
-              <div style={{display:"flex",gap:5,flexWrap:"wrap",marginTop:10}}>
-                {n.tickers.map(t=>(<span key={t} style={{background:"rgba(10,132,255,0.1)",color:A.blue,borderRadius:5,fontSize:10,fontWeight:600,padding:"2px 7px"}}>{t}</span>))}
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:10}}>
+                <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                  {n.tickers.map(t=>(<span key={t} style={{background:"rgba(10,132,255,0.1)",color:A.blue,borderRadius:5,fontSize:10,fontWeight:600,padding:"2px 7px"}}>{t}</span>))}
+                  {n.live&&<span style={{background:"rgba(48,209,88,0.1)",color:A.green,borderRadius:5,fontSize:9,fontWeight:700,padding:"2px 7px",letterSpacing:"0.04em"}}>LIVE</span>}
+                </div>
+                {n.url&&n.url!=="undefined"&&<a href={n.url} target="_blank" rel="noopener noreferrer" style={{color:A.blue,fontSize:11,fontWeight:500,textDecoration:"none",display:"flex",alignItems:"center",gap:3,flexShrink:0}}>Read full article →</a>}
               </div>
             </div>
           );
@@ -686,6 +724,30 @@ function NewsView(){
 
 /* ═══ GEO ══════════════════════════════════════════════════════════════════ */
 function GeoView(){
+  const [liveGeo,setLiveGeo]=useState([]);
+  const [geoStatus,setGeoStatus]=useState("loading");
+
+  useEffect(()=>{
+    async function fetchGeo(){
+      try{
+        const res=await fetch("/api/news");
+        const data=await res.json();
+        if(data.ok&&data.articles){
+          const geo=data.articles.filter(a=>a.cat==="GEOPO"||
+            /iran|ukraine|russia|taiwan|china|pakistan|border|conflict|war|strike|missile|nuclear/i.test(a.headline));
+          setLiveGeo(geo.slice(0,8));
+          setGeoStatus("live");
+        }else{
+          setGeoStatus("static");
+        }
+      }catch{
+        setGeoStatus("static");
+      }
+    }
+    fetchGeo();
+    const id=setInterval(fetchGeo,60*60*1000);
+    return()=>clearInterval(id);
+  },[]);
   const GEO=[
     {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–11 Mar 2026",hot:true,
      title:"Operation Epic Fury: US-Israel vs Iran — Full-Scale War",
@@ -734,6 +796,24 @@ function GeoView(){
         <Flame size={15} color={A.red}/>
         <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 11 March 2026 — US-Iran war, Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
+      {liveGeo.length>0&&(
+        <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:"1px solid rgba(48,209,88,0.2)",marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+            <span style={{color:A.green,fontSize:11,fontWeight:700,letterSpacing:"0.05em"}}>📡 LIVE GEOPOLITICAL UPDATES · refreshes hourly</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:7}}>
+            {liveGeo.map((n,i)=>(
+              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",padding:"8px 0",borderBottom:i<liveGeo.length-1?"1px solid "+A.sepLight:"none"}}>
+                <span style={{color:A.red,fontSize:9,fontWeight:700,padding:"2px 6px",background:"rgba(255,69,58,0.12)",borderRadius:4,flexShrink:0,marginTop:2}}>{n.cat}</span>
+                <div style={{flex:1}}>
+                  <a href={n.url||"#"} target="_blank" rel="noopener noreferrer" style={{color:A.t1,fontSize:12,fontWeight:500,lineHeight:1.4,textDecoration:"none"}}>{n.headline}</a>
+                  <p style={{color:A.t4,fontSize:10,marginTop:2}}>{n.date} · {n.source}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
         {GEO.map(e=>(<div key={e.id} style={{background:A.card,border:"1px solid "+(e.hot?"rgba(255,69,58,0.3)":A.sepLight),borderRadius:16,padding:22,position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,"+e.color+",transparent)"}}/>
@@ -941,7 +1021,7 @@ export default function BrahmosCapital(){
             </button>
             <span style={{fontSize:11,color:A.t3,display:"flex",alignItems:"center",gap:7}}>
               {priceStatus==="loading"&&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⏳ LOADING</span>}
-              {priceStatus==="live"   &&<span style={{color:A.green, fontSize:10,fontWeight:600}}>📡 LIVE</span>}
+              {priceStatus==="live"   &&<span style={{color:A.green, fontSize:10,fontWeight:600}}>📡 PRICES LIVE</span>}
               {priceStatus==="error"  &&<span style={{color:A.orange,fontSize:10,fontWeight:600}}>⚠ OFFLINE</span>}
               <span>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
             </span>
