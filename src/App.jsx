@@ -28,6 +28,23 @@ const STOCKS=[
   {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics",    shares:30,  buy:2500,px:3470.90,day:-0.58,pe:75.2,pb:11.8,roe:16.5,mc:100, ob:32,  seed:1007,sector:"Electronics"},
   {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space",         shares:200, buy:500, px:721.45, day:-3.72,pe:70.8,pb:9.6, roe:14.2,mc:60,  ob:18,  seed:1008,sector:"Space"},
   {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",  shares:100, buy:900, px:1413.00,day:-0.97,pe:45.1,pb:8.9, roe:20.8,mc:70,  ob:42,  seed:1009,sector:"Electronics"},
+
+  {ticker:"SOLARINDS", name:"Solar Industries India",   sub:"Explosives · Ammunition", shares:8,   buy:10500,px:14965.00,day:-0.08,pe:94.4,pb:18.2,roe:22.1,mc:135277,ob:850, seed:1010,sector:"Munitions"},
+  {ticker:"MTARTECH",  name:"MTAR Technologies",         sub:"Propulsion · Fuel Cells",  shares:50,  buy:1800, px:3722.00, day:+3.02,pe:169.8,pb:12.5,roe:7.4, mc:10778, ob:85,  seed:1011,sector:"Aerospace"},
+  {ticker:"BHARATFORG",name:"Bharat Forge",               sub:"Artillery · Drones",       shares:60,  buy:1200, px:1848.00, day:-0.75,pe:42.3,pb:6.2, roe:14.8,mc:86200, ob:320, seed:1012,sector:"Artillery"},
+  {ticker:"ASTRAMICRO",name:"Astra Microwave Products",  sub:"Radar · Microwave",        shares:120, buy:720,  px:1030.00, day:+2.21,pe:58.9,pb:8.4, roe:14.3,mc:9821,  ob:55,  seed:1013,sector:"Electronics"},
+  {ticker:"BEML",      name:"BEML Ltd",                   sub:"Heavy Vehicles · Mining",  shares:40,  buy:1400, px:1950.00, day:+1.20,pe:55.3,pb:4.8, roe:8.7, mc:13772, ob:120, seed:1014,sector:"Heavy Equipment"},
+  {ticker:"MIDHANI",   name:"Mishra Dhatu Nigam",         sub:"Special Alloys · Titanium",shares:200, buy:250,  px:342.00,  day:+1.10,pe:60.2,pb:5.6, roe:9.3, mc:6526,  ob:35,  seed:1015,sector:"Materials"},
+  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Defence Electronics",      shares:300, buy:200,  px:280.00,  day:-2.30,pe:84.9,pb:9.2, roe:11.0,mc:7578,  ob:28,  seed:1016,sector:"Electronics"},
+  {ticker:"DYNAMATIC", name:"Dynamatic Technologies",     sub:"Aerospace Components",     shares:10,  buy:5200, px:7500.00, day:+0.50,pe:202.8,pb:15.3,roe:7.6, mc:7287,  ob:48,  seed:1017,sector:"Aerospace"},
+  {ticker:"UNIMECHAE", name:"Unimech Aerospace",          sub:"Precision Machined Parts", shares:80,  buy:600,  px:872.00,  day:+0.07,pe:68.5,pb:10.2,roe:14.9,mc:4200,  ob:22,  seed:1018,sector:"Aerospace"},
+  {ticker:"DCXSYSTEMS",name:"DCX Systems",                sub:"Defence Electronics Systems",shares:400,buy:145, px:193.00,  day:-1.71,pe:62.4,pb:6.8, roe:11.2,mc:2150,  ob:14,  seed:1019,sector:"Electronics"},
+  {ticker:"PTCIND",    name:"PTC Industries",              sub:"Titanium · Aerospace Casting",shares:5,buy:12000,px:16800.00,day:+1.50,pe:185.2,pb:18.6,roe:10.1,mc:5500,  ob:30,  seed:1020,sector:"Materials"},
+  {ticker:"IDEAFORGE", name:"Ideaforge Technology",        sub:"Drones · UAV Systems",     shares:150, buy:380,  px:520.00,  day:+2.10,pe:145.6,pb:8.8, roe:6.0, mc:2300,  ob:18,  seed:1021,sector:"Drones"},
+  {ticker:"CYIENTDLM", name:"Cyient DLM",                  sub:"Defence Manufacturing",    shares:200, buy:380,  px:489.00,  day:-1.50,pe:98.5,pb:7.2, roe:7.4, mc:2600,  ob:16,  seed:1022,sector:"Electronics"},
+  {ticker:"PREMEXPLN", name:"Premier Explosives",          sub:"Explosives · Propellants",  shares:150, buy:340,  px:491.00,  day:+0.20,pe:88.3,pb:8.1, roe:9.2, mc:1850,  ob:25,  seed:1023,sector:"Munitions"},
+  {ticker:"AXISCADES", name:"Axiscades Technologies",      sub:"Aerospace Eng. R&D",        shares:100, buy:480,  px:620.00,  day:-0.80,pe:62.4,pb:6.5, roe:10.5,mc:6402,  ob:32,  seed:1024,sector:"Aerospace"},
+  {ticker:"AVANTEL",   name:"Avantel Ltd",                  sub:"Naval Comms · Satcom",     shares:400, buy:100,  px:141.00,  day:+0.48,pe:229.0,pb:11.2,roe:4.9, mc:3845,  ob:8,   seed:1025,sector:"Electronics"},
 ].map(s=>({...s,mktVal:s.shares*s.px,cost:s.shares*s.buy,ret:((s.px-s.buy)/s.buy)*100,spark:mkSpark(s.seed,s.px>s.buy)}));
 
 const TOTVAL=STOCKS.reduce((a,s)=>a+s.mktVal,0);
@@ -47,6 +64,22 @@ const CONSENSUS={
   DATAPATTNS:{buy:8, hold:6, sell:7, target:3200,brokers:["HDFC Sec","Motilal","Kotak","Emkay","Prabhudas"]},
   PARAS:     {buy:10,hold:5, sell:4, target:820, brokers:["ICICI Sec","Axis","YES Sec","Nirmal Bang","Monarch"]},
   ZENTEC:    {buy:12,hold:4, sell:2, target:1650,brokers:["Motilal","HDFC Sec","Emkay","Nirmal Bang","BOB Cap"]},
+  SOLARINDS: {buy:18,hold:6, sell:3, target:18500,brokers:["Motilal","Kotak","CLSA","Jefferies","Nomura"]},
+  MTARTECH:  {buy:12,hold:5, sell:4, target:4200, brokers:["HDFC Sec","Emkay","Axis","Motilal","BOB Cap"]},
+  BHARATFORG:{buy:16,hold:5, sell:2, target:2250, brokers:["Kotak","Motilal","CLSA","Nomura","Jefferies"]},
+  ASTRAMICRO:{buy:14,hold:4, sell:3, target:1250, brokers:["HDFC Sec","Motilal","Emkay","ICICI Sec","Axis"]},
+  BEML:      {buy:15,hold:5, sell:3, target:2400, brokers:["Motilal","HDFC Sec","Kotak","Emkay","Axis"]},
+  MIDHANI:   {buy:10,hold:6, sell:4, target:410,  brokers:["Motilal","HDFC Sec","ICICI Sec","Axis","Emkay"]},
+  APOLLOMICRO:{buy:14,hold:4,sell:3, target:340,  brokers:["HDFC Sec","Motilal","BOB Cap","YES Sec","Monarch"]},
+  DYNAMATIC: {buy:8, hold:5, sell:6, target:7200, brokers:["Kotak","HDFC Sec","Motilal","Emkay","Axis"]},
+  UNIMECHAE: {buy:11,hold:4, sell:3, target:1100, brokers:["Motilal","HDFC Sec","ICICI Sec","Emkay","BOB Cap"]},
+  DCXSYSTEMS:{buy:10,hold:5, sell:4, target:240,  brokers:["HDFC Sec","Motilal","Axis","YES Sec","BOB Cap"]},
+  PTCIND:    {buy:9, hold:5, sell:4, target:19500,brokers:["Kotak","Motilal","HDFC Sec","CLSA","Emkay"]},
+  IDEAFORGE: {buy:10,hold:6, sell:5, target:620,  brokers:["Motilal","HDFC Sec","Emkay","Axis","YES Sec"]},
+  CYIENTDLM: {buy:9, hold:5, sell:4, target:580,  brokers:["Motilal","HDFC Sec","Kotak","Emkay","Axis"]},
+  PREMEXPLN: {buy:8, hold:6, sell:4, target:600,  brokers:["Motilal","YES Sec","BOB Cap","Monarch","Nirmal Bang"]},
+  AXISCADES: {buy:10,hold:5, sell:3, target:760,  brokers:["HDFC Sec","Motilal","Axis","Emkay","YES Sec"]},
+  AVANTEL:   {buy:7, hold:5, sell:6, target:155,  brokers:["Motilal","YES Sec","BOB Cap","Monarch","Nirmal Bang"]},
 };
 
 const NEWS=[
@@ -257,7 +290,7 @@ Key macro context: India FY27 defence budget ₹7.85L Cr (+15.2%); Indonesia Bra
 Keep responses structured but conversational. End every response with a clear one-line verdict in bold.`;
 
 function AskAIView(){
-  const [messages,setMessages]=useState([{role:"assistant",content:"Namaste. I'm Shriansh Jena — 20 years on Dalal Street, formerly Head of India Equity Research at Morgan Stanley. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?"}]);
+  const [messages,setMessages]=useState([{role:"assistant",content:"Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?"}]);
   const [input,setInput]=useState("");
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
@@ -299,7 +332,7 @@ function AskAIView(){
         <div style={{padding:"16px 20px",borderBottom:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:12,background:"linear-gradient(90deg,rgba(10,132,255,0.08),transparent)"}}>
           <div style={{width:42,height:42,borderRadius:13,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:"0 4px 16px rgba(10,132,255,0.35)"}}>S</div>
           <div>
-            <p style={{fontSize:13,fontWeight:700,color:A.t1}}>Shriansh Jena</p>
+            <p style={{fontSize:13,fontWeight:700,color:A.t1}}>Shri</p>
             <p style={{fontSize:11,color:A.t3}}>Ex-Morgan Stanley · Head of India Equity Research · NSE Defence Specialist · 20 yrs Dalal Street</p>
           </div>
           <div style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center"}}>
@@ -317,12 +350,12 @@ function AskAIView(){
               </div>
             </div>
           ))}
-          {loading&&(<div style={{display:"flex"}}><div style={{padding:"12px 16px",borderRadius:"16px 16px 16px 4px",background:A.card2,border:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:8}}><Loader size={14} color={A.blue} style={{animation:"spin 1s linear infinite"}}/><span style={{fontSize:13,color:A.t3}}>Shriansh is analysing...</span></div></div>)}
+          {loading&&(<div style={{display:"flex"}}><div style={{padding:"12px 16px",borderRadius:"16px 16px 16px 4px",background:A.card2,border:`1px solid ${A.sepLight}`,display:"flex",alignItems:"center",gap:8}}><Loader size={14} color={A.blue} style={{animation:"spin 1s linear infinite"}}/><span style={{fontSize:13,color:A.t3}}>Shri is analysing...</span></div></div>)}
           <div ref={bottomRef}/>
         </div>
         <div style={{padding:"14px 16px",borderTop:`1px solid ${A.sepLight}`,display:"flex",gap:10}}>
           <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!e.shiftKey&&ask(input)}
-            placeholder="Ask for a full equity research note on any stock..."
+            placeholder="Ask Shri for a full equity research note on any stock..."
             style={{flex:1,background:A.card2,border:`1px solid ${A.sep}`,borderRadius:12,padding:"10px 16px",color:A.t1,fontSize:13,outline:"none"}}/>
           <button onClick={()=>ask(input)} disabled={loading||!input.trim()} style={{width:42,height:42,borderRadius:12,background:A.blue,border:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",opacity:loading||!input.trim()?0.4:1}}>
             <Send size={16} color="#fff"/>
@@ -358,10 +391,10 @@ function PortfolioView({onAskAI}){
         <div style={{width:54,height:54,borderRadius:16,background:"linear-gradient(135deg,#0A84FF,#0055CC)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,boxShadow:"0 6px 24px rgba(10,132,255,0.4)"}}>S</div>
         <div style={{flex:1}}>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:5}}>
-            <p style={{fontSize:16,fontWeight:700,color:A.t1}}>Ask Shriansh Jena — AI Equity Research</p>
+            <p style={{fontSize:16,fontWeight:700,color:A.t1}}>Ask Shri — AI Equity Research</p>
             <span style={{background:"rgba(10,132,255,0.25)",color:A.blue,border:"1px solid rgba(10,132,255,0.5)",borderRadius:20,fontSize:10,fontWeight:700,padding:"2px 10px",letterSpacing:"0.05em"}}>POWERED BY AI</span>
           </div>
-          <p style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Former Morgan Stanley Head of India Equity Research. Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
+          <p style={{fontSize:13,color:A.t2,lineHeight:1.5}}>Ex-Morgan Stanley (hypothetical). Ask for a full valuation analysis, buy/hold/sell call, 12-month price targets, and entry zones on any stock in this portfolio.</p>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:6,color:A.blue,fontSize:13,fontWeight:600,flexShrink:0}}>
           <span>Open Chat</span>
@@ -728,6 +761,11 @@ const DRILL_SECTORS=[
   {name:"Defence Electronics",keys:["DATAPATTNS"],color:A.teal},
   {name:"Optics / Space",keys:["PARAS"],color:A.yellow},
   {name:"Training / Anti-Drone",keys:["ZENTEC"],color:A.green},
+  {name:"Munitions / Explosives",keys:["SOLARINDS","PREMEXPLN"],color:A.orange},
+  {name:"Artillery / Drones",   keys:["BHARATFORG","IDEAFORGE"],color:A.red},
+  {name:"Aerospace Components", keys:["MTARTECH","DYNAMATIC","UNIMECHAE","AXISCADES"],color:A.teal},
+  {name:"Heavy Equipment",      keys:["BEML"],color:A.purple},
+  {name:"Special Materials",    keys:["MIDHANI","PTCIND"],color:A.yellow},
 ].map(sec=>({...sec,
   val:sec.keys.reduce((a,k)=>a+(STOCKS.find(s=>s.ticker===k)?.mktVal||0),0),
   ret:(()=>{const v=sec.keys.map(k=>STOCKS.find(s=>s.ticker===k)?.ret||0);return v.reduce((a,x)=>a+x,0)/v.length;})()
@@ -809,7 +847,7 @@ const NAV_GROUPS=[
   {group:"PORTFOLIO",items:[{id:"portfolio",label:"Portfolio",Icon:Layers},{id:"geo",label:"Geopolitical",Icon:Globe},{id:"drill",label:"Drill-Down",Icon:BarChart2}]},
   {group:"RESEARCH",items:[{id:"screener",label:"Screener",Icon:Search},{id:"heatmap",label:"Valuation Map",Icon:TrendingUp},{id:"consensus",label:"Consensus",Icon:Star},{id:"why",label:"Why Defence?",Icon:BookOpen}]},
   {group:"LIVE",items:[{id:"news",label:"News Feed",Icon:Newspaper}]},
-  {group:"AI ANALYST",items:[{id:"ai",label:"Ask Shriansh",Icon:MessageSquare}]},
+  {group:"AI ANALYST",items:[{id:"ai",label:"Ask Shri",Icon:MessageSquare}]},
   {group:"TOOLS",items:[{id:"calc",label:"Entry Calculator",Icon:Calculator}]},
 ];
 
@@ -844,7 +882,7 @@ export default function BrahmosCapital(){
         <div style={{padding:"12px 16px",borderTop:`1px solid ${A.sep}`}}>
           <p style={{fontSize:10,color:A.t4,marginBottom:2}}>NSE · India Defence · FY26</p>
           <p style={{fontSize:10,color:A.t4,marginBottom:6}}>Stocks bought March 2025</p>
-          <p style={{fontSize:10,color:A.t4}}>Built by <span style={{color:A.blue,fontWeight:600}}>Shriansh Jena</span></p>
+          <p style={{fontSize:10,color:A.t4}}>Built by <span style={{color:A.blue,fontWeight:600}}>Shri</span></p>
         </div>
       </div>
       {/* MAIN */}
@@ -857,7 +895,7 @@ export default function BrahmosCapital(){
           <div style={{display:"flex",alignItems:"center",gap:16}}>
             <button onClick={()=>setTab("ai")} style={{display:"flex",alignItems:"center",gap:7,padding:"6px 14px",borderRadius:20,background:"rgba(10,132,255,0.15)",border:"1px solid rgba(10,132,255,0.4)",color:A.blue,fontSize:12,fontWeight:600,cursor:"pointer"}}>
               <MessageSquare size={13}/>
-              <span>Ask Shriansh Jena</span>
+              <span>Ask Shri</span>
               <span style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
             <span style={{fontSize:11,color:A.t3}}>NSE · 11 Mar 2026</span>
@@ -868,7 +906,7 @@ export default function BrahmosCapital(){
           <KpiCard label="TOTAL VALUE"        value={inr(TOTVAL)}   sub={"Cost basis "+inr(TOTCOST)+" · Mar 2025"} positive={null}/>
           <KpiCard label="TOTAL RETURN"       value={pct(TOTRET)}   sub={inr(TOTVAL-TOTCOST)+" unrealised gain"} positive={TOTRET>=0}/>
           <KpiCard label="ALPHA VS NIFTY DEF" value={pct(ALPHA)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={ALPHA>=0}/>
-          <KpiCard label="ACTIVE CONFLICTS"   value="4"             sub="Iran · Ukraine · Gaza · Indo-Pac" positive={null}/>
+          <KpiCard label="PORTFOLIO STOCKS"   value="25"            sub="9 core + 16 extended positions" positive={null}/>
         </div>
         <div style={{flex:1,overflowY:"auto"}}>
           {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")}/>}
