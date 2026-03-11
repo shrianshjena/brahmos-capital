@@ -1,16 +1,59 @@
-# React + Vite
+# 🛡️ Brahmos Capital
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**NSE India Defence Investment Intelligence Dashboard**
 
-Currently, two official plugins are available:
+Built by [Shriansh Jena](https://github.com/shrianshjena)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Brahmos Capital is a real-time dashboard for tracking Indian defence sector stocks listed on the NSE. It provides portfolio analytics, investment signals, geopolitical intelligence, and sector drill-downs — all in a clean Apple-ecosystem aesthetic.
 
-## Expanding the ESLint configuration
+**Live stocks tracked:** HAL · BEL · MAZDOCK · COCHINSHIP · GRSE · BDL · DATAPATTNS · PARAS · ZENTEC
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+| Section | Description |
+|---|---|
+| **Portfolio** | Normalised benchmark chart vs Nifty India Defence + full positions table with sparklines |
+| **Signals** | Buy/Sell/Hold signals filtered by Gov, Geo, and Market categories with confidence scores |
+| **Drill-Down** | Sector allocation breakdown + individual stock cards with P/E, market cap, return |
+| **Geopolitical** | Live geopolitical events with impact scores and affected tickers |
+
+## Stack
+
+- **React 18** + **Vite**
+- **Recharts** for charts and sparklines
+- **Lucide React** for SF Symbol-inspired icons
+- Apple dark mode design system (`-apple-system` SF Pro font stack)
+
+## Deploy
+
+### Vercel (Recommended)
+
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+### GitHub + Vercel
+
+1. Push to GitHub:
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/brahmos-capital.git
+git push -u origin master
+```
+
+2. Go to [vercel.com](https://vercel.com) → **New Project** → Import from GitHub → Deploy
+
+### Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+*Data as of 11 Mar 2026 · For informational purposes only · Not investment advice*
