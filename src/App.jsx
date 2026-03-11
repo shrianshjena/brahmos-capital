@@ -653,7 +653,29 @@ function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
           {["All","Gov","Geo","Market"].map(c=>(<button key={c} onClick={()=>setSigFilter(c)} style={{padding:"5px 14px",borderRadius:20,border:`1px solid ${sigFilter===c?A.blue:A.sep}`,background:sigFilter===c?"rgba(10,132,255,0.15)":"transparent",color:sigFilter===c?A.blue:A.t3,fontSize:12,cursor:"pointer",fontWeight:sigFilter===c?600:400}}>{c}</button>))}
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          {sigItems.map(sig=>(<div key={sig.id} style={{display:"flex",alignItems:"flex-start",gap:16,padding:"13px 16px",background:A.bg2,borderRadius:12,border:`1px solid ${A.sepLight}`}}><div style={{minWidth:110}}><p style={{color:A.blue,fontSize:13,fontWeight:600,marginBottom:6}}>{sig.ticker}</p><Badge type={sig.type}/></div><div style={{flex:1}}><p style={{color:A.t1,fontSize:13,fontWeight:600,marginBottom:4}}>{sig.title}</p><p style={{color:A.t3,fontSize:12,lineHeight:1.55}}>{sig.detail}</p></div><div style={{minWidth:130,display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}><span style={{background:sig.cat==="Gov"?"rgba(10,132,255,0.15)":sig.cat==="Geo"?"rgba(255,159,10,0.15)":"rgba(255,255,255,0.06)",color:catColor[sig.cat]||A.t3,borderRadius:6,fontSize:10,fontWeight:600,padding:"2px 8px"}}>{sig.cat}</span><div style={{display:"flex",alignItems:"center",gap:6}}><div style={{width:64,height:3,background:A.sep,borderRadius:2}}><div style={{width:`${sig.conf}%`,height:"100%",borderRadius:2,background:sig.conf>=75?A.green:sig.conf>=55?A.blue:A.orange}}/></div><span style={{fontSize:11,color:A.t3}}>{sig.conf}%</span></div><p style={{fontSize:11,color:A.t4}}>{sig.date}</p></div></div>))}
+          {sigItems.map(sig=>{
+            const barColor=sig.conf>=75?A.green:sig.conf>=55?A.blue:A.orange;
+            const catBg=sig.cat==="Gov"?"rgba(10,132,255,0.15)":sig.cat==="Geo"?"rgba(255,159,10,0.15)":"rgba(255,255,255,0.06)";
+            return(<div key={sig.id} className="signal-card" style={{padding:"13px 16px",background:A.bg2,borderRadius:12,border:`1px solid ${A.sepLight}`}}>
+              {/* Row 1: ticker + badge + cat tag */}
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,flexWrap:"wrap"}}>
+                <p style={{color:A.blue,fontSize:13,fontWeight:700}}>{sig.ticker}</p>
+                <Badge type={sig.type}/>
+                <span style={{marginLeft:"auto",background:catBg,color:catColor[sig.cat]||A.t3,borderRadius:6,fontSize:10,fontWeight:600,padding:"2px 8px",flexShrink:0}}>{sig.cat}</span>
+              </div>
+              {/* Row 2: title + detail */}
+              <p style={{color:A.t1,fontSize:13,fontWeight:600,marginBottom:4,lineHeight:1.4}}>{sig.title}</p>
+              <p style={{color:A.t3,fontSize:12,lineHeight:1.55,marginBottom:8}}>{sig.detail}</p>
+              {/* Row 3: confidence bar + date */}
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{flex:1,height:3,background:A.sep,borderRadius:2}}>
+                  <div style={{width:`${sig.conf}%`,height:"100%",borderRadius:2,background:barColor}}/>
+                </div>
+                <span style={{fontSize:11,color:A.t3,flexShrink:0}}>{sig.conf}%</span>
+                <span style={{fontSize:11,color:A.t4,flexShrink:0}}>{sig.date}</span>
+              </div>
+            </div>);
+          })}
         </div>
       </div>
     </div>
@@ -677,8 +699,8 @@ function ScreenerView({stocks}){
       <div className="filter-bar" style={{background:A.card,borderRadius:14,padding:"16px 20px",border:`1px solid ${A.sepLight}`,marginBottom:16,display:"flex",gap:24,alignItems:"center",flexWrap:"wrap"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}><Filter size={13} color={A.t3}/><span style={{fontSize:12,color:A.t3}}>Filters:</span></div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:12,color:A.t3}}>Sector</span>
-          <div style={{display:"flex",gap:5}}>{sectors.map(s=>(<button key={s} onClick={()=>setSectorF(s)} style={{padding:"4px 11px",borderRadius:20,border:`1px solid ${sectorF===s?A.blue:A.sep}`,background:sectorF===s?"rgba(10,132,255,0.15)":"transparent",color:sectorF===s?A.blue:A.t3,fontSize:11,cursor:"pointer"}}>{s}</button>))}</div>
+          <span style={{fontSize:12,color:A.t3,flexShrink:0}}>Sector</span>
+          <div style={{display:"flex",gap:5,flexWrap:"nowrap",overflowX:"auto",WebkitOverflowScrolling:"touch",paddingBottom:2}}>{sectors.map(s=>(<button key={s} onClick={()=>setSectorF(s)} style={{padding:"4px 11px",borderRadius:20,border:`1px solid ${sectorF===s?A.blue:A.sep}`,background:sectorF===s?"rgba(10,132,255,0.15)":"transparent",color:sectorF===s?A.blue:A.t3,fontSize:11,cursor:"pointer",whiteSpace:"nowrap",flexShrink:0}}>{s}</button>))}</div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:12,color:A.t3}}>Max P/E</span><input type="range" min={20} max={100} value={peMax} onChange={e=>setPeMax(+e.target.value)} style={{accentColor:A.blue,width:80}}/><span style={{fontSize:12,color:A.blue,minWidth:30}}>{peMax}x</span></div>
         <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:12,color:A.t3}}>Min Return</span><input type="range" min={-50} max={100} value={retMin} onChange={e=>setRetMin(+e.target.value)} style={{accentColor:A.blue,width:80}}/><span style={{fontSize:12,color:A.blue,minWidth:40}}>{retMin}%</span></div>
@@ -717,7 +739,7 @@ function EntryCalcView({stocks}){
   const totalInvested=allocation.reduce((a,x)=>a+x.invested,0);
   return(
     <div style={{padding:"24px 28px"}}>
-      <div className="calc-grid" style={{display:"grid",gridTemplateColumns:"380px 1fr",gap:20}}>
+      <div className="calc-grid" style={{display:"grid",gridTemplateColumns:"min(380px,100%) 1fr",gap:20}}>
         <div style={{display:"flex",flexDirection:"column",gap:14}}>
           <div style={{background:A.card,borderRadius:16,padding:22,border:`1px solid ${A.sepLight}`}}>
             <p style={{fontSize:13,fontWeight:600,color:A.t1,marginBottom:18}}>Investment Parameters</p>
@@ -1294,7 +1316,11 @@ export default function BrahmosCapital(){
   .kpi-value{font-size:18px!important;}
 }
 .hamburger{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,0.06);border:1px solid rgba(84,84,88,0.4);cursor:pointer;flex-shrink:0;}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}`}</style>
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:199;}
+@media(max-width:768px){
+  .calc-grid{grid-template-columns:1fr!important;}
+  .entry-params{width:100%!important;}
+}`}</style>
       {/* SIDEBAR */}
       {sidebarOpen&&<div className="sidebar-overlay" onClick={()=>setSidebarOpen(false)}/>}
       <div className={"sidebar"+(sidebarOpen?" open":"")} style={{width:210,background:"rgba(10,10,10,0.98)",borderRight:`1px solid ${A.sep}`,display:"flex",flexDirection:"column",flexShrink:0}}>
@@ -1338,15 +1364,15 @@ export default function BrahmosCapital(){
               <span className="ask-dot" style={{width:5,height:5,borderRadius:"50%",background:A.green,animation:"pulse 2s infinite"}}/>
             </button>
             <span className="topbar-date" style={{fontSize:11,color:A.t3}}>NSE · {new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</span>
-            <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>LIVE</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:6,background:"rgba(48,209,88,0.1)",borderRadius:20,padding:"4px 12px",border:"1px solid rgba(48,209,88,0.2)"}}><span style={{width:6,height:6,borderRadius:"50%",background:A.green,display:"inline-block",animation:"pulse 1.8s ease-in-out infinite"}}/><span style={{color:A.green,fontSize:11,fontWeight:600,letterSpacing:"0.05em"}}>NSE LIVE</span></div>
           </div>
         </div>
-        <div className="kpi-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
+        {tab==="portfolio"&&<div className="kpi-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,padding:"14px 28px",flexShrink:0,borderBottom:`1px solid ${A.sep}`,background:A.bg2}}>
           <KpiCard label="TOTAL VALUE"        value={inr(totVal)}   sub={"Cost basis "+inr(totCost)+" · Mar 2025"} positive={null}/>
           <KpiCard label="TOTAL RETURN"       value={pct(totRet)}   sub={inr(totVal-totCost)+" unrealised gain"} positive={totRet>=0}/>
           <KpiCard label="ALPHA VS NIFTY DEF" value={pct(alpha)}    sub={"Nifty Defence YTD +"+BENCH.toFixed(1)+"%"} positive={alpha>=0}/>
           <KpiCard label="PORTFOLIO STOCKS"   value="25"            sub="9 core + 16 extended positions" positive={null}/>
-        </div>
+        </div>}
         <div ref={scrollRef} style={{flex:1,overflowY:"auto"}}>
           {tab==="portfolio"&&<PortfolioView onAskAI={()=>setTab("ai")} stocks={stocks} histData={histData} histStatus={histStatus} signals={liveSignals} aiStatus={aiStatus}/>}
           {tab==="geo"      &&<GeoView geoCards={aiGeoCards} geoAiStatus={geoAiStatus}/>}
