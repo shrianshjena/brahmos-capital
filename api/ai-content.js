@@ -1,7 +1,6 @@
 /**
- * AI Investment Signals + Consensus  (100% free APIs)
- * Priority: Gemini 1.5 Pro → Gemini 2.0 Flash → Groq Llama 70B
- * Claude removed (paid). HuggingFace removed (token expires ~90d).
+ * AI Investment Signals + Consensus  (100% free)
+ * Model: Groq Llama 70B (dedicated — Gemini reserved for Ask Shri chat)
  * Cached 4 hours on Vercel edge.
  */
 
@@ -51,30 +50,7 @@ async function fetchNewsHeadlines() {
   } catch { return []; }
 }
 
-async function callGemini(apiKey, prompt, maxTok=2800) {
-  if (!apiKey) return null;
-  const modelConfigs = [
-    { model: "gemini-2.0-flash",      genConfig: { maxOutputTokens: maxTok, temperature: 0.4 } },
-    { model: "gemini-2.0-flash-lite", genConfig: { maxOutputTokens: maxTok, temperature: 0.4 } },
-    { model: "gemini-2.5-flash",      genConfig: { maxOutputTokens: maxTok, temperature: 0.4, thinkingConfig: { thinkingBudget: 0 } } },
-  ];
-  for (const { model, genConfig } of modelConfigs) {
-    try {
-      const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        { method:"POST", headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig: genConfig }) }
-      );
-      const d = await r.json();
-      if (d.error) continue;
-      const parts = d?.candidates?.[0]?.content?.parts || [];
-      const t = parts.filter(p => !p.thought).map(p => p.text||"").join("").trim();
-      if (t && t.length > 50) return t;
-    } catch { continue; }
-  }
-  return null;
-}
-
+// Groq only — Gemini quota reserved exclusively for Ask Shri
 async function callGroq(apiKey, prompt) {
   if (!apiKey) return null;
   const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
@@ -83,22 +59,30 @@ async function callGroq(apiKey, prompt) {
       const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":`Bearer ${apiKey}`},
-        body:JSON.stringify({ model, messages:[{role:"user",content:prompt}], max_tokens:2800, temperature:0.4, stream:false }),
+        body:JSON.stringify({
+          model,
+          messages:[
+            { role:"system", content:"You are a senior Indian equity research analyst. Return ONLY valid JSON — no markdown, no explanation, no preamble." },
+            { role:"user", content:prompt }
+          ],
+          max_tokens:3000,
+          temperature:0.4,
+          stream:false
+        }),
       });
       const d = await r.json();
       if (d.error) continue;
       const t = d?.choices?.[0]?.message?.content;
-      if (t && t.length > 50) return t;
+      if (t && t.length > 100) return t;
     } catch { continue; }
   }
   return null;
 }
 
 export default async function handler(req, res) {
-  const geminiKey = process.env.GEMINI_API_KEY;
-  const groqKey   = process.env.GROQ_API_KEY;
-  if (!geminiKey && !groqKey) {
-    return res.status(500).json({ ok: false, error: "No AI API key configured" });
+  const groqKey = process.env.GROQ_API_KEY;
+  if (!groqKey) {
+    return res.status(500).json({ ok: false, error: "GROQ_API_KEY not configured" });
   }
 
   const [prices, headlines] = await Promise.all([
@@ -120,7 +104,7 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines available.";
 
-  const prompt = `You are a senior Indian equity research analyst. Today is ${today}. Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
+  const prompt = `Today is ${today}. Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
 
 PORTFOLIO DATA:
 ${stockLines}
@@ -147,7 +131,7 @@ Rules:
 - Return ONLY the JSON. No markdown fences. No text before or after.`;
 
   try {
-    let raw = await callGemini(geminiKey, prompt) || await callGroq(groqKey, prompt) || "";
+    let raw = await callGroq(groqKey, prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
     const start = raw.indexOf("{");
     const end   = raw.lastIndexOf("}");

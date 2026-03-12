@@ -915,8 +915,7 @@ function NewsView(){
   const [tickerF,setTickerF]=useState("All");
   const [liveNews,setLiveNews]=useState([]);
   const [newsStatus,setNewsStatus]=useState("loading");
-  const cats=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS","EXPORTS"];
-  const cats2=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS"];
+  const cats=["All","GEOPO","ORDER","DEAL","BROKER","POLICY","BUDGET","MARKET","RESULTS","EXPORTS"];
   const catColors={GEOPO:A.red,ORDER:A.blue,DEAL:A.green,BROKER:A.purple,POLICY:A.orange,BUDGET:A.yellow,MARKET:A.teal,RESULTS:A.green,EXPORTS:A.teal};
   const tickers=["All",...STOCKS.map(s=>s.ticker),"SECTOR"]; // ticker list is static (fine)
 
@@ -948,7 +947,7 @@ function NewsView(){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:`1px solid ${A.sepLight}`,marginBottom:16}}>
         <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
-          {cats2.map(c=>(<button key={c} onClick={()=>setCatF(c)} style={{padding:"4px 12px",borderRadius:20,border:"1px solid "+(catF===c?(catColors[c]||A.blue):A.sep),background:catF===c?((catColors[c]||A.blue)+"22"):"transparent",color:catF===c?(catColors[c]||A.blue):A.t3,fontSize:11,cursor:"pointer",fontWeight:catF===c?600:400}}>{c}</button>))}
+          {cats.map(c=>(<button key={c} onClick={()=>setCatF(c)} style={{padding:"4px 12px",borderRadius:20,border:"1px solid "+(catF===c?(catColors[c]||A.blue):A.sep),background:catF===c?((catColors[c]||A.blue)+"22"):"transparent",color:catF===c?(catColors[c]||A.blue):A.t3,fontSize:11,cursor:"pointer",fontWeight:catF===c?600:400}}>{c}</button>))}
         </div>
         <div style={{display:"flex",gap:5,flexWrap:"wrap",alignItems:"center"}}>
           <span style={{fontSize:11,color:A.t4,marginRight:4}}>Stock filter:</span>
