@@ -1,49 +1,83 @@
-// Serverless function — generates geopolitical event cards from live news
-
-const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
+/**
+ * Geopolitical Event Cards  (100% free APIs)
+ * Priority: Gemini 1.5 Pro → Gemini 2.0 Flash → Groq Llama 70B
+ * Claude removed (paid). HuggingFace removed (token expires ~90d).
+ * Cached 1 hour on Vercel edge.
+ */
 
 async function fetchGeoNews() {
   const feeds = [
-    "https://news.google.com/rss/search?q=India+defence+geopolitical+military&hl=en-IN&gl=IN&ceid=IN:en",
-    "https://news.google.com/rss/search?q=Iran+war+Ukraine+Taiwan+conflict+2026&hl=en&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=India+defence+budget+export+BrahMos&hl=en-IN&gl=IN&ceid=IN:en",
+    "https://news.google.com/rss/search?q=Iran+war+India+defence+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "https://news.google.com/rss/search?q=Ukraine+Taiwan+nato+conflict+2026&hl=en&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=India+defence+budget+export+BrahMos+Tejas&hl=en-IN&gl=IN&ceid=IN:en",
   ];
-  const results = await Promise.allSettled(feeds.map(url =>
-    fetch(url).then(r => r.text()).catch(() => "")
-  ));
+  const results = await Promise.allSettled(feeds.map(url => fetch(url).then(r => r.text()).catch(() => "")));
   const allTitles = new Set();
   for (const r of results) {
     if (r.status !== "fulfilled" || !r.value) continue;
-    const matches = [...r.value.matchAll(/<title><!\[CDATA\[(.*?)\]\]><\/title>/g)];
-    matches.forEach(m => {
-      const t = m[1];
-      if (!t.includes("Google News") && t.length > 20) allTitles.add(t);
-    });
+    [...r.value.matchAll(/<title><!\[CDATA\[(.*?)\]\]><\/title>/g)]
+      .forEach(m => { if (!m[1].includes("Google News") && m[1].length > 20) allTitles.add(m[1]); });
   }
   return [...allTitles].slice(0, 20);
 }
 
+async function callGemini(apiKey, prompt) {
+  if (!apiKey) return null;
+  const models = ["gemini-1.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
+  for (const model of models) {
+    try {
+      const r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        { method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{maxOutputTokens:2000,temperature:0.4} }) }
+      );
+      const d = await r.json();
+      if (d.error) continue;
+      const t = d?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (t && t.length > 50) return t;
+    } catch { continue; }
+  }
+  return null;
+}
+
+async function callGroq(apiKey, prompt) {
+  if (!apiKey) return null;
+  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  for (const model of models) {
+    try {
+      const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${apiKey}`},
+        body:JSON.stringify({ model, messages:[{role:"user",content:prompt}], max_tokens:2000, temperature:0.4, stream:false }),
+      });
+      const d = await r.json();
+      if (d.error) continue;
+      const t = d?.choices?.[0]?.message?.content;
+      if (t && t.length > 50) return t;
+    } catch { continue; }
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  const geminiKey    = process.env.GEMINI_API_KEY;
-  const hfToken      = process.env.HF_TOKEN;
-  if (!anthropicKey && !geminiKey && !hfToken) {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const groqKey   = process.env.GROQ_API_KEY;
+  if (!geminiKey && !groqKey) {
     return res.status(500).json({ ok: false, error: "No AI API key configured" });
   }
 
   const headlines = await fetchGeoNews();
   const today = new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
-
   const headlineStr = headlines.length > 0
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
-    : "No live headlines. Use your knowledge of current events as of 2026.";
+    : "No live headlines. Use your knowledge of current global events as of 2026.";
 
   const prompt = `You are a geopolitical risk analyst for Indian defence stocks. Today is ${today}.
 
 Based on these news headlines:
 ${headlineStr}
 
-Generate 8 geopolitical event cards relevant to Indian defence sector. Return ONLY a raw JSON array — no markdown, no explanation.
+Generate 8 geopolitical event cards relevant to the Indian defence sector. Return ONLY a raw JSON array — no markdown, no explanation.
 
 [
   {
@@ -61,70 +95,19 @@ Generate 8 geopolitical event cards relevant to Indian defence sector. Return ON
 ]
 
 Rules:
-- impact must be one of: ACTIVE WAR, ESCALATING, YEAR 4, RISING RISK, BULLISH, LT BULL, NEUTRAL
-- colorType: red for war/conflict, orange for escalating, blue for ongoing, green for India bullish, teal for long-term
+- impact: ACTIVE WAR / ESCALATING / YEAR 4 / RISING RISK / BULLISH / LT BULL / NEUTRAL
+- colorType: red=war, orange=escalating, blue=ongoing, green=India bullish, teal=long-term
 - hot: true only for ACTIVE WAR or ESCALATING
 - score: 1-10 impact on Indian defence stocks
-- tickers: relevant portfolio tickers from: HAL,BEL,MAZDOCK,COCHINSHIP,GRSE,BDL,DATAPATTNS,PARAS,ZENTEC,SOLARINDS,MTAR,BHARATFORG,ASTRAMICRO,BEML,APOLLOMICRO,MIDHANI,IDEAFORGE,PREMEXPLN,UNIMECH,PTCIND,DCXINDIA,DYNAMATECH,AVANTEL,AXISCADES,CYIENTDLM,SECTOR
-- Include a mix: conflicts, India policy/budget events, export deals, tech programmes
+- tickers from: HAL,BEL,MAZDOCK,COCHINSHIP,GRSE,BDL,DATAPATTNS,PARAS,ZENTEC,SOLARINDS,MTAR,BHARATFORG,ASTRAMICRO,BEML,APOLLOMICRO,MIDHANI,IDEAFORGE,PREMEXPLN,UNIMECH,PTCIND,DCXINDIA,DYNAMATECH,AVANTEL,AXISCADES,CYIENTDLM,SECTOR
+- Include a mix: active conflicts, India policy/budget, export deals, tech programmes
 - Return ONLY the JSON array. Nothing else.`;
 
-  async function callClaude(p) {
-    if (!anthropicKey) return null;
-    try {
-      const r = await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",headers:{"Content-Type":"application/json","x-api-key":anthropicKey,"anthropic-version":"2023-06-01"},
-        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:p}]}),
-      });
-      const d = await r.json(); return d?.content?.[0]?.text||null;
-    } catch { return null; }
-  }
-  async function callGemini(p) {
-    if (!geminiKey) return null;
-    try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({contents:[{parts:[{text:p}]}],generationConfig:{maxOutputTokens:2000,temperature:0.5}}),
-      });
-      const d = await r.json(); return d?.candidates?.[0]?.content?.parts?.[0]?.text||null;
-    } catch { return null; }
-  }
-  async function callHF(p) {
-    if (!hfToken) return null;
-    try {
-      const r = await fetch("https://router.huggingface.co/v1/chat/completions",{
-        method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${hfToken}`},
-        body:JSON.stringify({model:HF_MODEL,messages:[{role:"user",content:p}],max_tokens:1800,temperature:0.5,stream:false}),
-      });
-      const d = await r.json(); return d?.choices?.[0]?.message?.content||null;
-    } catch { return null; }
-  }
-
   try {
-async function callGroq(prompt, maxTok) {
-    if (!process.env.GROQ_API_KEY) return null;
-    const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
-    for (const model of models) {
-      try {
-        const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${process.env.GROQ_API_KEY}` },
-          body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: maxTok, temperature: 0.4, stream: false }),
-        });
-        const d = await r.json();
-        if (d.error) continue;
-        const t = d?.choices?.[0]?.message?.content;
-        if (t && t.length > 50) return t;
-      } catch { continue; }
-    }
-    return null;
-  }
-
-        let raw = await callGroq(prompt, 2000) || await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
+    let raw = await callGemini(geminiKey, prompt) || await callGroq(groqKey, prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
-
     const start = raw.indexOf("[");
-    const end = raw.lastIndexOf("]");
+    const end   = raw.lastIndexOf("]");
     if (start === -1 || end === -1) throw new Error("No JSON array in response");
     const events = JSON.parse(raw.slice(start, end + 1));
     if (!Array.isArray(events)) throw new Error("Not an array");
@@ -132,7 +115,6 @@ async function callGroq(prompt, maxTok) {
     res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
     res.setHeader("Content-Type", "application/json");
     return res.status(200).json({ ok: true, events, generatedAt: today });
-
   } catch (err) {
     return res.status(500).json({ ok: false, error: err.message });
   }

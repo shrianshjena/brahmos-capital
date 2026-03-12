@@ -1,5 +1,9 @@
-// Serverless function (not edge) — needs up to 60s for HF model response
-const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
+/**
+ * AI Investment Signals + Consensus  (100% free APIs)
+ * Priority: Gemini 1.5 Pro → Gemini 2.0 Flash → Groq Llama 70B
+ * Claude removed (paid). HuggingFace removed (token expires ~90d).
+ * Cached 4 hours on Vercel edge.
+ */
 
 const TICKERS = ["HAL","BEL","MAZDOCK","COCHINSHIP","GRSE","BDL","DATAPATTNS","PARAS",
   "ZENTEC","SOLARINDS","MTAR","BHARATFORG","ASTRAMICRO","BEML","APOLLOMICRO","MIDHANI",
@@ -30,8 +34,7 @@ const PE = {
 
 async function fetchPrice(sym) {
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1d`;
-    const res = await fetch(url, {
+    const res = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1d`, {
       headers: { "User-Agent":"Mozilla/5.0","Referer":"https://finance.yahoo.com/" }
     });
     const d = await res.json();
@@ -41,23 +44,58 @@ async function fetchPrice(sym) {
 
 async function fetchNewsHeadlines() {
   try {
-    const rss = await fetch("https://news.google.com/rss/search?q=India+defence+stocks+NSE&hl=en-IN&gl=IN&ceid=IN:en");
+    const rss = await fetch("https://news.google.com/rss/search?q=Nifty+India+defence+HAL+BEL+NSE+stocks&hl=en-IN&gl=IN&ceid=IN:en");
     const text = await rss.text();
-    const titles = [...text.matchAll(/<title><!\[CDATA\[(.*?)\]\]><\/title>/g)]
-      .map(m => m[1]).filter(t => !t.includes("Google News")).slice(0, 12);
-    return titles;
+    return [...text.matchAll(/<title><!\[CDATA\[(.*?)\]\]><\/title>/g)]
+      .map(m => m[1]).filter(t => !t.includes("Google News")).slice(0, 10);
   } catch { return []; }
 }
 
+async function callGemini(apiKey, prompt) {
+  if (!apiKey) return null;
+  const models = ["gemini-1.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
+  for (const model of models) {
+    try {
+      const r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        { method:"POST", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{maxOutputTokens:3000,temperature:0.4} }) }
+      );
+      const d = await r.json();
+      if (d.error) continue;
+      const t = d?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (t && t.length > 50) return t;
+    } catch { continue; }
+  }
+  return null;
+}
+
+async function callGroq(apiKey, prompt) {
+  if (!apiKey) return null;
+  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  for (const model of models) {
+    try {
+      const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${apiKey}`},
+        body:JSON.stringify({ model, messages:[{role:"user",content:prompt}], max_tokens:2800, temperature:0.4, stream:false }),
+      });
+      const d = await r.json();
+      if (d.error) continue;
+      const t = d?.choices?.[0]?.message?.content;
+      if (t && t.length > 50) return t;
+    } catch { continue; }
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  const geminiKey    = process.env.GEMINI_API_KEY;
-  const hfToken      = process.env.HF_TOKEN;
-  if (!anthropicKey && !geminiKey && !hfToken) {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  const groqKey   = process.env.GROQ_API_KEY;
+  if (!geminiKey && !groqKey) {
     return res.status(500).json({ ok: false, error: "No AI API key configured" });
   }
 
-  // Fetch live prices + news in parallel
   const [prices, headlines] = await Promise.all([
     Promise.all(TICKERS.map(t => fetchPrice(SYMBOL_MAP[t]).then(px => ({ t, px })))),
     fetchNewsHeadlines(),
@@ -65,7 +103,6 @@ export default async function handler(req, res) {
 
   const priceMap = {};
   for (const { t, px } of prices) priceMap[t] = px;
-
   const today = new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
 
   const stockLines = TICKERS.map(t => {
@@ -94,7 +131,7 @@ Return this exact JSON structure:
   ],
   "consensus": {
     "HAL":{"buy":20,"hold":5,"sell":2,"target":4800,"brokers":["Motilal","HDFC Sec","Kotak","Nomura","CLSA"]},
-    ...one entry for each of the 25 tickers: HAL,BEL,MAZDOCK,COCHINSHIP,GRSE,BDL,DATAPATTNS,PARAS,ZENTEC,SOLARINDS,MTAR,BHARATFORG,ASTRAMICRO,BEML,APOLLOMICRO,MIDHANI,IDEAFORGE,PREMEXPLN,UNIMECH,PTCIND,DCXINDIA,DYNAMATECH,AVANTEL,AXISCADES,CYIENTDLM...
+    ...one entry for each of the 25 tickers...
   }
 }
 
@@ -104,88 +141,19 @@ Rules:
 - Brokers from: Motilal, HDFC Sec, Kotak, Emkay, ICICI Sec, Axis, Nuvama, YES Sec, Jefferies, Nomura, CLSA, BOB Cap, Prabhudas, JM Fin, Nirmal Bang, Monarch
 - Return ONLY the JSON. No markdown fences. No text before or after.`;
 
-  // Helper: call Claude
-  async function callClaude(prompt) {
-    if (!anthropicKey) return null;
-    try {
-      const r = await fetch("https://api.anthropic.com/v1/messages", {
-        method:"POST",
-        headers:{"Content-Type":"application/json","x-api-key":anthropicKey,"anthropic-version":"2023-06-01"},
-        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2800,messages:[{role:"user",content:prompt}]}),
-      });
-      const d = await r.json();
-      return d?.content?.[0]?.text || null;
-    } catch { return null; }
-  }
-
-  // Helper: call Gemini
-  async function callGemini(prompt) {
-    if (!geminiKey) return null;
-    try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2800,temperature:0.4}}),
-      });
-      const d = await r.json();
-      return d?.candidates?.[0]?.content?.parts?.[0]?.text || null;
-    } catch { return null; }
-  }
-
-  // Helper: call HuggingFace
-  async function callHF(prompt) {
-    if (!hfToken) return null;
-    try {
-      const r = await fetch("https://router.huggingface.co/v1/chat/completions",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":`Bearer ${hfToken}`},
-        body:JSON.stringify({model:HF_MODEL,messages:[{role:"user",content:prompt}],max_tokens:2500,temperature:0.4,stream:false}),
-      });
-      const d = await r.json();
-      return d?.choices?.[0]?.message?.content || null;
-    } catch { return null; }
-  }
-
   try {
-    // Try providers in order: Claude → Gemini → HF
-async function callGroq(prompt, maxTok) {
-    if (!process.env.GROQ_API_KEY) return null;
-    const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
-    for (const model of models) {
-      try {
-        const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${process.env.GROQ_API_KEY}` },
-          body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: maxTok, temperature: 0.4, stream: false }),
-        });
-        const d = await r.json();
-        if (d.error) continue;
-        const t = d?.choices?.[0]?.message?.content;
-        if (t && t.length > 50) return t;
-      } catch { continue; }
-    }
-    return null;
-  }
-
-        let raw = await callGroq(prompt, 2800) || await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
-
-    // Strip any markdown fences if AI added them
+    let raw = await callGemini(geminiKey, prompt) || await callGroq(groqKey, prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
-
-    // Find the JSON object
     const start = raw.indexOf("{");
-    const end = raw.lastIndexOf("}");
+    const end   = raw.lastIndexOf("}");
     if (start === -1 || end === -1) throw new Error("No JSON found in response");
     const parsed = JSON.parse(raw.slice(start, end + 1));
-
     if (!parsed.signals || !parsed.consensus) throw new Error("Invalid JSON structure");
 
     res.setHeader("Cache-Control", "s-maxage=14400, stale-while-revalidate=3600");
     res.setHeader("Content-Type", "application/json");
     return res.status(200).json({ ok: true, ...parsed, generatedAt: today });
-
   } catch (err) {
-    // Return error so frontend falls back to static data
     return res.status(500).json({ ok: false, error: err.message });
   }
 }
