@@ -155,7 +155,7 @@ export default async function handler(req) {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
         // Cache 1 hour on Vercel Edge — free, no re-fetch every visitor
-        "Cache-Control": "s-maxage=3600, stale-while-revalidate=300",
+        "Cache-Control": "s-maxage=1800, stale-while-revalidate=300",
       },
     }
   );

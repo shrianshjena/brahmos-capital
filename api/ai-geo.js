@@ -129,7 +129,7 @@ async function callGroq(prompt, maxTok) {
     const events = JSON.parse(raw.slice(start, end + 1));
     if (!Array.isArray(events)) throw new Error("Not an array");
 
-    res.setHeader("Cache-Control", "s-maxage=7200, stale-while-revalidate=1800");
+    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
     res.setHeader("Content-Type", "application/json");
     return res.status(200).json({ ok: true, events, generatedAt: today });
 
