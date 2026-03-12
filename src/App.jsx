@@ -331,7 +331,28 @@ FOR STOCK-SPECIFIC ANALYSIS: Give a full equity research note:
 5. 12-MONTH TARGETS — Bull and bear case with reasoning.
 6. RISK RATING (1–10) — Key risks and tailwinds.
 7. ENTRY ZONE & STOP-LOSS — Where to enter, where to cut.
-End with: verdict table | Metric | Value | Rating | and a **bold one-line verdict**.
+End with a summary verdict table in this EXACT format (no text before the first |, no blank lines between rows):
+
+| Metric | Value | Rating |
+|--------|-------|--------|
+| Valuation (P/E) | Xx | Fair/Overheated/Bargain |
+| Business Moat | — | Weak/Moderate/Strong |
+| Revenue Growth | X% CAGR | Improving/Stable/Declining |
+| Balance Sheet | — | Healthy/Caution/Red Flag |
+| 12M Bull Target | ₹X | — |
+| 12M Bear Target | ₹X | — |
+| Risk Rating | X/10 | Low/Moderate/High |
+| Entry Zone | ₹X–₹X | — |
+| Stop-Loss | ₹X | — |
+
+Then end with a **bold one-line verdict**.
+
+FORMATTING RULES — always follow:
+- Tables: every row starts with |, separator row starts with |, NO blank lines between rows
+- Section headers: use ## for major sections (VALUATION, BUSINESS QUALITY, etc.)
+- Sub-points: use bullet points (- item)
+- Numbers: always in ₹ or % format, never raw floats
+- Do NOT output raw text like "verdict table | Metric |" — the table must start with | on its own line
 
 FOR MACRO/GEOPOLITICAL QUESTIONS (Iran war, budget, global events):
 Answer as a portfolio strategist — which stocks benefit most, which face headwinds, overall portfolio impact. No need to force a stock-by-stock format.
@@ -357,14 +378,27 @@ function MarkdownMsg({text}){
   let i=0;
   while(i<lines.length){
     const line=lines[i];
-    // Table block
-    if(line.trim().startsWith("|")&&i+1<lines.length&&lines[i+1].trim().match(/^\|[-|\s:]+\|$/)){
-      const headers=line.split("|").filter(c=>c.trim()).map(c=>c.trim());
-      i+=2;
+    // Table block — handle: separator with/without leading |, blank lines between rows
+    // Detect separator on current or next line (AI sometimes skips leading |)
+    const isSep=s=>s.trim().match(/^[|\-:][\-|:\s]{3,}$/);
+    const hasInlinePipe=line.includes("|")&&line.split("|").filter(c=>c.trim()).length>=2;
+    const nextIsSep=i+1<lines.length&&isSep(lines[i+1]);
+    const nextNextIsSep=i+2<lines.length&&isSep(lines[i+2]);
+    if(hasInlinePipe&&(nextIsSep||nextNextIsSep)){
+      // Extract only the pipe-delimited portion of the header line
+      const pipeStart=line.indexOf("|");
+      const headerLine=pipeStart>=0?line.slice(pipeStart):line;
+      const headers=headerLine.split("|").filter(c=>c.trim()).map(c=>c.trim());
+      i+=(nextIsSep?2:3); // skip header + optional text row + separator
       const rows=[];
-      while(i<lines.length&&lines[i].trim().startsWith("|")){
-        rows.push(lines[i].split("|").filter(c=>c.trim()).map(c=>c.trim()));
-        i++;
+      while(i<lines.length){
+        const rl=lines[i].trim();
+        if(rl.startsWith("|")){
+          const cells=lines[i].split("|").filter(c=>c.trim()).map(c=>c.trim());
+          if(!isSep(lines[i]))rows.push(cells);
+          i++;
+        } else if(rl===""){ i++; } // skip blank lines within table
+        else break;
       }
       elements.push(
         <div key={`t${i}`} style={{overflowX:"auto",margin:"12px 0"}}>
@@ -484,7 +518,7 @@ function InlineText({t}){
   return <>{parts}</>;
 }
 
-const GREETING="Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — whether to buy HAL at these levels, whether BDL at 83x P/E makes sense, which stock has the best risk-reward today. I'll give you a full equity research note, not the usual sanitised analyst fluff.\n\nWhat's on your mind?";
+const GREETING="Namaste. I'm Shri — 20 years on Dalal Street. I built this dashboard to track my own defence portfolio, and now I'm opening it up to the community.\n\nAsk me anything — a full equity research note on any stock, whether to buy or hold at current levels, which stock has the best risk-reward today, or how global events are shaping this portfolio. I'll give you straight talk backed by 20 years on Dalal Street, not the usual sanitised analyst fluff.\n\nWhat's on your mind?";
 
 function AskAIView({stocks}){
   const [messages,setMessages]=useState([{role:"assistant",content:GREETING}]);
@@ -492,14 +526,14 @@ function AskAIView({stocks}){
   const [loading,setLoading]=useState(false);
   const bottomRef=useRef();
   const QUICK=[
-    "Is HAL a buy at ₹3,979?",
-    "Full analysis of BDL — 83x P/E justified?",
-    "Which stock has best risk-reward right now?",
-    "Should I book profits after 30-57% gains?",
-    "MAZDOCK vs COCHINSHIP — which would you pick?",
-    "Is Data Patterns at 75x P/E overvalued?",
-    "Impact of US-Iran war on this portfolio?",
-    "Best entry point for someone new to this sector?",
+    "Give me a full equity research note on HAL — is it a buy right now?",
+    "Full analysis of BDL — is the current valuation justified?",
+    "Which stock in this portfolio has the best risk-reward today?",
+    "Should I start booking profits given the gains so far?",
+    "MAZDOCK vs COCHINSHIP — full comparison, which would you pick?",
+    "Is Data Patterns overvalued at its current P/E, or is growth justifying it?",
+    "How does the US-Iran conflict affect this defence portfolio?",
+    "What is the best entry strategy for someone new to this sector?",
   ];
   useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:"smooth"});},[messages]);
   // freshHistory: optional — pass a clean history array to avoid stale closure (used by quick buttons)
