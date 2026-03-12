@@ -99,7 +99,11 @@ function parseRSS(xml) {
       block.match(/<title>([\s\S]*?)<\/title>/)
     )?.[1]?.trim() || "";
     const link = (block.match(/<link>([\s\S]*?)<\/link>/))?.[1]?.trim() || "#";
-    const pubDate = (block.match(/<pubDate>([\s\S]*?)<\/pubDate>/))?.[1]?.trim() || "";
+    // pubDate: handle both plain and CDATA-wrapped (Livemint uses CDATA)
+    const pubDate = (
+      block.match(/<pubDate><!\[CDATA\[([\s\S]*?)\]\]><\/pubDate>/) ||
+      block.match(/<pubDate>([\s\S]*?)<\/pubDate>/)
+    )?.[1]?.trim() || "";
     const rawDesc = (
       block.match(/<description><!\[CDATA\[([\s\S]*?)\]\]><\/description>/) ||
       block.match(/<description>([\s\S]*?)<\/description>/)
@@ -115,7 +119,10 @@ function parseRSS(xml) {
     const source = srcMatch ? srcMatch[1].trim() : "Livemint";
     const cleanTitle = srcMatch ? title.slice(0, -srcMatch[0].length).trim() : title;
     if (cleanTitle && cleanTitle.length > 15) {
-      items.push({ title: cleanTitle, link, pubDate, desc, source });
+      const safeTitle = cleanTitle
+        .replace(/&amp;amp;/g,"&").replace(/&amp;/g,"&")
+        .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"');
+      items.push({ title: safeTitle, link, pubDate, desc, source });
     }
   }
   return items;
