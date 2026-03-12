@@ -24,8 +24,12 @@ async function fetchGeoNews() {
 }
 
 export default async function handler(req, res) {
-  const hfToken = process.env.HF_TOKEN;
-  if (!hfToken) return res.status(500).json({ ok: false, error: "HF_TOKEN not set" });
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const geminiKey    = process.env.GEMINI_API_KEY;
+  const hfToken      = process.env.HF_TOKEN;
+  if (!anthropicKey && !geminiKey && !hfToken) {
+    return res.status(500).json({ ok: false, error: "No AI API key configured" });
+  }
 
   const headlines = await fetchGeoNews();
   const today = new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
@@ -65,21 +69,39 @@ Rules:
 - Include a mix: conflicts, India policy/budget events, export deals, tech programmes
 - Return ONLY the JSON array. Nothing else.`;
 
-  try {
-    const hfRes = await fetch("https://router.huggingface.co/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type":"application/json", "Authorization":`Bearer ${hfToken}` },
-      body: JSON.stringify({
-        model: HF_MODEL,
-        messages: [{ role:"user", content: prompt }],
-        max_tokens: 1800,
-        temperature: 0.5,
-        stream: false,
-      }),
-    });
+  async function callClaude(p) {
+    if (!anthropicKey) return null;
+    try {
+      const r = await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",headers:{"Content-Type":"application/json","x-api-key":anthropicKey,"anthropic-version":"2023-06-01"},
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:p}]}),
+      });
+      const d = await r.json(); return d?.content?.[0]?.text||null;
+    } catch { return null; }
+  }
+  async function callGemini(p) {
+    if (!geminiKey) return null;
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:p}]}],generationConfig:{maxOutputTokens:2000,temperature:0.5}}),
+      });
+      const d = await r.json(); return d?.candidates?.[0]?.content?.parts?.[0]?.text||null;
+    } catch { return null; }
+  }
+  async function callHF(p) {
+    if (!hfToken) return null;
+    try {
+      const r = await fetch("https://router.huggingface.co/v1/chat/completions",{
+        method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${hfToken}`},
+        body:JSON.stringify({model:HF_MODEL,messages:[{role:"user",content:p}],max_tokens:1800,temperature:0.5,stream:false}),
+      });
+      const d = await r.json(); return d?.choices?.[0]?.message?.content||null;
+    } catch { return null; }
+  }
 
-    const data = await hfRes.json();
-    let raw = data?.choices?.[0]?.message?.content || "";
+  try {
+    let raw = await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
 
     const start = raw.indexOf("[");

@@ -50,9 +50,11 @@ async function fetchNewsHeadlines() {
 }
 
 export default async function handler(req, res) {
-  const hfToken = process.env.HF_TOKEN;
-  if (!hfToken) {
-    return res.status(500).json({ ok: false, error: "HF_TOKEN not set" });
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const geminiKey    = process.env.GEMINI_API_KEY;
+  const hfToken      = process.env.HF_TOKEN;
+  if (!anthropicKey && !geminiKey && !hfToken) {
+    return res.status(500).json({ ok: false, error: "No AI API key configured" });
   }
 
   // Fetch live prices + news in parallel
@@ -102,21 +104,51 @@ Rules:
 - Brokers from: Motilal, HDFC Sec, Kotak, Emkay, ICICI Sec, Axis, Nuvama, YES Sec, Jefferies, Nomura, CLSA, BOB Cap, Prabhudas, JM Fin, Nirmal Bang, Monarch
 - Return ONLY the JSON. No markdown fences. No text before or after.`;
 
-  try {
-    const hfRes = await fetch("https://router.huggingface.co/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type":"application/json", "Authorization":`Bearer ${hfToken}` },
-      body: JSON.stringify({
-        model: HF_MODEL,
-        messages: [{ role:"user", content: prompt }],
-        max_tokens: 2500,
-        temperature: 0.4,
-        stream: false,
-      }),
-    });
+  // Helper: call Claude
+  async function callClaude(prompt) {
+    if (!anthropicKey) return null;
+    try {
+      const r = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{"Content-Type":"application/json","x-api-key":anthropicKey,"anthropic-version":"2023-06-01"},
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2800,messages:[{role:"user",content:prompt}]}),
+      });
+      const d = await r.json();
+      return d?.content?.[0]?.text || null;
+    } catch { return null; }
+  }
 
-    const data = await hfRes.json();
-    let raw = data?.choices?.[0]?.message?.content || "";
+  // Helper: call Gemini
+  async function callGemini(prompt) {
+    if (!geminiKey) return null;
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2800,temperature:0.4}}),
+      });
+      const d = await r.json();
+      return d?.candidates?.[0]?.content?.parts?.[0]?.text || null;
+    } catch { return null; }
+  }
+
+  // Helper: call HuggingFace
+  async function callHF(prompt) {
+    if (!hfToken) return null;
+    try {
+      const r = await fetch("https://router.huggingface.co/v1/chat/completions",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${hfToken}`},
+        body:JSON.stringify({model:HF_MODEL,messages:[{role:"user",content:prompt}],max_tokens:2500,temperature:0.4,stream:false}),
+      });
+      const d = await r.json();
+      return d?.choices?.[0]?.message?.content || null;
+    } catch { return null; }
+  }
+
+  try {
+    // Try providers in order: Claude → Gemini → HF
+    let raw = await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
 
     // Strip any markdown fences if AI added them
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
