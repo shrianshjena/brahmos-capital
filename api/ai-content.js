@@ -51,19 +51,22 @@ async function fetchNewsHeadlines() {
   } catch { return []; }
 }
 
-async function callGemini(apiKey, prompt) {
+async function callGemini(apiKey, prompt, maxTok=2800) {
   if (!apiKey) return null;
-  const models = ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"];
-  for (const model of models) {
+  const modelConfigs = [
+    { model: "gemini-2.0-flash",      genConfig: { maxOutputTokens: maxTok, temperature: 0.4 } },
+    { model: "gemini-2.0-flash-lite", genConfig: { maxOutputTokens: maxTok, temperature: 0.4 } },
+    { model: "gemini-2.5-flash",      genConfig: { maxOutputTokens: maxTok, temperature: 0.4, thinkingConfig: { thinkingBudget: 0 } } },
+  ];
+  for (const { model, genConfig } of modelConfigs) {
     try {
       const r = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         { method:"POST", headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{maxOutputTokens:3000,temperature:0.4} }) }
+          body:JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig: genConfig }) }
       );
       const d = await r.json();
       if (d.error) continue;
-      // Gemini 2.5: filter out thought parts, join remaining text
       const parts = d?.candidates?.[0]?.content?.parts || [];
       const t = parts.filter(p => !p.thought).map(p => p.text||"").join("").trim();
       if (t && t.length > 50) return t;

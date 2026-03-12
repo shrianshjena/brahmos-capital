@@ -23,14 +23,24 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
   const contents = messages.map((m, i) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: i === 0 && m.role === "user"
-      ? `${systemPrompt}\n\n${m.content}`
+      ? `${systemPrompt}
+
+${m.content}`
       : m.content }],
   }));
   if (!contents.length) return null;
 
-  const models = ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"];
+  // Model order: highest daily quota first, then quality fallbacks
+  // gemini-2.0-flash:      1500 req/day — primary workhorse
+  // gemini-2.0-flash-lite: 1500 req/day — fast backup
+  // gemini-2.5-flash:        20 req/day — emergency only, thinking disabled
+  const modelConfigs = [
+    { model: "gemini-2.0-flash",       genConfig: { maxOutputTokens: maxTokens, temperature: 0.4 } },
+    { model: "gemini-2.0-flash-lite",  genConfig: { maxOutputTokens: maxTokens, temperature: 0.4 } },
+    { model: "gemini-2.5-flash",       genConfig: { maxOutputTokens: maxTokens, temperature: 0.4, thinkingConfig: { thinkingBudget: 0 } } },
+  ];
 
-  for (const model of models) {
+  for (const { model, genConfig } of modelConfigs) {
     try {
       const res = await withTimeout(
         fetch(
@@ -40,7 +50,7 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               contents,
-              generationConfig: { maxOutputTokens: maxTokens, temperature: 0.4 },
+              generationConfig: genConfig,
               safetySettings: [
                 { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_NONE" },
                 { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_NONE" },
@@ -54,13 +64,8 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
       );
       const data = await res.json();
       if (data.error) continue;
-      // Gemini 2.5 has "thinking" mode — parts[0] is internal reasoning, parts[1]+ is the answer
-      // Join all non-thought parts to get the full response
       const parts = data?.candidates?.[0]?.content?.parts || [];
-      const text = parts
-        .filter(p => !p.thought)
-        .map(p => p.text || "")
-        .join("").trim();
+      const text = parts.filter(p => !p.thought).map(p => p.text || "").join("").trim();
       if (text && text.length > 30) return { text, model: `gemini/${model}` };
     } catch { continue; }
   }
