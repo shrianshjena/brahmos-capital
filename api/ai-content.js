@@ -133,6 +133,8 @@ Rules:
   try {
     let raw = await callGroq(groqKey, prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
+    // Sanitize literal control chars that Groq/Llama sometimes emits in JSON strings
+    raw = raw.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, " ");
     const start = raw.indexOf("{");
     const end   = raw.lastIndexOf("}");
     if (start === -1 || end === -1) throw new Error("No JSON found in response");
