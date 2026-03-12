@@ -376,7 +376,9 @@ Give a direct tactical recommendation. Reference specific tickers and their curr
 FOR COMPARISONS (Stock A vs Stock B):
 Side-by-side analysis on valuation, moat, growth, risk. Pick one clearly with reasoning.
 
-LIVE PORTFOLIO — ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
+⚠️ PORTFOLIO CONSTRAINT: You ONLY discuss and recommend stocks from this portfolio. Never mention stocks outside this list (e.g., Infosys, TCS, Reliance, HDFC etc. are NOT in this portfolio). If asked for a "conviction pick" or "best stock", choose from these 25 stocks ONLY.
+
+LIVE PORTFOLIO (25 defence stocks) — ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
 ${priceLines}
 
 Macro context: India FY27 defence budget ₹7.85L Cr (+15.2% YoY); Indonesia BrahMos deal ~$375M signed; US-Israel Operation Epic Fury against Iran (Feb 28 2026) — Strait of Hormuz disrupted; Global defence spend $2.65T at 8.6% CAGR; Nifty India Defence index +19% YTD.`;
