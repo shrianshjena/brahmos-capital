@@ -74,31 +74,50 @@ function getTickersFromText(text) {
 
 function isDefenceRelevant(text) {
   const lower = text.toLowerCase();
-  
-  // Core defence keywords — must appear in title or strong description match
-  const CORE = [
-    "hal","bel","bdl","grse","mazdock","mazagon","cochin shipyard","data patterns",
-    "paras defence","paras defense","zen tech","zentec","solar industries","mtar",
-    "bharat forge","astra micro","beml","ideaforge","unimech","ptcind","dcx",
-    "dynamatic","avantel","axiscades","cyient dlm","midhani","bharat dynamics",
-    "bharat electronics","hindustan aeronautics","garden reach",
-    "defence","defense","missile","submarine","frigate","torpedo","fighter jet",
-    "brahmos","akash","tejas","drdo","procurement","indigenisation","make in india defence",
-    "nifty defence","ministry of defence","atma nirbhar","dac","dap 2026",
-    "anti-drone","c-uav","amca","kaveri","predator","p-75",
+
+  // Hard exclusions — catch false positives before anything else
+  const EXCLUDE = [
+    "anthropic","openai","chatgpt","claude ai","generative ai company",
+    "lpg curb","induction cooktop","mango tree","startup lets you harvest",
+    "blackstone","private equity","pe firm","joint venture ai",
   ];
-  
-  const GEO = ["iran","ukraine","taiwan","nato","hormuz","war","conflict","geopolit","rearm"];
-  
-  // Must match a core defence term, OR be geopolitical AND mention India/defence
-  const hasCoreDefence = CORE.some(k => lower.includes(k));
+  if (EXCLUDE.some(k => lower.includes(k))) return false;
+
+  // Ticker-level exact phrases (avoid substring false positives like "bel" in "labels")
+  const TICKERS = [
+    "hal ", " hal ", "hal.ns", "hindustan aeronautics",
+    " bel ", "bel.ns", "bharat electronics",
+    " bdl ", "bdl.ns", "bharat dynamics",
+    "mazdock","mazagon dock","cochin shipyard","garden reach","grse",
+    "data patterns","paras defence","paras defense","zen technologies","zentec",
+    "solar industries","mtar technologies","bharat forge","astra microwave",
+    "beml ltd","apollo micro","ideaforge","unimech","ptc industries",
+    "dcx systems","dynamatic","avantel","axiscades","cyient dlm","midhani",
+  ];
+
+  // Broad Indian defence terms (require "indian" or "india" context for generic ones)
+  const INDIA_DEFENCE = [
+    "nifty india defence","nifty defence index","make in india defence",
+    "ministry of defence","mod order","mod tender","drdo","dac approval","dac clears",
+    "dap 2026","atma nirbhar bharat defence","defence psu","defence indigenisation",
+    "indian army","indian navy","indian air force","iaf order","in order","ia order",
+    "brahmos","tejas","akash missile","kaveri engine","amca","p-75","predator uav",
+    "anti-drone india","c-uav india","fighter jet india",
+  ];
+
+  // Geopolitical terms relevant to Indian defence stocks
+  const GEO = ["iran war","strait of hormuz","ukraine war","taiwan strait",
+                "nato rearm","india defence export","brahmos export","tejas export"];
+
+  const hasTicker = TICKERS.some(k => lower.includes(k));
+  const hasIndiaDefence = INDIA_DEFENCE.some(k => lower.includes(k));
   const hasGeo = GEO.some(k => lower.includes(k));
-  const hasIndiaDefence = (lower.includes("india") || lower.includes("indian")) && 
-    (lower.includes("military") || lower.includes("army") || lower.includes("navy") || 
-     lower.includes("air force") || lower.includes("defence") || lower.includes("defense") ||
-     lower.includes("weapon") || lower.includes("ammo") || lower.includes("ammunition"));
-  
-  return hasCoreDefence || (hasGeo && (hasIndiaDefence || lower.includes("india"))) ;
+  // "defence" or "defense" only passes if also India-related
+  const hasDefenceWord = (lower.includes("defence") || lower.includes("defense")) &&
+    (lower.includes("india") || lower.includes("indian") || lower.includes("drdo") ||
+     lower.includes("nifty") || lower.includes("dalal") || lower.includes("psu"));
+
+  return hasTicker || hasIndiaDefence || hasGeo || hasDefenceWord;
 }
 
 function inferCat(text, defaultCat) {
