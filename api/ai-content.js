@@ -53,7 +53,7 @@ async function fetchNewsHeadlines() {
 // Groq only — Gemini quota reserved exclusively for Ask Shri
 async function callGroq(apiKey, prompt) {
   if (!apiKey) return null;
-  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  const models = ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"];
   for (const model of models) {
     try {
       const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -65,7 +65,7 @@ async function callGroq(apiKey, prompt) {
             { role:"system", content:"You are a senior Indian equity research analyst. Return ONLY valid JSON — no markdown, no explanation, no preamble." },
             { role:"user", content:prompt }
           ],
-          max_tokens:3000,
+          max_tokens:2000,
           temperature:0.4,
           stream:false
         }),
@@ -97,8 +97,8 @@ export default async function handler(req, res) {
   const stockLines = TICKERS.map(t => {
     const px = priceMap[t] || ENTRIES[t];
     const ret = (((px - ENTRIES[t]) / ENTRIES[t]) * 100).toFixed(1);
-    return `${t}: CMP ₹${Math.round(px)} | Entry ₹${ENTRIES[t]} | Return ${ret}% | P/E ${PE[t]}x`;
-  }).join("\n");
+    return `${t}:₹${Math.round(px)} ret${ret}% pe${PE[t]}`;
+  }).join(" | ");
 
   const headlineStr = headlines.length > 0
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
@@ -127,7 +127,7 @@ Return this exact JSON structure:
 Rules:
 - Targets should be 10-35% above current price for BUY stocks, realistic for HOLD/REDUCE
 - buy+hold+sell should roughly add to ~20 analysts per stock
-- Brokers from: Motilal, HDFC Sec, Kotak, Emkay, ICICI Sec, Axis, Nuvama, YES Sec, Jefferies, Nomura, CLSA, BOB Cap, Prabhudas, JM Fin, Nirmal Bang, Monarch
+- Brokers from: Motilal, HDFC Sec, Kotak, Emkay, ICICI Sec, Axis, Jefferies, Nomura, CLSA, Prabhudas
 - Return ONLY the JSON. No markdown fences. No text before or after.`;
 
   try {
