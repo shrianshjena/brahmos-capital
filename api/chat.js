@@ -54,7 +54,13 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
       );
       const data = await res.json();
       if (data.error) continue;
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      // Gemini 2.5 has "thinking" mode — parts[0] is internal reasoning, parts[1]+ is the answer
+      // Join all non-thought parts to get the full response
+      const parts = data?.candidates?.[0]?.content?.parts || [];
+      const text = parts
+        .filter(p => !p.thought)
+        .map(p => p.text || "")
+        .join("").trim();
       if (text && text.length > 30) return { text, model: `gemini/${model}` };
     } catch { continue; }
   }

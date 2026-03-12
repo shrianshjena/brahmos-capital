@@ -74,7 +74,31 @@ function getTickersFromText(text) {
 
 function isDefenceRelevant(text) {
   const lower = text.toLowerCase();
-  return DEFENCE_KEYWORDS.some(k => lower.includes(k));
+  
+  // Core defence keywords — must appear in title or strong description match
+  const CORE = [
+    "hal","bel","bdl","grse","mazdock","mazagon","cochin shipyard","data patterns",
+    "paras defence","paras defense","zen tech","zentec","solar industries","mtar",
+    "bharat forge","astra micro","beml","ideaforge","unimech","ptcind","dcx",
+    "dynamatic","avantel","axiscades","cyient dlm","midhani","bharat dynamics",
+    "bharat electronics","hindustan aeronautics","garden reach",
+    "defence","defense","missile","submarine","frigate","torpedo","fighter jet",
+    "brahmos","akash","tejas","drdo","procurement","indigenisation","make in india defence",
+    "nifty defence","ministry of defence","atma nirbhar","dac","dap 2026",
+    "anti-drone","c-uav","amca","kaveri","predator","p-75",
+  ];
+  
+  const GEO = ["iran","ukraine","taiwan","nato","hormuz","war","conflict","geopolit","rearm"];
+  
+  // Must match a core defence term, OR be geopolitical AND mention India/defence
+  const hasCoreDefence = CORE.some(k => lower.includes(k));
+  const hasGeo = GEO.some(k => lower.includes(k));
+  const hasIndiaDefence = (lower.includes("india") || lower.includes("indian")) && 
+    (lower.includes("military") || lower.includes("army") || lower.includes("navy") || 
+     lower.includes("air force") || lower.includes("defence") || lower.includes("defense") ||
+     lower.includes("weapon") || lower.includes("ammo") || lower.includes("ammunition"));
+  
+  return hasCoreDefence || (hasGeo && (hasIndiaDefence || lower.includes("india"))) ;
 }
 
 function inferCat(text, defaultCat) {

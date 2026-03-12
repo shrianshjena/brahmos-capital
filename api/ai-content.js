@@ -63,7 +63,9 @@ async function callGemini(apiKey, prompt) {
       );
       const d = await r.json();
       if (d.error) continue;
-      const t = d?.candidates?.[0]?.content?.parts?.[0]?.text;
+      // Gemini 2.5: filter out thought parts, join remaining text
+      const parts = d?.candidates?.[0]?.content?.parts || [];
+      const t = parts.filter(p => !p.thought).map(p => p.text||"").join("").trim();
       if (t && t.length > 50) return t;
     } catch { continue; }
   }
