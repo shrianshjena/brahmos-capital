@@ -1,21 +1,14 @@
 /**
- * Ask Shri — AI Chat Backend  v6  (100% free APIs, serverless runtime)
+ * Ask Shri — AI Chat Backend  v7  (100% free APIs, serverless)
  *
- * Priority chain (accuracy first, all free):
- *   1. Gemini 1.5 Pro   — best financial reasoning, FREE 1500 req/day
- *   2. Gemini 2.0 Flash — faster Gemini fallback
- *   3. Gemini 1.5 Flash — lightest Gemini fallback
- *   4. Groq Llama 70B   — FREE 30 req/min, never expires
+ * Priority: Gemini 1.5 Pro → Gemini 2.0 Flash → Gemini 1.5 Flash → Groq Llama 70B
+ * Sequential (accuracy > speed). 12s timeout per provider.
  *
- * Runtime: SERVERLESS (not edge) — allows 30s maxDuration config in vercel.json
- * Sequential providers with 12s timeout each — fits within 30s function limit
- *
- * Env vars (Vercel → Settings → Environment Variables):
- *   GEMINI_API_KEY  — aistudio.google.com/apikey   FREE, no card needed
- *   GROQ_API_KEY    — console.groq.com              FREE, never expires
+ * Env vars: GEMINI_API_KEY  (aistudio.google.com)  FREE
+ *           GROQ_API_KEY    (console.groq.com)       FREE, never expires
  */
 
-const TIMEOUT_MS = 12000; // 12s per provider — 2 attempts fit in 30s window
+const TIMEOUT_MS = 12000;
 
 function withTimeout(promise, ms) {
   return Promise.race([
@@ -24,7 +17,6 @@ function withTimeout(promise, ms) {
   ]);
 }
 
-// ── Provider 1: Google Gemini (primary — best financial accuracy) ─────────────
 async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
   if (!apiKey) return null;
 
@@ -61,21 +53,14 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
         TIMEOUT_MS
       );
       const data = await res.json();
-      if (data.error) {
-        console.error(`Gemini ${model} error:`, data.error.message);
-        continue;
-      }
+      if (data.error) continue;
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text && text.length > 30) return { text, model: `gemini/${model}` };
-    } catch (e) {
-      console.error(`Gemini ${model} exception:`, e.message);
-      continue;
-    }
+    } catch { continue; }
   }
   return null;
 }
 
-// ── Provider 2: Groq Llama 70B (reliable free fallback) ──────────────────────
 async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
   if (!apiKey) return null;
   const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
@@ -104,17 +89,16 @@ async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
         TIMEOUT_MS
       );
       const data = await res.json();
-      if (data.error) { console.error("Groq error:", data.error); continue; }
+      if (data.error) continue;
       const text = data?.choices?.[0]?.message?.content;
       if (text && text.length > 30) return { text, model: `groq/${model}` };
-    } catch (e) { console.error("Groq exception:", e.message); continue; }
+    } catch { continue; }
   }
   return null;
 }
 
-// ── Main handler (serverless) ─────────────────────────────────────────────────
+// Vercel serverless — req.body is auto-parsed from JSON
 export default async function handler(req, res) {
-  // CORS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -122,11 +106,8 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ ok: false });
 
-  let body;
-  try { body = JSON.parse(await readBody(req)); }
-  catch { return res.status(400).json({ ok: false, error: "invalid_json" }); }
-
-  const { system = "", messages = [], max_tokens = 1000 } = body;
+  // Vercel auto-parses JSON body — just use req.body directly
+  const { system = "", messages = [], max_tokens = 1000 } = req.body || {};
   const trimmed = messages.slice(-10);
 
   const geminiKey = process.env.GEMINI_API_KEY;
@@ -136,7 +117,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: false, error: "no_api_keys_configured" });
   }
 
-  // Sequential: best model first
   let result = await callGemini(geminiKey, system, trimmed, max_tokens);
   if (!result) result = await callGroq(groqKey, system, trimmed, max_tokens);
 
@@ -152,15 +132,5 @@ export default async function handler(req, res) {
     ok: false,
     error: "all_providers_failed",
     message: "Apologies — Mr. Shriansh Jena is currently in an important executive meeting with institutional clients. Please reach out again shortly.",
-  });
-}
-
-// Node.js body reader for serverless (req is IncomingMessage, not Request)
-function readBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = "";
-    req.on("data", chunk => { data += chunk; });
-    req.on("end", () => resolve(data));
-    req.on("error", reject);
   });
 }
