@@ -9,29 +9,13 @@ export default async function handler(req, res) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: "Write a 3-paragraph analysis of HAL stock with specific numbers for: valuation, order book, and 12-month price target." }] }],
-          generationConfig: { maxOutputTokens: 800, temperature: 0.4 },
+          contents: [{ parts: [{ text: "Say: HELLO WORLD" }] }],
+          generationConfig: { maxOutputTokens: 50, temperature: 0.4 },
         })
       }
     );
-    const d = await r.json();
-    const candidate = d?.candidates?.[0];
-    const parts = candidate?.content?.parts || [];
-    const allParts = parts.map((p, i) => ({ 
-      index: i, 
-      hasThought: !!p.thought, 
-      textLength: (p.text||"").length,
-      textPreview: (p.text||"").slice(0, 100)
-    }));
-    const filteredText = parts.filter(p => !p.thought).map(p => p.text||"").join("").trim();
-    
-    return res.json({
-      finishReason: candidate?.finishReason,
-      numParts: parts.length,
-      allParts,
-      filteredTextLength: filteredText.length,
-      filteredTextPreview: filteredText.slice(0, 300),
-      usageMetadata: d?.usageMetadata,
-    });
+    const raw = await r.text();
+    // Return full raw response (first 3000 chars)
+    return res.json({ rawLength: raw.length, raw: raw.slice(0, 3000) });
   } catch(e) { return res.json({ error: e.message }); }
 }
