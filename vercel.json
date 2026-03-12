@@ -2,33 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/ai-content.js": {
-      "maxDuration": 60
-    },
-    "api/ai-geo.js": {
-      "maxDuration": 60
-    },
-    "api/chat.js": {
-      "maxDuration": 30
-    },
-    "api/stocks.js": {
-      "maxDuration": 15
-    },
-    "api/history.js": {
-      "maxDuration": 20
-    },
-    "api/news.js": {
-      "maxDuration": 20
-    }
+    "api/ai-content.js": { "maxDuration": 60 },
+    "api/ai-geo.js":     { "maxDuration": 60 },
+    "api/stocks.js":     { "maxDuration": 15 },
+    "api/history.js":    { "maxDuration": 20 },
+    "api/news.js":       { "maxDuration": 20 }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)",     "destination": "/index.html" }
   ]
 }

@@ -1,0 +1,43 @@
+name: Daily Market Update
+
+on:
+  schedule:
+    # 10:30 UTC = 16:00 IST — 30 min after NSE close (15:30 IST)
+    - cron: '30 10 * * 1-5'
+  # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Fetch live prices and update App.jsx
+        run: python scripts/update_prices.py
+
+      - name: Check if anything changed
+        id: changes
+        run: |
+          git diff --quiet src/App.jsx || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push (triggers Vercel auto-deploy)
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name  "brahmos-bot"
+          git config user.email "brahmos-bot@brahmos-capital.vercel.app"
+          DATE=$(TZ=Asia/Kolkata date '+%d %b %Y')
+          git add src/App.jsx
+          git commit -m "auto: daily price update ${DATE} [skip ci]"
+          git push

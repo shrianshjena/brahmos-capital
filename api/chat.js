@@ -1,94 +1,46 @@
-export const config = { runtime: "edge" };
-
 /**
- * Ask Shri — AI Chat Backend  v3
- * Priority chain: Groq → Claude → Gemini → HuggingFace
- * All four race simultaneously; first valid response wins.
+ * Ask Shri — AI Chat Backend  v4
  *
- * Env vars (Vercel → Settings → Environment Variables):
- *   GROQ_API_KEY       — console.groq.com           FREE, no expiry, fast
- *   ANTHROPIC_API_KEY  — console.anthropic.com      FREE $5 credit
- *   GEMINI_API_KEY     — aistudio.google.com        FREE 1500 req/day
- *   HF_TOKEN           — huggingface.co/settings    FREE but expires ~90d
+ * Priority (accuracy first, not speed):
+ *   1. Gemini 1.5 Pro   — best financial reasoning, 1500 req/day free
+ *   2. Claude Sonnet    — strong analyst, reliable fallback
+ *   3. Groq (Llama 70B) — fast last resort, always available
+ *
+ * Sequential, NOT a race — we wait for the best model first.
+ * Target response time: 5-15 seconds (accuracy over speed, per spec).
  */
 
-const GROQ_MODELS  = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768"];
-const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
-const HF_MODELS    = ["Qwen/Qwen2.5-72B-Instruct", "Qwen/Qwen2.5-7B-Instruct", "meta-llama/Llama-3.3-70B-Instruct"];
+export const config = { runtime: "edge" };
 
-// ── Groq (OpenAI-compatible) ──────────────────────────────────────────────────
-async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
-  if (!apiKey) return null;
-  for (const model of GROQ_MODELS) {
-    try {
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
-        body: JSON.stringify({
-          model,
-          max_tokens: maxTokens,
-          temperature: 0.7,
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...messages.map(m => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content })),
-          ],
-        }),
-      });
-      const data = await res.json();
-      if (data.error) continue;
-      const text = data?.choices?.[0]?.message?.content;
-      if (text && text.length > 20) return text;
-    } catch { continue; }
-  }
-  return null;
+const TIMEOUT_MS = 22000;
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms)),
+  ]);
 }
 
-// ── Anthropic Claude ──────────────────────────────────────────────────────────
-async function callClaude(apiKey, systemPrompt, messages, maxTokens) {
-  if (!apiKey) return null;
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: maxTokens,
-        system: systemPrompt,
-        messages: messages.map(m => ({
-          role: m.role === "assistant" ? "assistant" : "user",
-          content: m.content,
-        })),
-      }),
-    });
-    const data = await res.json();
-    const text = data?.content?.[0]?.text;
-    return text && text.length > 20 ? text : null;
-  } catch { return null; }
-}
-
-// ── Google Gemini ─────────────────────────────────────────────────────────────
+// ── Provider 1: Google Gemini 1.5 Pro (primary — best financial accuracy) ────
 async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
   if (!apiKey) return null;
-  // Build Gemini history — inject system into first user message
-  const history = messages.map((m, i) => ({
+  const contents = messages.map((m, i) => ({
     role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: i === 0 && m.role === "user" ? systemPrompt + "\n\n" + m.content : m.content }],
+    parts: [{ text: i === 0 && m.role === "user"
+      ? `${systemPrompt}\n\n${m.content}`
+      : m.content }],
   }));
-  if (!history.length) return null;
-  for (const model of GEMINI_MODELS) {
+  if (!contents.length) return null;
+  const models = ["gemini-1.5-pro", "gemini-2.0-flash", "gemini-1.5-flash"];
+  for (const model of models) {
     try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
+      const res = await withTimeout(
+        fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: history,
-            generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 },
+            contents,
+            generationConfig: { maxOutputTokens: maxTokens, temperature: 0.4 },
             safetySettings: [
               { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_NONE" },
               { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_NONE" },
@@ -96,41 +48,79 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
               { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
             ],
           }),
-        }
+        }), TIMEOUT_MS
       );
       const data = await res.json();
       if (data.error) continue;
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text && text.length > 20) return text;
+      if (text && text.length > 30) return { text, model: `gemini/${model}` };
     } catch { continue; }
   }
   return null;
 }
 
-// ── HuggingFace ───────────────────────────────────────────────────────────────
-async function callHF(token, systemPrompt, messages, maxTokens) {
-  if (!token) return null;
-  const hfMsgs = [
-    { role: "system", content: systemPrompt },
-    ...messages.map(m => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content })),
-  ];
-  for (const model of HF_MODELS) {
-    try {
-      const res = await fetch("https://router.huggingface.co/v1/chat/completions", {
+// ── Provider 2: Anthropic Claude Sonnet (reliable fallback) ──────────────────
+async function callClaude(apiKey, systemPrompt, messages, maxTokens) {
+  if (!apiKey) return null;
+  try {
+    const res = await withTimeout(
+      fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ model, messages: hfMsgs, max_tokens: maxTokens, temperature: 0.7, stream: false }),
-      });
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: maxTokens,
+          temperature: 0.4,
+          system: systemPrompt,
+          messages: messages.map((m) => ({
+            role: m.role === "assistant" ? "assistant" : "user",
+            content: m.content,
+          })),
+        }),
+      }), TIMEOUT_MS
+    );
+    const data = await res.json();
+    const text = data?.content?.[0]?.text;
+    return text && text.length > 30 ? { text, model: "claude-sonnet-4" } : null;
+  } catch { return null; }
+}
+
+// ── Provider 3: Groq Llama 70B (fast last resort) ────────────────────────────
+async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
+  if (!apiKey) return null;
+  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  for (const model of models) {
+    try {
+      const res = await withTimeout(
+        fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${apiKey}` },
+          body: JSON.stringify({
+            model, max_tokens: maxTokens, temperature: 0.4,
+            messages: [
+              { role: "system", content: systemPrompt },
+              ...messages.map((m) => ({
+                role: m.role === "assistant" ? "assistant" : "user",
+                content: m.content,
+              })),
+            ],
+          }),
+        }), TIMEOUT_MS
+      );
       const data = await res.json();
       if (data.error) continue;
       const text = data?.choices?.[0]?.message?.content;
-      if (text && text.length > 20) return text;
+      if (text && text.length > 30) return { text, model: `groq/${model}` };
     } catch { continue; }
   }
   return null;
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
+// ── Main ──────────────────────────────────────────────────────────────────────
 export default async function handler(req) {
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -143,46 +133,33 @@ export default async function handler(req) {
   try { body = await req.json(); }
   catch { return new Response(JSON.stringify({ ok: false }), { status: 400 }); }
 
-  const { system = "", messages = [], max_tokens = 900 } = body;
-  const trimmed = messages.slice(-8);
-
-  const groqKey      = process.env.GROQ_API_KEY;
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const { system = "", messages = [], max_tokens = 1000 } = body;
+  const trimmed = messages.slice(-10);
   const geminiKey    = process.env.GEMINI_API_KEY;
-  const hfToken      = process.env.HF_TOKEN;
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const groqKey      = process.env.GROQ_API_KEY;
 
-  const HEADERS = {
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  };
+  const HEADERS = { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" };
 
-  // No keys at all — return clear error
-  if (!groqKey && !anthropicKey && !geminiKey && !hfToken) {
-    return new Response(JSON.stringify({ ok: false, error: "no_keys" }), { status: 200, headers: HEADERS });
+  if (!geminiKey && !anthropicKey && !groqKey) {
+    return new Response(JSON.stringify({ ok: false, error: "no_api_keys_configured" }), { status: 200, headers: HEADERS });
   }
 
-  // Race all available providers simultaneously — first valid response wins
-  const racers = [
-    callGroq(groqKey, system, trimmed, max_tokens),
-    callClaude(anthropicKey, system, trimmed, max_tokens),
-    callGemini(geminiKey, system, trimmed, max_tokens),
-    callHF(hfToken, system, trimmed, max_tokens),
-  ];
+  // Sequential: best model first, fall back only on failure
+  let result = await callGemini(geminiKey, system, trimmed, max_tokens);
+  if (!result) result = await callClaude(anthropicKey, system, trimmed, max_tokens);
+  if (!result) result = await callGroq(groqKey, system, trimmed, max_tokens);
 
-  const text = await new Promise(resolve => {
-    let settled = 0;
-    let won = false;
-    racers.forEach(p =>
-      Promise.resolve(p)
-        .then(r => { if (!won && r) { won = true; resolve(r); } })
-        .catch(() => {})
-        .finally(() => { settled++; if (settled === racers.length && !won) resolve(null); })
+  if (result) {
+    return new Response(
+      JSON.stringify({ ok: true, content: [{ type: "text", text: result.text }], provider: result.model }),
+      { status: 200, headers: HEADERS }
     );
-  });
-
-  if (text) {
-    return new Response(JSON.stringify({ ok: true, content: [{ type: "text", text }] }), { status: 200, headers: HEADERS });
   }
 
-  return new Response(JSON.stringify({ ok: false, error: "all_providers_failed" }), { status: 200, headers: HEADERS });
+  return new Response(
+    JSON.stringify({ ok: false, error: "all_providers_failed",
+      message: "Apologies — Mr. Shriansh Jena is currently in an important executive meeting with institutional clients. Please reach out again shortly." }),
+    { status: 200, headers: HEADERS }
+  );
 }
