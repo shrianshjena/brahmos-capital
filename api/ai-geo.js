@@ -101,7 +101,26 @@ Rules:
   }
 
   try {
-    let raw = await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
+async function callGroq(prompt, maxTok) {
+    if (!process.env.GROQ_API_KEY) return null;
+    const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+    for (const model of models) {
+      try {
+        const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${process.env.GROQ_API_KEY}` },
+          body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: maxTok, temperature: 0.4, stream: false }),
+        });
+        const d = await r.json();
+        if (d.error) continue;
+        const t = d?.choices?.[0]?.message?.content;
+        if (t && t.length > 50) return t;
+      } catch { continue; }
+    }
+    return null;
+  }
+
+        let raw = await callGroq(prompt, 2000) || await callClaude(prompt) || await callGemini(prompt) || await callHF(prompt) || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
 
     const start = raw.indexOf("[");

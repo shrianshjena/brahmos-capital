@@ -523,13 +523,13 @@ function AskAIView({stocks}){
       });
       if(!res.ok)throw new Error("HTTP "+res.status);
       const data=await res.json();
-      const ok=data.ok!==false;
+      const ok=data.ok===true;
       const text=(data.content?.[0]?.text||"").trim();
-      const finalText=(ok&&text.length>10)?text:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly.";
+      const finalText=(ok&&text.length>10)?text:"Service temporarily unavailable — AI providers are being refreshed. Please try again in a moment, or check back shortly.";
       setMessages(m=>[...m,{role:"assistant",content:finalText}]);
     }catch(e){
       console.error("Ask Shri error:",e.message);
-      setMessages(m=>[...m,{role:"assistant",content:"Apologies — Shri is currently in an important executive meeting with institutional clients. Please reach out again shortly."}]);
+      setMessages(m=>[...m,{role:"assistant",content:"Service temporarily unavailable — AI providers are being refreshed. Please try again in a moment, or check back shortly."}]);
     }
     setLoading(false);
   };
