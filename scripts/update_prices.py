@@ -44,40 +44,55 @@ SYMBOL_MAP = {
     "CYIENTDLM":   "CYIENTDLM.NS",
 }
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-    ),
-    "Accept": "application/json, */*",
-    "Referer": "https://finance.yahoo.com/",
-}
+# Rotate user agents to avoid Yahoo Finance rate limiting
+HEADERS_LIST = [
+    {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+        "Accept": "application/json, */*",
+        "Referer": "https://finance.yahoo.com/",
+    },
+    {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36",
+        "Accept": "application/json, */*",
+        "Referer": "https://finance.yahoo.com/",
+    },
+    {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+        "Accept": "application/json, */*",
+        "Referer": "https://finance.yahoo.com/",
+    },
+]
+import random
+HEADERS = random.choice(HEADERS_LIST)
 
 
 # ── Fetch one stock ───────────────────────────────────────────────────────────
-def fetch_price(ticker: str, symbol: str) -> dict | None:
+def fetch_price(ticker: str, symbol: str, retries: int = 3) -> dict | None:
     urls = [
         f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=2d",
         f"https://query2.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=2d",
     ]
-    for url in urls:
-        try:
-            req = urllib.request.Request(url, headers=HEADERS)
-            with urllib.request.urlopen(req, timeout=12) as r:
-                data = json.loads(r.read())
-            result = data.get("chart", {}).get("result", [])
-            if not result:
+    for attempt in range(retries):
+        headers = random.choice(HEADERS_LIST)  # rotate per attempt
+        for url in urls:
+            try:
+                req = urllib.request.Request(url, headers=headers)
+                with urllib.request.urlopen(req, timeout=15) as r:
+                    data = json.loads(r.read())
+                result = data.get("chart", {}).get("result", [])
+                if not result:
+                    continue
+                meta = result[0].get("meta", {})
+                px = meta.get("regularMarketPrice")
+                prev = meta.get("chartPreviousClose") or meta.get("regularMarketPreviousClose") or 0
+                if not px:
+                    continue
+                day = round(((px - prev) / prev) * 100, 2) if prev else 0.0
+                return {"ticker": ticker, "px": round(float(px), 2), "day": day}
+            except Exception as e:
+                print(f"    attempt {attempt+1} failed for {ticker} ({url[:50]}): {e}")
+                time.sleep(1.0 + attempt * 2.0)  # backoff: 1s, 3s, 5s
                 continue
-            meta = result[0].get("meta", {})
-            px = meta.get("regularMarketPrice")
-            prev = meta.get("chartPreviousClose") or meta.get("regularMarketPreviousClose") or 0
-            if not px:
-                continue
-            day = round(((px - prev) / prev) * 100, 2) if prev else 0.0
-            return {"ticker": ticker, "px": round(float(px), 2), "day": day}
-        except Exception:
-            time.sleep(0.5)
-            continue
     return None
 
 

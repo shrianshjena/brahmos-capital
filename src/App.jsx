@@ -1034,7 +1034,7 @@ function GeoView({geoCards,geoAiStatus}){
   },[]);
   const colorFromType=t=>({red:A.red,orange:A.orange,blue:A.blue,green:A.green,teal:A.teal,yellow:A.yellow}[t]||A.t3);
   const GEO_STATIC=[
-    {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–12 Mar 2026",hot:true,
+    {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–14 Mar 2026",hot:true,
      title:"Operation Epic Fury: US-Israel vs Iran — Full-Scale War",
      detail:"The US and Israel launched 900 strikes in 12 hours on 28 February 2026, killing Supreme Leader Khamenei. Iran retaliated with hundreds of missiles and thousands of drones across the Gulf, UAE, Qatar, and oil infrastructure. The Strait of Hormuz was disrupted, 150 ships stalled. As of 12 March, active ceasefire negotiations ongoing; US signals diplomatic off-ramp but structural defence procurement impact is irreversible — but structural defence procurement impact is irreversible.",
      tickers:["BDL","ZENTEC","HAL","BEL","PARAS"]},
@@ -1079,7 +1079,7 @@ function GeoView({geoCards,geoAiStatus}){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>
         <Flame size={15} color={A.red}/>
-        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 12 Mar 2026 — US-Iran war (ceasefire talks ongoing), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
+        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 14 Mar 2026 — US-Iran war (ceasefire talks ongoing), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
       {liveGeo.length>0&&(
         <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:"1px solid rgba(48,209,88,0.2)",marginBottom:16}}>
