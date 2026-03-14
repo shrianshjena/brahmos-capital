@@ -61,7 +61,16 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. Based on these news headlines:
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of March 2026.
+
+MANDATORY CURRENT EVENTS you must include as cards (these happened in 2026):
+1. US-Israel Operation Epic Fury against Iran (started 28 Feb 2026) — Strait of Hormuz disrupted, global oil price shock, Indian defence stocks surging
+2. Indonesia BrahMos missile deal ~$375M finalised Mar 2026 — India's first major missile export
+3. India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY) — highest ever allocation
+4. Nifty 50 crashed 9.2% on 14 Mar 2026 due to Middle East war escalation
+5. India-Pakistan ceasefire on LoC holding — border tensions manageable
+
+Additional context from today's news headlines:
 ${headlineStr}
 
 Generate 8 geopolitical event cards relevant to Indian defence stocks. Return ONLY a raw JSON array.

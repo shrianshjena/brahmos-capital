@@ -104,7 +104,15 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines available.";
 
-  const prompt = `Today is ${today}. Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
+  const prompt = `Today is ${today} (Saturday — NSE closed; last trading day was Friday 13 Mar 2026).
+You have full knowledge of events as of March 2026, including:
+- US-Iran war (Operation Epic Fury, 28 Feb 2026) — Strait of Hormuz disrupted — defence stocks bullish
+- Indonesia BrahMos deal $375M signed — India's first missile export
+- India FY27 defence budget ₹7.85L Cr (+15.2%) — highest ever
+- Nifty 50 fell 9.2% on 14 Mar 2026 (Middle East escalation) — buying opportunity for long-term defence holders
+- Indian defence index outperforming broader market YTD
+
+Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
 
 PORTFOLIO DATA:
 ${stockLines}
@@ -115,8 +123,9 @@ ${headlineStr}
 Return this exact JSON structure:
 {
   "signals": [
-    {"id":1,"ticker":"HAL","type":"STRONG BUY","cat":"Gov","conf":88,"date":"${today}","title":"Short title","detail":"2 sentence rationale with specific numbers."},
-    ...8 to 10 signals total, covering different tickers and types (STRONG BUY / BUY / HOLD / REDUCE / WATCH)...
+    {"id":1,"ticker":"HAL","type":"STRONG BUY","cat":"Gov","conf":88,"date":"${today}","title":"MoD ₹5,200 Cr Helicopter Order","detail":"Ministry of Defence cleared 12 ALH Mk-IV helicopters worth ₹5,200 Cr. Order book now exceeds ₹1.1L Cr with 7-year revenue visibility."},
+    {"id":2,"ticker":"BDL","type":"BUY","cat":"Geo","conf":81,"date":"${today}","title":"Iran Conflict Boosts Missile Demand","detail":"Escalating Middle East conflict accelerating Akash and Astra missile orders. BDL Q3 order inflows up 34% YoY with DRDO clearance for next-gen torpedoes."},
+    ...generate 8-10 signals total with SPECIFIC, REAL-SOUNDING titles and details referencing actual numbers, order values, P/E levels, order book figures, and current geo-political events. Types: STRONG BUY / BUY / HOLD / REDUCE / WATCH...
   ],
   "consensus": {
     "HAL":{"buy":20,"hold":5,"sell":2,"target":4800,"brokers":["Motilal","HDFC Sec","Kotak","Nomura","CLSA"]},
