@@ -43,7 +43,12 @@ function withTimeout(promise, ms) {
 // Groq: system role always sent separately — correct and reliable
 async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
   if (!apiKey) return null;
-  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  // Model order: separate quota pools — if one hits daily limit, next still works
+  const models = [
+    "meta-llama/llama-4-scout-17b-16e-instruct",  // Llama 4 Scout — fresh quota, fast
+    "llama-3.3-70b-versatile",                     // Best quality
+    "llama-3.1-8b-instant",                        // Fast backup
+  ];
   for (const model of models) {
     try {
       const res = await withTimeout(
