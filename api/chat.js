@@ -1,5 +1,5 @@
 /**
- * Ask Shri — AI Chat Backend  v9  (100% free APIs, serverless)
+ * Ask Shri — AI Chat Backend  v9.1  (100% free APIs, serverless)
  *
  * CRITICAL FIX: systemPrompt uses Gemini's native systemInstruction field
  * (never dropped in multi-turn). Groq is PRIMARY — it correctly uses date
