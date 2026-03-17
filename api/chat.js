@@ -133,7 +133,7 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST")    return res.status(405).json({ ok: false });
 
-  const { system = "", messages = [], max_tokens = 1000 } = req.body || {};
+  const { system = "", messages = [], max_tokens = 2000 } = req.body || {};
   const trimmed = messages.slice(-10);
 
   // Server-side date injected on every request — cannot be stale

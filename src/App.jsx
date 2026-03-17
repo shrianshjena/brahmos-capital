@@ -381,7 +381,7 @@ Side-by-side analysis on valuation, moat, growth, risk. Pick one clearly with re
 LIVE PORTFOLIO (25 defence stocks) — ${new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}:
 ${priceLines}
 
-Macro context: India FY27 defence budget ₹7.85L Cr (+15.2% YoY); Indonesia BrahMos deal ~$375M signed; US-Israel Operation Epic Fury against Iran (Feb 28 2026) — Strait of Hormuz disrupted; Global defence spend $2.65T at 8.6% CAGR; Nifty India Defence index +19% YTD.`;
+Macro context (as of 17 Mar 2026): India FY27 defence budget ₹7.85L Cr (+15.2% YoY); Indonesia BrahMos supersonic missile deal $375M SIGNED Mar 2026 — India's first major missile export; US-Israel Operation Epic Fury vs Iran started 28 Feb 2026 — Strait of Hormuz disrupted, oil at $105/barrel; Nifty 50 fell 9.2% on 13 Mar 2026 (war escalation); Nifty India Defence index outperforming broader market YTD; Global defence spend $2.65T at 8.6% CAGR.`;
 }
 
 
@@ -566,7 +566,7 @@ function AskAIView({stocks}){
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           system:buildPrompt(stocks),
-          max_tokens:900,
+          max_tokens:2000,
           messages:trimmed.map(m=>({role:m.role,content:m.content}))
         })
       });
