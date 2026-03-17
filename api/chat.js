@@ -70,7 +70,7 @@ async function callGroq(apiKey, systemPrompt, messages, maxTokens) {
       const data = await res.json();
       if (data.error) continue;
       const text = data?.choices?.[0]?.message?.content;
-      if (text && text.length > 30) return { text, model: `groq/${model}` };
+      if (text && text.length > 3) return { text, model: `groq/${model}` };
     } catch { continue; }
   }
   return null;
@@ -124,7 +124,7 @@ async function callGemini(apiKey, systemPrompt, messages, maxTokens) {
       if (data.error) continue;
       const parts = data?.candidates?.[0]?.content?.parts || [];
       const text = parts.filter(p => !p.thought).map(p => p.text || "").join("").trim();
-      if (text && text.length > 30) return { text, model: `gemini/${model}` };
+      if (text && text.length > 3) return { text, model: `gemini/${model}` };
     } catch { continue; }
   }
   return null;
