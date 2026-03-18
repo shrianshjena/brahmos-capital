@@ -67,7 +67,8 @@ async function callGroq(apiKey, prompt) {
           ],
           max_tokens:2000,
           temperature:0.4,
-          stream:false
+          stream:false,
+          response_format: { type: "json_object" }
         }),
       });
       const d = await r.json();
