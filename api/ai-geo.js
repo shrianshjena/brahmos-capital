@@ -83,7 +83,7 @@ Generate 8 geopolitical event cards relevant to Indian defence stocks. Return ON
     "region": "Middle East",
     "impact": "ACTIVE WAR",
     "score": 9,
-    "date": "${today}",
+    "date": "28 Feb 2026",
     "hot": true,
     "detail": "2-3 sentence analysis of what this means for Indian defence stocks specifically. Mention specific companies or sectors that benefit.",
     "tickers": ["BDL","HAL"],
