@@ -207,7 +207,7 @@ export default async function handler(req) {
     if (result.status !== "fulfilled") continue;
     const { xml, cat, source } = result.value;
     const items = parseRSS(xml);
-    for (const item of items.slice(0, 12)) {
+    for (const item of items.slice(0, 20)) {
       const combined = item.title + " " + item.desc;
       if (!isDefenceRelevant(combined)) continue;
       const finalCat = inferCat(combined, cat);
@@ -229,14 +229,8 @@ export default async function handler(req) {
   }
 
   // Sort newest first, dedupe
-  // Drop articles older than 3 days — keeps feed fresh, handles weekends
-  const cutoff3d = Date.now() - 3 * 24 * 60 * 60 * 1000;
-  const cutoff7d = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const fresh = allArticles.filter(a => a.rawDate > cutoff3d);
-  const toUse = fresh.length >= 15 ? fresh : allArticles.filter(a => a.rawDate > cutoff7d);
-  toUse.sort((a, b) => b.rawDate - a.rawDate);
-  allArticles.length = 0;
-  allArticles.push(...toUse);
+  // Sort by date (newest first) — Google News doesn't guarantee recency,
+  // so sort ensures most recent articles always appear at the top
   allArticles.sort((a, b) => b.rawDate - a.rawDate);
   const seen = new Set();
   const deduped = allArticles.filter(a => {
