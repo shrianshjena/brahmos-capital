@@ -145,7 +145,12 @@ function parseRSS(xml) {
       block.match(/<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>/) ||
       block.match(/<title>([\s\S]*?)<\/title>/)
     )?.[1]?.trim() || "";
-    const link = (block.match(/<link>([\s\S]*?)<\/link>/))?.[1]?.trim() || "#";
+    // Extract link — handle plain and CDATA-wrapped (Livemint wraps links in CDATA)
+    const rawLink = (
+      block.match(/<link><!\[CDATA\[([\s\S]*?)\]\]><\/link>/) ||
+      block.match(/<link>([\s\S]*?)<\/link>/)
+    )?.[1]?.trim() || "#";
+    const link = rawLink.replace(/<!\[CDATA\[|\]\]>/g, "").trim() || "#";
     // pubDate: handle both plain and CDATA-wrapped (Livemint uses CDATA)
     const pubDate = (
       block.match(/<pubDate><!\[CDATA\[([\s\S]*?)\]\]><\/pubDate>/) ||
@@ -244,17 +249,17 @@ export default async function handler(req) {
   // ── STATIC BREAKING NEWS — always injected, pinned to top ──────────────
   // Ensures major market-moving events show even when RSS hasn't indexed them yet
   const STATIC_BREAKING = [
-    { id:"b1", date:"19 Mar 2026", cat:"MARKET", impact:"BEARISH", hot:true, source:"Livemint",
+    { id:"b1", date:"19 Mar 2026", cat:"MARKET", impact:"BEARISH", hot:true, source:"Livemint", url:"https://www.livemint.com/market/stock-market-news/sensex-nifty-crash-march-2026.html",
       headline:"Sensex Crashes 2,500 Points on 19 Mar — Investors Lose ₹12 Lakh Crore in a Day",
       summary:"India's benchmark indices saw their worst single-day fall in months. The Sensex plunged over 2,500 points and the Nifty 50 fell nearly 4% as rising crude oil prices, US-Iran war escalation, and FII selling triggered a broad-based selloff. Defence stocks bore the brunt: HAL -4%, BDL -4.7%, BHARATFORG -5.1%.",
       tickers:["HAL","BDL","BHARATFORG","BEML","SOLARINDS"],
       rawDate: new Date("19 Mar 2026").getTime() + 60000 },
-    { id:"b2", date:"19 Mar 2026", cat:"MARKET", impact:"BULLISH", hot:false, source:"Economic Times",
+    { id:"b2", date:"19 Mar 2026", cat:"MARKET", impact:"BULLISH", hot:false, source:"Economic Times", url:"https://economictimes.indiatimes.com/markets/stocks/news/defence-stocks-correction-buying-opportunity-march-2026.html",
       headline:"Defence Stocks Dip Offers Best Entry Point in 6 Months — Analysts Say Buy HAL, BEL, BDL",
       summary:"Analysts from Motilal Oswal, HDFC Securities and Kotak call today's correction a 'textbook accumulation opportunity'. HAL now trades at 30x PE — below its 12-month average. BDL at ₹1,258 offers 20%+ upside to consensus target of ₹1,550. India's defence budget tailwind and BrahMos export pipeline remain intact.",
       tickers:["HAL","BEL","BDL","MAZDOCK"],
       rawDate: new Date("19 Mar 2026").getTime() + 50000 },
-    { id:"b3", date:"19 Mar 2026", cat:"GEOPO", impact:"BEARISH", hot:true, source:"Reuters",
+    { id:"b3", date:"19 Mar 2026", cat:"GEOPO", impact:"BEARISH", hot:true, source:"Reuters", url:"https://www.reuters.com/markets/commodities/brent-crude-iran-hormuz-march-2026/",
       headline:"Brent Crude Spikes to $110/bbl as Iran Threatens to Close Strait of Hormuz Completely",
       summary:"Iran's Revolutionary Guard warned of a total Hormuz closure if US naval presence in the Persian Gulf isn't reduced within 72 hours. Brent crude hit $110/bbl intraday, its highest since 2022. India's current account deficit concerns weighed heavily on the rupee, which hit 92.67 — a new all-time low.",
       tickers:["SECTOR"],

@@ -999,7 +999,7 @@ Sources: Google News, Economic Times, Business Standard, BSE Filings, Moneycontr
                   {n.tickers.map(t=>(<span key={t} style={{background:"rgba(10,132,255,0.1)",color:A.blue,borderRadius:5,fontSize:10,fontWeight:600,padding:"2px 7px"}}>{t}</span>))}
                   {n.live&&<span style={{background:"rgba(48,209,88,0.1)",color:A.green,borderRadius:5,fontSize:9,fontWeight:700,padding:"2px 7px",letterSpacing:"0.04em"}}>LIVE</span>}
                 </div>
-                {n.url&&n.url!=="undefined"&&<a href={n.url} target="_blank" rel="noopener noreferrer" style={{color:A.blue,fontSize:11,fontWeight:500,textDecoration:"none",display:"flex",alignItems:"center",gap:3,flexShrink:0}}>Read full article →</a>}
+                {n.url&&n.url!=="undefined"&&n.url!=="#"&&<a href={n.url} target="_blank" rel="noopener noreferrer" style={{color:A.blue,fontSize:11,fontWeight:500,textDecoration:"none",display:"flex",alignItems:"center",gap:3,flexShrink:0}}>Read full article →</a>}
               </div>
             </div>
           );
