@@ -40,4 +40,5 @@ jobs:
           DATE=$(TZ=Asia/Kolkata date '+%d %b %Y')
           git add src/App.jsx
           git commit -m "auto: daily price update ${DATE} [skip ci]"
+          git pull --rebase origin main
           git push
