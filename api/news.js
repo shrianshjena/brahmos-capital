@@ -23,10 +23,10 @@ const FEEDS = [
   { url: "https://news.google.com/rss/search?q=india+defence+export+BrahMos+Tejas+Akash+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "EXPORTS", source: "Google News" },
   { url: "https://news.google.com/rss/search?q=ukraine+war+taiwan+nato+india+defence+rearmament&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Google News" },
 ,
-    // Today-specific feeds — surface same-day breaking news
-    "https://news.google.com/rss/search?q=india+nifty+sensex+market+today+march+2026&hl=en-IN&gl=IN&ceid=IN:en",
-    "https://news.google.com/rss/search?q=HAL+BEL+BDL+defence+stocks+today+2026&hl=en-IN&gl=IN&ceid=IN:en"
-  ];
+  // Today-specific — surface same-day breaking news
+  { url: "https://news.google.com/rss/search?q=india+nifty+defence+stocks+crash+march+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=HAL+BEL+BDL+defence+stocks+india+latest&hl=en-IN&gl=IN&ceid=IN:en",    cat: "MARKET", source: "Google News" },
+];
 
 const DEFENCE_KEYWORDS = [
   "hal","bel","mazdock","mazagon","bharat electronics","bharat dynamics","bdl",
