@@ -107,11 +107,13 @@ export default async function handler(req, res) {
 
   const prompt = `Today is ${today} (Saturday — NSE closed; last trading day was Friday 13 Mar 2026).
 You have full knowledge of events as of March 2026, including:
-- US-Iran war (Operation Epic Fury, 28 Feb 2026) — Strait of Hormuz disrupted — defence stocks bullish
-- Indonesia BrahMos deal $375M signed — India's first missile export
-- India FY27 defence budget Rs.7.85L Cr (+15.2%) — highest ever
-- Nifty 50 fell 9.2% on 14 Mar 2026 (Middle East escalation) — buying opportunity for long-term defence holders
-- Indian defence index outperforming broader market YTD
+- US-Iran war (Operation Epic Fury, 28 Feb 2026) — Strait of Hormuz disrupted — defence stocks bullish long-term
+- Indonesia BrahMos deal $375M signed — India's first major missile export
+- India FY27 defence budget Rs.7.85L Cr (+15.2%) — highest ever capex allocation
+- NSE CRASHED on 19 Mar 2026: Nifty -3.5% to -4% — HAL -4%, BDL -4.7%, BHARATFORG -5.1% — seen as buying opportunity
+- Rupee at record low 92.50 vs USD on 19 Mar — war-driven risk-off
+- DRDO cleared Akash-NG for series production — boosts BDL order pipeline
+- Indian defence index +12% YTD despite correction — outperforming Nifty 50
 
 Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
 

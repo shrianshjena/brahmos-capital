@@ -67,8 +67,10 @@ MANDATORY CURRENT EVENTS you must include as cards (these happened in 2026):
 1. US-Israel Operation Epic Fury against Iran (started 28 Feb 2026) — Strait of Hormuz disrupted, global oil price shock, Indian defence stocks surging
 2. Indonesia BrahMos missile deal ~$375M finalised Mar 2026 — India's first major missile export
 3. India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY) — highest ever allocation
-4. Nifty 50 crashed 9.2% on 14 Mar 2026 due to Middle East war escalation
-5. India-Pakistan ceasefire on LoC holding — border tensions manageable
+4. NSE market crash on 19 Mar 2026 — Nifty 50 -3.5% to -4%, defence stocks HAL -4%, BDL -4.7%, BHARATFORG -5.1% — buying opportunity signal
+5. Rupee hits record low 92.50 vs USD on 19 Mar — war-driven risk-off sentiment
+6. India-Pakistan ceasefire on LoC holding — border tensions manageable
+7. DRDO cleared Akash-NG missile for series production — boosts BDL order pipeline
 
 Additional context from today's news headlines:
 ${headlineStr}
