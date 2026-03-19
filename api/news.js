@@ -22,7 +22,6 @@ const FEEDS = [
   { url: "https://news.google.com/rss/search?q=india+defence+ministry+order+MoD+procurement&hl=en-IN&gl=IN&ceid=IN:en", cat: "ORDER", source: "Google News" },
   { url: "https://news.google.com/rss/search?q=india+defence+export+BrahMos+Tejas+Akash+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "EXPORTS", source: "Google News" },
   { url: "https://news.google.com/rss/search?q=ukraine+war+taiwan+nato+india+defence+rearmament&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Google News" },
-,
   // Today-specific — surface same-day breaking news
   { url: "https://news.google.com/rss/search?q=india+nifty+defence+stocks+crash+march+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
   { url: "https://news.google.com/rss/search?q=HAL+BEL+BDL+defence+stocks+india+latest&hl=en-IN&gl=IN&ceid=IN:en",    cat: "MARKET", source: "Google News" },
