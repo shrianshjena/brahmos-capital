@@ -108,10 +108,10 @@ export default async function handler(req, res) {
   const prompt = `Today is ${today} (Saturday — NSE closed; last trading day was Friday 13 Mar 2026).
 You have full knowledge of events as of March 2026, including:
 - US-Iran war (Operation Epic Fury, 28 Feb 2026) — Strait of Hormuz disrupted — defence stocks bullish long-term
-- Indonesia BrahMos deal $375M signed — India's first major missile export
+- Indonesia BrahMos deal Rs.375M signed — India's first major missile export
 - India FY27 defence budget Rs.7.85L Cr (+15.2%) — highest ever capex allocation
-- NSE CRASHED on 19 Mar 2026: Nifty -3.5% to -4% — HAL -4%, BDL -4.7%, BHARATFORG -5.1% — seen as buying opportunity
-- Rupee at record low 92.50 vs USD on 19 Mar — war-driven risk-off
+- NSE fell sharply 19 Mar 2026: Nifty -3.5% to -4%, HAL -4%, BDL -4.7%, BHARATFORG -5.1%
+- Rupee at 92.50 vs USD — war-driven risk-off; Brent crude ~Rs.107/bbl
 - DRDO cleared Akash-NG for series production — boosts BDL order pipeline
 - Indian defence index +12% YTD despite correction — outperforming Nifty 50
 

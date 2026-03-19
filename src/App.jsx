@@ -1034,10 +1034,6 @@ function GeoView({geoCards,geoAiStatus}){
   },[]);
   const colorFromType=t=>({red:A.red,orange:A.orange,blue:A.blue,green:A.green,teal:A.teal,yellow:A.yellow}[t]||A.t3);
   const GEO_STATIC=[
-    {id:"m19a", date:"19 Mar 2026",cat:"MARKET",  impact:"BEARISH",  hot:true, tickers:["HAL","BDL","BHARATFORG","SOLARINDS","BEML"],
-      title:"NSE Crash — Defence Stocks Down 3–5%",
-      detail:"Nifty 50 fell 3.5–4% on 19 Mar 2026 as US-Iran war fears intensified. Defence index down despite strong fundamentals — HAL -4%, BDL -4.7%, BHARATFORG -5.1%. Analysts call it a buying opportunity.",
-      color:"#FF453A"},
     {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–19 Mar 2026",hot:true,
      title:"Operation Epic Fury: US-Israel vs Iran — Full-Scale War",
      detail:"The US and Israel launched 900 strikes in 12 hours on 28 February 2026, killing Supreme Leader Khamenei. Iran retaliated with hundreds of missiles and thousands of drones across the Gulf, UAE, Qatar, and oil infrastructure. The Strait of Hormuz was disrupted, 150 ships stalled. As of 12 March, active ceasefire negotiations ongoing; US signals diplomatic off-ramp but structural defence procurement impact is irreversible — but structural defence procurement impact is irreversible.",
@@ -1058,7 +1054,7 @@ function GeoView({geoCards,geoAiStatus}){
      title:"Taiwan Strait Crisis — CFR Rates 50%+ Probability in 2026",
      detail:"The Council on Foreign Relations rates a Taiwan Strait military confrontation as 50%+ likely in 2026. A cross-strait crisis would trigger the largest global defence procurement surge since the Cold War. India, as the democratic counterweight to China in the Indo-Pacific, would receive accelerated military modernisation support from the US and allies.",
      tickers:["HAL","BEL","MAZDOCK"]},
-    {id:6,impact:"BULLISH",score:9,region:"India",color:A.green,date:"19 Mar 2026",hot:false,
+    {id:6,impact:"BULLISH",score:9,region:"India",color:A.green,date:"10 Mar 2026",hot:false,
      title:"Indonesia Signs BrahMos Deal — India's Largest Defence Export",
      detail:"Indonesia formalised India's largest-ever defence export: BrahMos supersonic cruise missiles at ~$375M. Multiple Southeast Asian nations are now in active discussions for BrahMos, Akash, Pinaka, and Tejas. India's export order pipeline has expanded to 85+ countries.",
      tickers:["HAL","BEL","BDL"]},
@@ -1079,6 +1075,7 @@ function GeoView({geoCards,geoAiStatus}){
      detail:"HAL filed a regulatory clarification after media reports of a Tejas LCA incident. Confirmed minor technical issue during ground testing with no crash and the pilot safe. Tejas maintains one of the world's best safety records for contemporary combat aircraft. No impact on HAL's export pipeline.",
      tickers:["HAL"]},
   ];
+
   return(
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>

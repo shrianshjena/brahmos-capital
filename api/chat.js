@@ -27,7 +27,7 @@ function buildDateContext() {
 DATE: ${day}, ${dateStr} (IST)
 NSE: ${isWeekend ? "CLOSED (weekend)" : "Open / closed 15:30 IST"}
 INSTRUCTION: The portfolio system reports today as ${dateStr}. When asked the date, respond: "${dateStr}". Do not say you lack a real-time clock.
-MACRO (${dateStr}): US-Iran war (Op Epic Fury, 28 Feb 2026) ongoing — Hormuz disrupted, Brent ~$105/bbl, ceasefire talks stalled. NSE crashed 19 Mar 2026: Nifty 50 -3.5% to -4%, defence stocks broadly down 3-5% (HAL -4%, BDL -4.7%, BHARATFORG -5.1%). India FY27 defence budget ₹7.85L Cr (+15.2% YoY). Indonesia BrahMos deal $375M signed. DRDO cleared Akash-NG for series production. Rupee at record low 92.50 vs USD.
+MACRO (${dateStr}): US-Iran war (Op Epic Fury, 28 Feb 2026) — Hormuz disrupted, Brent ~$107/bbl, ceasefire talks ongoing. NSE fell sharply on 19 Mar 2026 — defence stocks down 3-5% (HAL -4%, BDL -4.7%). India FY27 defence budget ₹7.85L Cr (+15.2% YoY). Indonesia BrahMos deal $375M signed. DRDO cleared Akash-NG for production. Rupee at 92.50 vs USD. India Defence index +12% YTD.
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `;

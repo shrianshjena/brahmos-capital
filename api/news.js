@@ -247,7 +247,7 @@ export default async function handler(req) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "s-maxage=1800, stale-while-revalidate=300",
+        "Cache-Control": "s-maxage=900, stale-while-revalidate=300",
       },
     }
   );
