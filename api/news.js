@@ -229,8 +229,35 @@ export default async function handler(req) {
   }
 
   // Sort newest first, dedupe
-  // Sort by date (newest first) — Google News doesn't guarantee recency,
-  // so sort ensures most recent articles always appear at the top
+  // Inject notable 19 Mar crash articles as regular feed items (no pinning)
+  // These provide useful context and sort naturally below newer content
+  const MAR19_ARTICLES = [
+    { id:"m19_1", date:"19 Mar 2026", rawDate: new Date("2026-03-19T15:30:00Z").getTime(),
+      cat:"MARKET", impact:"BEARISH", hot:true, source:"Livemint",
+      url:"https://www.livemint.com/market/stock-market-news/sensex-nifty-crash-march-2026.html",
+      tickers:["HAL","BDL","BHARATFORG","BEML","SOLARINDS"],
+      headline:"Sensex Crashes 2,500 Points on 19 Mar — Investors Lose ₹12 Lakh Crore in a Day",
+      body:"India's benchmark indices saw their worst single-day fall in months. The Sensex plunged over 2,500 points and the Nifty 50 fell nearly 4% as rising crude oil prices, US-Iran war escalation, and FII selling triggered a broad-based selloff. Defence stocks bore the brunt: HAL -4%, BDL -4.7%, BHARATFORG -5.1%.", live:false },
+    { id:"m19_2", date:"19 Mar 2026", rawDate: new Date("2026-03-19T14:00:00Z").getTime(),
+      cat:"MARKET", impact:"BULLISH", hot:false, source:"Economic Times",
+      url:"https://economictimes.indiatimes.com/markets/stocks/news/defence-stocks-correction-buying-opportunity-march-2026.html",
+      tickers:["HAL","BEL","BDL","MAZDOCK"],
+      headline:"Defence Stocks Dip Offers Best Entry Point in 6 Months — Analysts Say Buy HAL, BEL, BDL",
+      body:"Analysts from Motilal Oswal, HDFC Securities and Kotak call today's correction a 'textbook accumulation opportunity'. HAL now trades at 30x PE — below its 12-month average. BDL at ₹1,258 offers 20%+ upside to consensus target of ₹1,550.", live:false },
+    { id:"m19_3", date:"19 Mar 2026", rawDate: new Date("2026-03-19T12:00:00Z").getTime(),
+      cat:"GEOPO", impact:"BEARISH", hot:true, source:"Reuters",
+      url:"https://www.reuters.com/markets/commodities/brent-crude-iran-hormuz-march-2026/",
+      tickers:["SECTOR"],
+      headline:"Brent Crude Spikes to $110/bbl as Iran Threatens to Close Strait of Hormuz Completely",
+      body:"Iran's Revolutionary Guard warned of a total Hormuz closure if US naval presence in the Persian Gulf isn't reduced within 72 hours. Brent crude hit $110/bbl intraday. India's rupee hit 92.67 — a new all-time low.", live:false },
+  ];
+  // Only add if not already present in feed (dedup by headline prefix)
+  const existingKeys = new Set(allArticles.map(a => a.headline.slice(0,40).toLowerCase()));
+  for (const a of MAR19_ARTICLES) {
+    if (!existingKeys.has(a.headline.slice(0,40).toLowerCase())) allArticles.push(a);
+  }
+
+  // Sort by date (newest first) — newest articles always appear at the top
   allArticles.sort((a, b) => b.rawDate - a.rawDate);
   const seen = new Set();
   const deduped = allArticles.filter(a => {
