@@ -106,14 +106,17 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today} (Saturday — NSE closed; last trading day was Friday 13 Mar 2026).
-You have full knowledge of events as of March 2026, including:
-- US-Iran war (Operation Epic Fury, 28 Feb 2026) — Strait of Hormuz disrupted — defence stocks bullish long-term
+You have full knowledge of events as of April 2026, including:
+- Rajnath Singh Germany visit (21-23 Apr) — €5B TKMS–MDL submarine deal expected — huge bullish for MDL
+- DAC approved Rs.2.38L Cr defence deals Apr 2026 — BEL, HAL, BDL primary beneficiaries
+- HAL Su-57 licence production talks with Russia — technical assessments underway
+- HAL Nashik 3rd Tejas Mk1A assembly line operational — output scaling to 24/year
+- Nifty India Defence index +9% last week, +7.5% YTD — outperforming Nifty 50
+- Defence stocks rally 21 Apr: Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%
+- Operation Epic Fury (US-Iran war) ongoing — ceasefire talks, Brent ~\$94/bbl easing
 - Indonesia BrahMos deal Rs.375M signed — India's first major missile export
-- India FY27 defence budget Rs.7.85L Cr (+15.2%) — highest ever capex allocation
-- NSE fell sharply 19 Mar 2026: Nifty -3.5% to -4%, HAL -4%, BDL -4.7%, BHARATFORG -5.1%
-- Rupee at 92.50 vs USD — war-driven risk-off; Brent crude ~Rs.107/bbl
-- DRDO cleared Akash-NG for series production — boosts BDL order pipeline
-- Indian defence index +12% YTD despite correction — outperforming Nifty 50
+- India FY27 defence budget Rs.7.85L Cr (+15.2%) — largest ever
+- Nuvama price targets: HAL Rs.4,800, BDL Rs.1,900, BEL Rs.525
 
 Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
 

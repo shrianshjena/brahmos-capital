@@ -63,13 +63,14 @@ export default async function handler(req, res) {
 
   const prompt = `Today is ${today}. You are operating with full knowledge of events as of March 2026.
 
-MANDATORY CURRENT EVENTS you must include as cards (these happened in 2026):
-1. US-Israel Operation Epic Fury against Iran (started 28 Feb 2026) — Strait of Hormuz disrupted, global oil price shock, Indian defence spending surging
-2. Indonesia BrahMos missile deal ~$375M finalised Mar 2026 — India's first major missile export, opens Southeast Asia pipeline
-3. India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY) — largest ever allocation with 20.1% capex surge
-4. India-Pakistan border tensions / Operation Sindoor 2025 — C-UAV and precision munitions emergency procurement ongoing
-5. Russia-Ukraine Year 4 — NATO €400B rearmament, India exporting 155mm shells and BrahMos into NATO supply chain
-6. AMCA stealth fighter — BEL-L&T shortlisted, ₹1.5L Cr programme over 30 years
+MANDATORY CURRENT EVENTS you must include as cards (these happened in Apr 2026):
+1. Rajnath Singh Germany Visit (21-23 Apr 2026) — €5B TKMS submarine deal for Indian Navy, Eurodrone MALE UAV collaboration, first Indian Defence Minister visit in 7 years
+2. DAC Approves Rs.2.38L Cr Deals (Apr 2026) — BEL QRSAM + Akash, HAL Su-30 SLEP + transport aircraft, BDL missiles, MDL submarines
+3. HAL Su-57 Licence Production Talks (Apr 2026) — India to become first foreign operator of a 5th-gen stealth fighter under licence
+4. HAL Nashik 3rd Tejas Mk1A Assembly Line (Apr 2026) — Output scaling to 24 jets/year, resolves historic delivery bottleneck  
+5. Defence Stocks Rally 21 Apr 2026 — Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%, Cyient DLM +9.9% — sector-wide bullish
+6. Operation Epic Fury (28 Feb – 21 Apr 2026) — US-Iran war, Hormuz tanker incident, ceasefire talks ongoing, Brent ~\$94/bbl
+7. Indonesia BrahMos \$375M Deal — India's first major missile export, Philippines/Vietnam pipeline opening
 
 Additional context from today's news headlines:
 ${headlineStr}

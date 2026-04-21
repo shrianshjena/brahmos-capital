@@ -27,7 +27,7 @@ function buildDateContext() {
 DATE: ${day}, ${dateStr} (IST)
 NSE: ${isWeekend ? "CLOSED (weekend)" : "Open / closed 15:30 IST"}
 INSTRUCTION: The portfolio system reports today as ${dateStr}. When asked the date, respond: "${dateStr}". Do not say you lack a real-time clock.
-MACRO (${dateStr}): US-Iran war (Op Epic Fury, 28 Feb 2026) — Hormuz disrupted, ceasefire talks ongoing, Brent ~$105/bbl. NSE corrected sharply on 19 Mar (Nifty -4%), mild recovery on 20 Mar. India FY27 defence budget ₹7.85L Cr (+15.2% YoY). Indonesia BrahMos deal $375M signed. DRDO cleared Akash-NG for series production. Rupee ~92.50 vs USD.
+MACRO (${dateStr}): India defence stocks rallying — Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12% today (21 Apr 2026). Rajnath Singh in Germany (21-23 Apr) — €5B TKMS submarine deal for MDL expected. DAC approved ₹2.38L Cr deals (BEL/HAL/BDL beneficiaries). HAL Su-57 licence talks advancing with Russia. HAL Nashik 3rd Tejas Mk1A line scaling output to 24/year. Operation Epic Fury (US-Iran) ongoing — ceasefire talks, Brent ~$94/bbl easing. India FY27 defence budget ₹7.85L Cr (+15.2%). Nifty Defence index +9% last week, +7.5% YTD. Nuvama targets: HAL ₹4,800, BDL ₹1,900, BEL ₹525.
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `;

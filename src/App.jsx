@@ -19,6 +19,7 @@ function rng(s){let v=s;return()=>{v=(v*16807)%2147483647;return(v-1)/2147483646
 function mkSpark(seed,up){const r=rng(seed);const p=[100];for(let i=1;i<24;i++)p.push(Math.max(68,p[i-1]+(up?.5:-.2)+(r()-.46)*4));return p.map(v=>({v}));}
 
 const STOCKS=[
+<<<<<<< Updated upstream
   {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4358.4, day:0.32,pe:30.2,pb:5.8, roe:19.2,mc:2970,  ob:1050,seed:1001,sector:"Aerospace"},
   {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:451.5, day:-1.32,pe:65.1,pb:12.4,roe:22.5,mc:2920,  ob:700, seed:1002,sector:"Electronics"},
   {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2656.6, day:1.35,pe:47.3,pb:9.1, roe:21.3,mc:1000,  ob:380, seed:1003,sector:"Naval"},
@@ -44,6 +45,33 @@ const STOCKS=[
   {ticker:"AVANTEL",    name:"Avantel Ltd",               sub:"Satellite Comms · Defence",    shares:600, buy:95,   px:157.91, day:0.5,pe:228.9,pb:18.5,roe:8.1, mc:3845,  ob:290, seed:2014,sector:"Electronics"},
   {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1916.7, day:3.3,pe:62.4,pb:6.8, roe:10.9,mc:6402,  ob:180, seed:2015,sector:"Aerospace"},
   {ticker:"CYIENTDLM",  name:"Cyient DLM",                sub:"PCB · Defence Electronics",    shares:200, buy:850,  px:357.8, day:3.47,pe:55.0,pb:7.2, roe:13.0,mc:3200,  ob:380, seed:2016,sector:"Electronics"},
+=======
+  {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4358.4, day:2.81,pe:30.2,pb:5.8, roe:19.2,mc:2970,  ob:1050,seed:1001,sector:"Aerospace"},
+  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:451.5, day:0.86,pe:65.1,pb:12.4,roe:22.5,mc:2920,  ob:700, seed:1002,sector:"Electronics"},
+  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2656.6, day:4.65,pe:47.3,pb:9.1, roe:21.3,mc:1000,  ob:380, seed:1003,sector:"Naval"},
+  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1556.9, day:5.25,pe:30.5,pb:5.2, roe:17.8,mc:440,   ob:210, seed:1004,sector:"Naval"},
+  {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2707.5, day:5.52,pe:42.1,pb:8.3, roe:20.1,mc:290,   ob:225, seed:1005,sector:"Naval"},
+  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1375.0, day:1.39,pe:83.5,pb:14.2,roe:17.0,mc:550,   ob:290, seed:1006,sector:"Missiles"},
+  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:3526.4, day:2.18,pe:75.2,pb:11.8,roe:16.5,mc:100,   ob:32,  seed:1007,sector:"Electronics"},
+  {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:782.5, day:3.66,pe:70.8,pb:9.6, roe:14.2,mc:60,    ob:18,  seed:1008,sector:"Space"},
+  {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1742.7, day:14.84,pe:45.1,pb:8.9, roe:20.8,mc:70,    ob:42,  seed:1009,sector:"Electronics"},
+  {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:14949.0, day:0.42,pe:94.4,pb:16.0,roe:18.5,mc:135277,ob:5800,seed:2001,sector:"Explosives"},
+  {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:5071.1, day:2.63,pe:169.8,pb:14.2,roe:8.5, mc:10778, ob:580, seed:2002,sector:"Aerospace"},
+  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:1895.8, day:3.51,pe:42.0,pb:8.5, roe:20.2,mc:86000, ob:2200,seed:2003,sector:"Forgings"},
+  {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1111.1, day:7.61,pe:58.9,pb:10.2,roe:17.8,mc:9821,  ob:890, seed:2004,sector:"Electronics"},
+  {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1767.9, day:3.29,pe:55.3,pb:4.8, roe:8.7, mc:13772, ob:620, seed:2005,sector:"Vehicles"},
+  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:286.93, day:21.8,pe:84.9,pb:12.5,roe:14.8,mc:7578,  ob:180, seed:2006,sector:"Electronics"},
+  {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:379.95, day:8.98,pe:60.2,pb:5.1, roe:8.4, mc:6526,  ob:920, seed:2007,sector:"Materials"},
+  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:483.9, day:5.86,pe:145.0,pb:8.5,roe:5.8, mc:2600,  ob:180, seed:2008,sector:"Drones"},
+  {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:497.05, day:4.29,pe:62.0,pb:8.8, roe:14.2,mc:1560,  ob:220, seed:2009,sector:"Explosives"},
+  {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:948.25, day:3.79,pe:68.0,pb:12.0,roe:17.6,mc:3000,  ob:140, seed:2010,sector:"Aerospace"},
+  {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:16166.0, day:2.6,pe:85.0,pb:14.5,roe:16.8,mc:6800,  ob:380, seed:2011,sector:"Aerospace"},
+  {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:189.53, day:0.28,pe:48.0,pb:5.2, roe:11.0,mc:2800,  ob:650, seed:2012,sector:"Electronics"},
+  {ticker:"DYNAMATECH", name:"Dynamatic Technologies",    sub:"Aerospace Structures · UAV",   shares:30,  buy:3800, px:10747.0, day:3.64,pe:202.8,pb:22.0,roe:10.8,mc:7287,  ob:640, seed:2013,sector:"Aerospace"},
+  {ticker:"AVANTEL",    name:"Avantel Ltd",               sub:"Satellite Comms · Defence",    shares:600, buy:95,   px:157.91, day:2.67,pe:228.9,pb:18.5,roe:8.1, mc:3845,  ob:290, seed:2014,sector:"Electronics"},
+  {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1916.7, day:11.96,pe:62.4,pb:6.8, roe:10.9,mc:6402,  ob:180, seed:2015,sector:"Aerospace"},
+  {ticker:"CYIENTDLM",  name:"Cyient DLM",                sub:"PCB · Defence Electronics",    shares:200, buy:850,  px:357.8, day:9.92,pe:55.0,pb:7.2, roe:13.0,mc:3200,  ob:380, seed:2016,sector:"Electronics"},
+>>>>>>> Stashed changes
 ].map(s=>({...s,mktVal:s.shares*s.px,cost:s.shares*s.buy,ret:((s.px-s.buy)/s.buy)*100,spark:mkSpark(s.seed,s.px>s.buy)}));
 
 const TOTVAL=STOCKS.reduce((a,s)=>a+s.mktVal,0);
@@ -102,16 +130,16 @@ const CONSENSUS = CONSENSUS_STATIC;
 
 const NEWS=[
   // --- March 12 ---
-  {id:"m12a", date:"20 Mar 2026",cat:"MARKET", impact:"MIXED",   hot:false,tickers:["HAL","GRSE","DATAPATTNS","SOLARINDS","AXISCADES"],
+  {id:"m12a", date:"21 Apr 2026",cat:"MARKET", impact:"MIXED",   hot:false,tickers:["HAL","GRSE","DATAPATTNS","SOLARINDS","AXISCADES"],
    headline:"Nifty India Defence Mixed on 12 March — Axiscades Surges 123%, Defence Mid-caps Slip",
    body:"Indian defence stocks traded mixed on 12 March. Axiscades Technologies surged on contract news; HAL (+0.2%), BEML (+0.25%), Avantel (+0.82%) ended positive. Data Patterns (-1.5%), Solar Industries (-0.07%), Bharat Forge (-0.97%), Cochin Shipyard (-1.1%), MTAR (-1.7%), Paras Defence (-1.8%) ended in red. Broader Nifty India Defence broadly flat."},
-  {id:"m12b", date:"20 Mar 2026",cat:"GEOPO",  impact:"BULLISH", hot:true, tickers:["BDL","ZENTEC","HAL","PARAS"],
+  {id:"m12b", date:"21 Apr 2026",cat:"GEOPO",  impact:"BULLISH", hot:true, tickers:["BDL","ZENTEC","HAL","PARAS"],
    headline:"US-Iran Ceasefire Talks Enter Day 2 — India's Defence Procurement Momentum Unchanged",
    body:"Active ceasefire negotiations between the US and Iran entered their second day on 12 March. India's Ministry of Defence confirmed procurement timelines are unaffected by diplomatic developments. Structural demand from India's own military modernisation programme continues to drive the investment case regardless of near-term ceasefire outcomes. BDL and ZENTEC remain primary beneficiaries of sustained air-defence procurement."},
-  {id:"m12c", date:"20 Mar 2026",cat:"ORDER",  impact:"BULLISH", hot:false,tickers:["AXISCADES"],
+  {id:"m12c", date:"21 Apr 2026",cat:"ORDER",  impact:"BULLISH", hot:false,tickers:["AXISCADES"],
    headline:"Axiscades Technologies Wins ₹180 Cr Aerospace Engineering Contract from European OEM",
    body:"Axiscades Technologies secured a multi-year aerospace engineering services contract from a major European OEM. The contract covers structural analysis, certification support, and digital twin development. Stock surged over 120% year-to-date, reflecting accelerating demand for India-based aerospace R&D services."},
-  {id:"m12d", date:"20 Mar 2026",cat:"POLICY", impact:"BULLISH", hot:false,tickers:["HAL","BEL","DATAPATTNS"],
+  {id:"m12d", date:"21 Apr 2026",cat:"POLICY", impact:"BULLISH", hot:false,tickers:["HAL","BEL","DATAPATTNS"],
    headline:"India Unveils Draft DAP 2026 — Higher Indigenisation Thresholds for All New Contracts",
    body:"The Ministry of Defence released the draft Defence Acquisition Procedure 2026, mandating higher indigenisation content for all new procurement. Systems-level suppliers like HAL, BEL, and Data Patterns are set to benefit most. The policy aligns with the Atmanirbhar Bharat target of 25% defence exports by 2025 and signals long-term structural tailwinds for domestic manufacturers."},
   // --- March 11 ---
@@ -124,11 +152,11 @@ const NEWS=[
    body:"Profit-booking hit defence stocks on 11 March after US President Trump suggested the war with Iran could end soon. HAL and ZENTEC fell ~2%; GRSE and BEL among losers. However, analysts note structural demand is intact regardless of near-term ceasefire.",
    source:"India TV News · Markets Desk"},
   // --- March 10 ---
-  {id:3, date:"20 Mar 2026",cat:"DEAL",   impact:"BULLISH",hot:true, tickers:["HAL","BEL","BDL"],
+  {id:3, date:"21 Apr 2026",cat:"DEAL",   impact:"BULLISH",hot:true, tickers:["HAL","BEL","BDL"],
    headline:"Indonesia Formalises BrahMos Missile Acquisition — India's Largest Defence Export",
    body:"Indonesia has formally signed the BrahMos supersonic cruise missile deal, marking India's largest-ever defence export at ~$375M. HAL supplies propulsion systems, BEL provides guidance electronics, and BDL manufactures the warhead subsystem.",
    source:"Economic Times Defence"},
-  {id:4, date:"20 Mar 2026",cat:"BROKER", impact:"BULLISH",hot:false,tickers:["HAL","BEL","BDL","MAZDOCK"],
+  {id:4, date:"21 Apr 2026",cat:"BROKER", impact:"BULLISH",hot:false,tickers:["HAL","BEL","BDL","MAZDOCK"],
    headline:"Motilal Oswal Issues BUY on 4 Stocks Post BrahMos Deal; Raises Targets",
    body:"Following the Indonesia deal, Motilal Oswal raised targets: HAL to ₹4,960, BEL to ₹520, BDL to ₹1,450, MAZDOCK to ₹2,850. Analyst cited strong order pipeline and sustained geopolitical tailwinds as key re-rating drivers.",
    source:"Motilal Oswal Research"},
@@ -138,7 +166,7 @@ const NEWS=[
    body:"HDFC Sec initiated coverage: BEL (Add ₹490), Data Patterns (Buy ₹3,770), Apollo Micro (Buy ₹280), MAZDOCK (Add ₹2,950), Astra Micro (Add ₹1,130) are positive; HAL (Reduce ₹3,265), BDL (Reduce ₹1,120), and Paras Defence (Reduce ₹665) flagged on valuation. Prefers electronics value-chain.",
    source:"HDFC Securities Research · Business Standard"},
   // --- March 8 ---
-  {id:6, date:"20 Mar 2026", cat:"RESULTS",impact:"BULLISH",hot:false,tickers:["DATAPATTNS"],
+  {id:6, date:"21 Apr 2026", cat:"RESULTS",impact:"BULLISH",hot:false,tickers:["DATAPATTNS"],
    headline:"Data Patterns Hits 52-Week High ₹3,609; Order Book at All-Time High ₹1,868 Cr",
    body:"Data Patterns rallied 7.5% intraday, touching a 52-week high of ₹3,609. The company's order book reached a record ₹1,868 Cr. Management cited strong budget support for radars, EW systems, and advanced electronics as the key demand driver.",
    source:"Business Standard · Markets"},
@@ -157,16 +185,16 @@ const NEWS=[
    body:"Defence Minister Rajnath Singh approved a new Defence Procurement Manual, streamlining procurement for estimated ₹1 trillion in annual revenue orders. DPM reduces execution risk, lowers timeline, and is widely viewed as structural positive per ICICI Securities.",
    source:"ICICI Securities Research"},
   // --- March 5 ---
-  {id:10,date:"20 Mar 2026", cat:"ORDER",  impact:"BULLISH",hot:true, tickers:["MAZDOCK"],
+  {id:10,date:"21 Apr 2026", cat:"ORDER",  impact:"BULLISH",hot:true, tickers:["MAZDOCK"],
    headline:"Indian Navy Finalises ₹99,000 Cr P-75I Submarine Deal with Thyssenkrupp",
    body:"The Indian Navy is finalising the landmark ₹99,000 Cr contract for 6 advanced P-75I submarines with Germany's Thyssenkrupp Marine Systems. MDL's Mazagon Dock is the designated Indian construction yard — a transformative decade-long revenue pipeline.",
    source:"Defence News India"},
-  {id:11,date:"20 Mar 2026", cat:"GEOPO",  impact:"BULLISH",hot:true, tickers:["SECTOR"],
+  {id:11,date:"21 Apr 2026", cat:"GEOPO",  impact:"BULLISH",hot:true, tickers:["SECTOR"],
    headline:"Strait of Hormuz Traffic Near Standstill — 150 Ships Stalled; India Eyes Strategic Opportunity",
    body:"Iranian counter-strikes have slowed Strait of Hormuz traffic to near-standstill, with 150 freight and oil tankers stalled. India's strategic location in the Indian Ocean and its growing naval capacity have made it an indispensable regional security partner — directly boosting procurement urgency.",
    source:"Wikipedia · Economic Impact of 2026 Iran War"},
   // --- March 4 ---
-  {id:12,date:"20 Mar 2026", cat:"ORDER",  impact:"BULLISH",hot:false,tickers:["HAL"],
+  {id:12,date:"21 Apr 2026", cat:"ORDER",  impact:"BULLISH",hot:false,tickers:["HAL"],
    headline:"MoD Awards HAL ₹5,083 Cr — 6 ALH Mk-III Helicopters + Shtil Naval Missiles",
    body:"HAL secured ₹5,083 Cr in contracts from MoD: ₹2,901 Cr for 6 ALH Mk-III helicopters for the Coast Guard, and ₹2,182 Cr for Shtil surface-to-air missiles for the Indian Navy. Order book visibility and cash flows strengthen materially.",
    source:"Ministry of Defence"},
@@ -640,7 +668,7 @@ function AskAIView({stocks}){
 }
 
 /* ═══ PORTFOLIO ════════════════════════════════════════════════════════════ */
-const SIGNALS_STATIC=[{id:1,ticker:"HAL",type:"STRONG BUY",cat:"Gov",conf:88,date:"20 Mar 2026",title:"MoD Awards ₹5,083 Cr Contract",detail:"6 ALH Mk-III helicopters (₹2,901 Cr) + Shtil naval missiles (₹2,182 Cr). Order book strengthens."},{id:2,ticker:"BDL",type:"STRONG BUY",cat:"Geo",conf:85,date:"20 Mar 2026",title:"Indonesia Signs BrahMos Deal",detail:"India's largest-ever defence export. BDL is key propulsion & warhead supplier."},{id:3,ticker:"MAZDOCK",type:"BUY",cat:"Gov",conf:74,date:"20 Mar 2026",title:"₹99,000 Cr Submarine Pipeline",detail:"Navy finalising 6 P-75I submarines. Transformative decade-long contract."},{id:4,ticker:"GRSE",type:"BUY",cat:"Market",conf:70,date:"1 Mar 2026",title:"Record Q3 Execution",detail:"Order book ₹22,500 Cr provides 3+ year revenue visibility. Target upgrades."},{id:5,ticker:"ZENTEC",type:"BUY",cat:"Geo",conf:72,date:"20 Mar 2026",title:"Anti-Drone Tailwind Post Epic Fury",detail:"Emergency C-UAV procurement accelerated. ZENTEC primary domestic beneficiary."},{id:6,ticker:"COCHINSHIP",type:"BUY",cat:"Market",conf:68,date:"7 Mar 2026",title:"Compelling Valuation at P/E 30x",detail:"P/E 30.5x vs sector avg 52x. NGOPV execution strong, margin recovery underway."},{id:7,ticker:"BEL",type:"HOLD",cat:"Market",conf:55,date:"6 Mar 2026",title:"Stretched at 65x — Await Pullback",detail:"₹570Bn FY26 target achievable, but P/E 65x limits near-term upside. Entry: ₹380–400."},{id:8,ticker:"DATAPATTNS",type:"REDUCE",cat:"Market",conf:63,date:"3 Mar 2026",title:"P/E 75x Prices in Perfection",detail:"Strong franchise but HDFC Sec flags execution risk. Trim 20–30% on strength."},{id:9,ticker:"HAL",type:"WATCH",cat:"Gov",conf:40,date:"23 Feb 2026",title:"Tejas Ground Incident — Monitor",detail:"Minor ground incident confirmed by HAL. Safety record intact. Watch export pipeline."}];
+const SIGNALS_STATIC=[{id:1,ticker:"HAL",type:"STRONG BUY",cat:"Gov",conf:88,date:"21 Apr 2026",title:"MoD Awards ₹5,083 Cr Contract",detail:"6 ALH Mk-III helicopters (₹2,901 Cr) + Shtil naval missiles (₹2,182 Cr). Order book strengthens."},{id:2,ticker:"BDL",type:"STRONG BUY",cat:"Geo",conf:85,date:"21 Apr 2026",title:"Indonesia Signs BrahMos Deal",detail:"India's largest-ever defence export. BDL is key propulsion & warhead supplier."},{id:3,ticker:"MAZDOCK",type:"BUY",cat:"Gov",conf:74,date:"21 Apr 2026",title:"₹99,000 Cr Submarine Pipeline",detail:"Navy finalising 6 P-75I submarines. Transformative decade-long contract."},{id:4,ticker:"GRSE",type:"BUY",cat:"Market",conf:70,date:"1 Mar 2026",title:"Record Q3 Execution",detail:"Order book ₹22,500 Cr provides 3+ year revenue visibility. Target upgrades."},{id:5,ticker:"ZENTEC",type:"BUY",cat:"Geo",conf:72,date:"21 Apr 2026",title:"Anti-Drone Tailwind Post Epic Fury",detail:"Emergency C-UAV procurement accelerated. ZENTEC primary domestic beneficiary."},{id:6,ticker:"COCHINSHIP",type:"BUY",cat:"Market",conf:68,date:"7 Mar 2026",title:"Compelling Valuation at P/E 30x",detail:"P/E 30.5x vs sector avg 52x. NGOPV execution strong, margin recovery underway."},{id:7,ticker:"BEL",type:"HOLD",cat:"Market",conf:55,date:"6 Mar 2026",title:"Stretched at 65x — Await Pullback",detail:"₹570Bn FY26 target achievable, but P/E 65x limits near-term upside. Entry: ₹380–400."},{id:8,ticker:"DATAPATTNS",type:"REDUCE",cat:"Market",conf:63,date:"3 Mar 2026",title:"P/E 75x Prices in Perfection",detail:"Strong franchise but HDFC Sec flags execution risk. Trim 20–30% on strength."},{id:9,ticker:"HAL",type:"WATCH",cat:"Gov",conf:40,date:"23 Feb 2026",title:"Tejas Ground Incident — Monitor",detail:"Minor ground incident confirmed by HAL. Safety record intact. Watch export pipeline."}];
 function PortfolioView({onAskAI,stocks,histData,histStatus,signals,aiStatus}){
   const totValP=stocks.reduce((a,s)=>a+s.mktVal,0);
   const stocksWt=stocks.map(s=>({...s,wt:(s.mktVal/totValP)*100}));
@@ -842,6 +870,11 @@ function WhyDefenceView(){
     {icon:"💡",color:A.indigo, title:"Valuation: HAL at 30x P/E — Cheap vs 52x Sector Average",stat:"HAL, COCHINSHIP: relative bargains",body:"Not all defence stocks are expensive. HAL at 30x P/E and Cochin Shipyard at 30.5x offer genuinely reasonable entry relative to their growth trajectories. MAZDOCK at 47x is justified by the transformative submarine pipeline. Quality names at fair prices still exist in this sector — but they require selectivity."},    {icon:"📉",color:A.red,     title:"19 Mar Crash = Rare Entry — Fundamentals Unchanged",stat:"Nifty Defence -3.8% · 19 Mar 2026",body:"The 19 March 2026 selloff was driven entirely by macro fear — Brent crude spiking to $110/bbl and FII outflows of ₹8,400 Cr. India's defence budget, order books, and indigenisation mandates are completely untouched. HAL at ₹3,802 is cheaper than its 6-month average. History shows every sharp defence correction since 2022 recovered within 8 weeks."},
     {icon:"🤝",color:A.teal,    title:"BrahMos Export Pipeline — Southeast Asia, Middle East, Europe",stat:"$375M Indonesia · 85+ countries",body:"Indonesia's $375M BrahMos deal was India's first major supersonic missile export — and it opened the floodgates. Philippines, Vietnam, Saudi Arabia, UAE, and Poland are all in active discussions. India's defence export target of ₹50,000 Cr by FY29 looks increasingly achievable. BDL, HAL and BEL are the direct beneficiaries of every export contract signed."},
     {icon:"⚡",color:A.orange,  title:"Akash-NG Cleared for Production — Domestic Air Defence Boom",stat:"DRDO Clearance · Mar 2026",body:"DRDO's clearance of the Akash Next-Generation missile system for series production is a landmark event for BEL and BDL. The Akash-NG offers double the range and triple the hit probability of Akash-1. With 72 squadrons planned for the Indian Army and Air Force, the order pipeline spans the next 8–10 years. This was a key driver missing from the original Akash thesis."},
+    {icon:"🇩🇪",color:A.green,  title:"Germany Submarine Deal Imminent — €5B Inflow for MDL",stat:"21 Apr 2026 · TKMS x MDL",body:"Rajnath Singh's 21-23 Apr Germany visit is expected to finalise a €5 billion inter-governmental agreement for 6 TKMS stealth submarines to be built by Mazagon Dock. This is India's largest European defence deal in a decade. MDL is also in discussion for the Eurodrone MALE UAV programme. MDL shares rallied 4.65% in a single session on the news."},
+    {icon:"🚀",color:A.green,    title:"₹2.38L Cr DAC Deals — Multi-Year Order Book Visibility",stat:"FY27 Capex ₹2.2L Cr",body:"The Defence Acquisition Council's approval of ₹2.38 lakh crore in new procurements in April 2026 gives BEL, HAL and BDL the strongest order-book visibility in a decade. Key tailwinds: QRSAM (BEL), Akash missile variants (BEL+BDL), Su-30 SLEP (HAL), medium transport aircraft (HAL), drone-killer missiles (BDL+Zen Tech), and 6 TKMS submarines (MDL). FY27 defence capex allocation is ₹2.2 lakh crore."},
+    {icon:"✈️",color:A.teal,     title:"HAL Su-57 Licence Production — 5th-Gen Stealth Fighter",stat:"Apr 2026 · Technical Assessments",body:"HAL Chairman Dr DK Sunil confirmed Su-57 Felon licence production talks with Russia have advanced to on-ground inspections and technical assessments. This would make India the first foreign operator to build a 5th-gen stealth fighter. Combined with the indigenous AMCA programme (BEL-L&T avionics) and Tejas Mk2 rollout, HAL's product portfolio spans every combat aircraft tier — including 4.5-gen, 5-gen, and trainer programmes."},
+    {icon:"🏭",color:A.green,    title:"HAL Nashik 3rd Assembly Line — Tejas Output 24/year",stat:"Apr 2026 · Capacity Expansion",body:"HAL's third Tejas Mk1A assembly line at Nashik is now operational, scaling total production to 24 jets/year. This resolves the historic bottleneck on HAL's 83-aircraft Tejas Mk1A order. IAF has signalled intent for 100+ HLFT-42 supersonic trainers, and the Rafale DRAL joint venture (HAL-Dassault) is preparing for indigenous Rafale assembly. HAL's delivery execution — the key concern for brokerages — is finally accelerating."},
+    {icon:"🎯",color:A.orange,  title:"Nifty Defence Index +9% Week, +7.5% YTD — Outperforming Nifty 50",stat:"Apr 2026 · Rotation to Defence",body:"The Nifty India Defence index has rallied 9% in a single week (week of 11 Apr 2026) and +7.5% YTD — outperforming Nifty 50. Motilal Oswal Nifty India Defence Index Fund delivered +30% over 12 months. Global defence rotation is accelerating: Trump's \\$1.5T US defence budget (+40% YoY), NATO €400B rearmament, and Indian FY27 capex ₹2.2L Cr are a rare simultaneous demand surge."},
 
   ];
   return(
@@ -1037,6 +1070,7 @@ function GeoView({geoCards,geoAiStatus}){
   },[]);
   const colorFromType=t=>({red:A.red,orange:A.orange,blue:A.blue,green:A.green,teal:A.teal,yellow:A.yellow}[t]||A.t3);
   const GEO_STATIC=[
+<<<<<<< Updated upstream
     {id:1,impact:"ACTIVE WAR",score:10,region:"Middle East",color:A.red,date:"28 Feb–21 Apr 2026",hot:true,
      title:"Operation Epic Fury: US-Israel vs Iran — Full-Scale War",
      detail:"The US and Israel launched 900 strikes in 12 hours on 28 February 2026, killing Supreme Leader Khamenei. Iran retaliated with hundreds of missiles and thousands of drones across the Gulf, UAE, Qatar, and oil infrastructure. The Strait of Hormuz was disrupted, 150 ships stalled. As of 12 March, active ceasefire negotiations ongoing; US signals diplomatic off-ramp but structural defence procurement impact is irreversible — but structural defence procurement impact is irreversible.",
@@ -1076,7 +1110,52 @@ function GeoView({geoCards,geoAiStatus}){
     {id:10,impact:"NEUTRAL",score:3,region:"India",color:A.card3,date:"23 Feb 2026",hot:false,
      title:"HAL Clarifies on Tejas Ground Incident — No Crash, Safety Record Intact",
      detail:"HAL filed a regulatory clarification after media reports of a Tejas LCA incident. Confirmed minor technical issue during ground testing with no crash and the pilot safe. Tejas maintains one of the world's best safety records for contemporary combat aircraft. No impact on HAL's export pipeline.",
+=======
+    {id:1,impact:"BULLISH",score:10,region:"Europe",color:A.green,date:"21 Apr 2026",hot:true,
+     title:"Rajnath Singh in Germany — €5B Submarine Deal on Table with TKMS–MDL",
+     detail:"Defence Minister Rajnath Singh began a three-day Germany visit on 21 Apr 2026. ThyssenKrupp Marine Systems (TKMS) and Mazagon Dock Shipbuilders (MDL) are finalising a €5 billion inter-governmental deal for 6 stealth submarines under Project P-75I. A Defence Industrial Cooperation Roadmap and Eurodrone MALE UAV collaboration are also expected. This is the first Indian Defence Minister visit to Germany in 7 years.",
+     tickers:["MAZDOCK","BEL","BDL"]},
+    {id:2,impact:"BULLISH",score:9,region:"India",color:A.green,date:"21 Apr 2026",hot:true,
+     title:"Defence Stocks Rally Up to 14% — Zen Tech Leads on Germany Visit Optimism",
+     detail:"Defence stocks rallied sharply on 21 Apr 2026 — Zen Technologies surged 14.84%, Apollo Micro +21.80%, Axiscades +11.96%, Cyient DLM +9.92%. The Nifty India Defence index climbed 1.3% as investor sentiment turned upbeat on expectations of fresh deals during Rajnath Singh's Germany visit. Mazagon Dock +4.65%, GRSE +5.52%, Cochin Shipyard +5.25% — shipbuilders rallied on the €5B TKMS submarine deal prospect.",
+     tickers:["ZENTEC","APOLLOMICRO","AXISCADES","CYIENTDLM","MAZDOCK"]},
+    {id:3,impact:"BULLISH",score:9,region:"India",color:A.green,date:"Apr 2026",hot:true,
+     title:"DAC Approves ₹2.38L Cr Defence Deals — BEL, HAL, BDL Primary Beneficiaries",
+     detail:"India's Defence Acquisition Council approved ₹2.38 lakh crore in new deals in April 2026, set to fuel multi-year growth for BEL, HAL, BDL. Key programmes: QRSAM (BEL-led), Akash missile variants, Su-30 service life extension (HAL), medium transport aircraft orders, surface-to-air missiles (BDL). Nuvama price targets: BEL ₹525, BDL ₹1,900 (+43.3% upside), HAL ₹4,800. CLSA reiterates Outperform on HAL; Jefferies picks it as top 2026 industrial.",
+     tickers:["BEL","HAL","BDL"]},
+    {id:4,impact:"LT BULL",score:9,region:"India",color:A.teal,date:"Apr 2026",hot:true,
+     title:"HAL–Russia Su-57 Licence Production Talks Advance — Technical Assessments Underway",
+     detail:"HAL Chairman Dr DK Sunil confirmed Su-57 Felon licence production talks with Russia have advanced to on-ground inspections and technical assessments. This positions India to become the first foreign operator of a 5th-gen stealth fighter programme. Simultaneously, Moscow greenlit sale of R-37M ultra-long-range air-to-air missiles (~400 km range) to India — game-changer for IAF Su-30MKI fleet.",
+>>>>>>> Stashed changes
      tickers:["HAL"]},
+    {id:5,impact:"BULLISH",score:8,region:"India",color:A.green,date:"Apr 2026",hot:true,
+     title:"HAL Nashik: 3rd Tejas Mk1A Assembly Line Operational — Output Scaling to 24/year",
+     detail:"HAL launched its third assembly line for Tejas Mk1A at the Nashik facility. This major capacity expansion scales total production to 24 jets annually, addressing long-standing delivery delay concerns. IAF has also signalled intent for 100+ HLFT-42 supersonic trainers. Combined with Rafale DRAL JV assembly and AMCA programme, India's aerospace manufacturing ecosystem is in unprecedented expansion.",
+     tickers:["HAL","BEL","DATAPATTNS"]},
+    {id:6,impact:"ACTIVE WAR",score:9,region:"Middle East",color:A.red,date:"28 Feb – 21 Apr 2026",hot:true,
+     title:"Operation Epic Fury — US-Iran Ceasefire Deadline Looms, Hormuz Incident",
+     detail:"US-Israel Operation Epic Fury (started 28 Feb 2026) continues with ceasefire talks ongoing. Iran rejected 2nd round of peace talks; Trump indicates no deadline extension. IRGC fired on 14 India-bound crude/gas tankers transiting Strait of Hormuz — 13 vessels returned to Persian Gulf ports. Brent crude at ~$94.5/bbl after easing from March highs. Defence procurement urgency remains elevated globally.",
+     tickers:["BDL","ZENTEC","HAL","BEL","PARAS"]},
+    {id:7,impact:"BULLISH",score:9,region:"India",color:A.green,date:"Apr 2026",hot:false,
+     title:"Indian Navy Drone Killer Missile — IR-Guided 7km Range, Industry RFP Out",
+     detail:"Indian Army published detailed specifications for a fire-and-forget, IR-guided anti-drone missile with 7km minimum range and 90%+ single-shot kill probability. BDL, BEL, Solar Industries, and Zen Technologies are primary contenders. DRDO also readying 100kW DURGA-II high-power laser weapon for ship-borne trials on stealth destroyers — India's first directed energy weapon.",
+     tickers:["BDL","BEL","SOLARINDS","ZENTEC"]},
+    {id:8,impact:"BULLISH",score:8,region:"India",color:A.green,date:"10 Mar 2026",hot:false,
+     title:"Indonesia BrahMos $375M Deal — Philippines, Vietnam Next in Pipeline",
+     detail:"Indonesia's $375M BrahMos supersonic missile deal — India's first major missile export — has opened the Southeast Asia pipeline. Philippines, Vietnam, Saudi Arabia, UAE and Poland are in active negotiations. India's defence export target of ₹50,000 Cr by FY29 is increasingly achievable. BDL, HAL (propulsion), BEL (guidance) are direct beneficiaries.",
+     tickers:["BDL","HAL","BEL"]},
+    {id:9,impact:"BULLISH",score:10,region:"India",color:A.green,date:"1 Feb 2026",hot:false,
+     title:"India FY27 Defence Budget ₹7.85L Cr (+15.2%) — Largest Ever",
+     detail:"Record defence allocation with 20.1% capex surge to ₹2.31L Cr. Funds Rafale-M, Predator UAVs, P-75I submarines, AMCA, and modernisation across all three services. Government signalling long-term intent to raise spending to 2.5% of GDP — NATO-equivalent levels. FY27 capital outlay expected at ₹2.2L Cr.",
+     tickers:["HAL","BEL","MAZDOCK","BDL","GRSE"]},
+    {id:10,impact:"LT BULL",score:8,region:"India",color:A.teal,date:"Feb–Apr 2026",hot:false,
+     title:"AMCA Stealth Fighter — Private Sector Lead, ₹1.5L Cr / 30-Year Programme",
+     detail:"India's Advanced Medium Combat Aircraft (AMCA) 5th-gen fighter programme will be executed primarily by private industry (Tata Advanced Systems, L&T, Bharat Forge shortlisted). BEL-L&T among avionics finalists. ADA projects AMCA as world's most cost-effective 5th-gen programme at just $1.8B R&D budget. Production partners compete alongside Tejas Mk2 (HAL) and Rafale DRAL JV.",
+     tickers:["BEL","HAL","BHARATFORG","DATAPATTNS"]},
+    {id:11,impact:"YEAR 4",score:7,region:"Eastern Europe",color:A.blue,date:"24 Feb 2026",hot:false,
+     title:"Russia-Ukraine War Year 4 — NATO €400B Rearmament Accelerating",
+     detail:"Russia-Ukraine conflict entered Year 4. NATO committed €400B in new defence orders. Europe's rearmament is the fastest since the Cold War. India's defence exports are entering NATO supply chains — 155mm shells (Solar Industries, Sunita Tools), BrahMos components, and dual-use parts in active procurement. Trump's $1.5T defence budget (+40% YoY) — largest US military expansion since WWII.",
+     tickers:["SECTOR","SOLARINDS","BDL","HAL"]},
   ];
 
   return(
