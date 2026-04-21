@@ -88,6 +88,18 @@ function getTickersFromText(text) {
   return found.size ? [...found] : ["SECTOR"];
 }
 
+// Detects bare company-name entries like "Bharat Electronics Ltd." or "Data Patterns (India) Ltd."
+// These are Moneycontrol/Google News stock-ticker pages, not real articles.
+function isStockPageEntry(title) {
+  const t = title.trim();
+  // Matches: "[Company Name] Ltd." / "Limited" / "(India) Ltd." with no verb or action words
+  if (/^[A-Za-z][A-Za-z\s\(\)\.&]+(?:Ltd\.|Ltd|Limited|Corp\.|Inc\.|Pvt\.?\s*Ltd\.)$/.test(t)) return true;
+  // Catches short (≤4 words) titles that are just a company name with no news action
+  const words = t.split(/\s+/);
+  if (words.length <= 4 && /(?:Ltd\.|Limited|Corp\.|Electronics|Industries|Systems|Technologies|Shipyard|Dynamics|Aeronautics|Defence|Forge|Aerospace)/.test(t)) return true;
+  return false;
+}
+
 function isDefenceRelevant(text) {
   const lower = text.toLowerCase();
 
@@ -222,6 +234,8 @@ export default async function handler(req) {
     for (const item of items.slice(0, 25)) {
       const combined = item.title + " " + item.desc;
       if (!isDefenceRelevant(combined)) continue;
+      // Reject bare company-name entries (stock ticker pages, not real news)
+      if (isStockPageEntry(item.title)) continue;
       const finalCat = inferCat(combined, cat);
       allArticles.push({
         id: `live_${allArticles.length}`,
@@ -247,8 +261,18 @@ export default async function handler(req) {
   allArticles.length = 0;
   allArticles.push(...recentOnly);
 
-  // Sort by date (newest first) — most recent at top
-  allArticles.sort((a, b) => b.rawDate - a.rawDate);
+  // Sort: newest day first; within same day, Livemint articles appear before other sources;
+  // within same source, newest timestamp first.
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  allArticles.sort((a, b) => {
+    const aDay = Math.floor(a.rawDate / DAY_MS);
+    const bDay = Math.floor(b.rawDate / DAY_MS);
+    if (aDay !== bDay) return bDay - aDay;                       // newer day first
+    const aLM = a.source === "Livemint" ? 0 : 1;
+    const bLM = b.source === "Livemint" ? 0 : 1;
+    if (aLM !== bLM) return aLM - bLM;                          // Livemint first within day
+    return b.rawDate - a.rawDate;                                // newest timestamp within source
+  });
   const seen = new Set();
   const deduped = allArticles.filter(a => {
     const key = a.headline.slice(0, 45).toLowerCase();
