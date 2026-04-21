@@ -27,7 +27,21 @@ function buildDateContext() {
 DATE: ${day}, ${dateStr} (IST)
 NSE: ${isWeekend ? "CLOSED (weekend)" : "Open / closed 15:30 IST"}
 INSTRUCTION: The portfolio system reports today as ${dateStr}. When asked the date, respond: "${dateStr}". Do not say you lack a real-time clock.
-MACRO (${dateStr}): India defence stocks rallying — Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12% today (21 Apr 2026). Rajnath Singh in Germany (21-23 Apr) — €5B TKMS submarine deal for MDL expected. DAC approved ₹2.38L Cr deals (BEL/HAL/BDL beneficiaries). HAL Su-57 licence talks advancing with Russia. HAL Nashik 3rd Tejas Mk1A line scaling output to 24/year. Operation Epic Fury (US-Iran) ongoing — ceasefire talks, Brent ~$94/bbl easing. India FY27 defence budget ₹7.85L Cr (+15.2%). Nifty Defence index +9% last week, +7.5% YTD. Nuvama targets: HAL ₹4,800, BDL ₹1,900, BEL ₹525.
+VERIFIED FACTS (${dateStr}) — USE THESE, DO NOT SPECULATE ABOUT OTHER NEWS:
+• Today's rally: Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%, Cyient DLM +9.9%, Midhani +9%
+• Rajnath Singh is IN GERMANY (21-23 Apr 2026) for 3-day official visit — meeting Boris Pistorius
+  · €5 BILLION TKMS-MDL submarine deal (6 stealth submarines for Indian Navy, Project P-75I) on table
+  · Defence Industrial Cooperation Roadmap + Eurodrone MALE UAV collaboration expected
+  · First Indian Defence Minister visit to Germany in 7 years
+• DAC approved ₹2.38L Cr defence deals in April 2026 — BEL/HAL/BDL primary beneficiaries
+• HAL Su-57 Felon licence production talks advanced to technical assessments phase (confirmed by HAL CMD Dr DK Sunil)
+• HAL Nashik 3rd Tejas Mk1A assembly line operational — production scaling to 24 jets/year
+• Operation Epic Fury (US-Iran war, started 28 Feb 2026) continues — ceasefire talks ongoing; Brent ~$94/bbl easing
+• India FY27 Defence Budget: ₹7.85L Cr (+15.2% YoY), capex ₹2.31L Cr
+• Nifty India Defence index: +9% last week (week of 11 Apr), +7.5% YTD
+• Nuvama broker targets: HAL ₹4,800 (+10%), BDL ₹1,900 (+43%), BEL ₹525 (+16%)
+
+IMPORTANT: If asked about any news not in this list, acknowledge you don't have that specific information rather than fabricating details.
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 
 `;
