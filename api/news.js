@@ -241,7 +241,13 @@ export default async function handler(req) {
   }
 
   // Sort newest first, dedupe
-  // Sort by date (newest first) — newest articles always appear at top
+  // Drop articles older than 60 days (catches stale stock-page entries)
+  const cutoff60d = Date.now() - 60 * 24 * 60 * 60 * 1000;
+  const recentOnly = allArticles.filter(a => a.rawDate > cutoff60d || a.rawDate === 0);
+  allArticles.length = 0;
+  allArticles.push(...recentOnly);
+
+  // Sort by date (newest first) — most recent at top
   allArticles.sort((a, b) => b.rawDate - a.rawDate);
   const seen = new Set();
   const deduped = allArticles.filter(a => {
