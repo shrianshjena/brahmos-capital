@@ -12,20 +12,32 @@
 export const config = { runtime: "edge" };
 
 const FEEDS = [
-  // ── Livemint — primary, reliable, India finance (no 403) ─────────────────
+  // ── Livemint — direct RSS, fast and reliable ─────────────────────────────
   { url: "https://www.livemint.com/rss/markets",   cat: "MARKET",  source: "Livemint" },
   { url: "https://www.livemint.com/rss/companies", cat: "ORDER",   source: "Livemint" },
   { url: "https://www.livemint.com/rss/economy",   cat: "POLICY",  source: "Livemint" },
-  // ── Google News targeted — defence-specific ────────────────────────────────
-  { url: "https://news.google.com/rss/search?q=Nifty+India+defence+HAL+BEL+BDL+NSE+stocks&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET",  source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=iran+india+defence+procurement+2026&hl=en-IN&gl=IN&ceid=IN:en",         cat: "GEOPO",   source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=india+defence+ministry+order+MoD+procurement&hl=en-IN&gl=IN&ceid=IN:en", cat: "ORDER", source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=india+defence+export+BrahMos+Tejas+Akash+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "EXPORTS", source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=ukraine+war+taiwan+nato+india+defence+rearmament&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Google News" },
-  // Crash + daily news feeds
-  { url: "https://news.google.com/rss/search?q=nifty+sensex+stock+market+crash+fall+march+2026&hl=en-IN&gl=IN&ceid=IN:en",     cat: "MARKET", source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=HAL+BEL+BDL+BHARATFORG+stock+fall+india+2026&hl=en-IN&gl=IN&ceid=IN:en",        cat: "MARKET", source: "Google News" },
-  { url: "https://news.google.com/rss/search?q=india+defence+stocks+buy+opportunity+correction+2026&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
+  // ── Economic Times — via Google News site: operator (14-day window) ───────
+  { url: "https://news.google.com/rss/search?q=HAL+BEL+BDL+defence+stocks+when:14d+site:economictimes.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Economic Times" },
+  { url: "https://news.google.com/rss/search?q=india+defence+procurement+MoD+when:14d+site:economictimes.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "ORDER", source: "Economic Times" },
+  { url: "https://news.google.com/rss/search?q=nifty+sensex+market+when:14d+site:economictimes.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Economic Times" },
+  // ── Times of India (14-day window) ────────────────────────────────────────
+  { url: "https://news.google.com/rss/search?q=defence+stocks+HAL+BEL+india+when:14d+site:timesofindia.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Times of India" },
+  { url: "https://news.google.com/rss/search?q=nifty+sensex+stock+market+when:14d+site:timesofindia.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Times of India" },
+  { url: "https://news.google.com/rss/search?q=india+defence+military+when:14d+site:timesofindia.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Times of India" },
+  // ── Business Standard (14-day window) ─────────────────────────────────────
+  { url: "https://news.google.com/rss/search?q=defence+stocks+HAL+BEL+when:14d+site:business-standard.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Business Standard" },
+  { url: "https://news.google.com/rss/search?q=india+stock+market+when:14d+site:business-standard.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Business Standard" },
+  // ── Moneycontrol (14-day window) ──────────────────────────────────────────
+  { url: "https://news.google.com/rss/search?q=defence+stocks+HAL+BEL+BDL+when:14d+site:moneycontrol.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Moneycontrol" },
+  { url: "https://news.google.com/rss/search?q=nifty+defence+index+when:14d+site:moneycontrol.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Moneycontrol" },
+  // ── Hindu BusinessLine (14-day window) ────────────────────────────────────
+  { url: "https://news.google.com/rss/search?q=defence+india+stocks+when:14d+site:thehindubusinessline.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "BusinessLine" },
+  // ── Google News broad defence queries (14-day window) ─────────────────────
+  { url: "https://news.google.com/rss/search?q=Nifty+India+defence+HAL+BEL+BDL+NSE+when:14d&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=india+defence+export+BrahMos+Tejas+Akash+when:14d&hl=en-IN&gl=IN&ceid=IN:en", cat: "EXPORTS", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=iran+hormuz+oil+war+india+when:14d&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=ukraine+war+nato+rearmament+when:14d&hl=en-IN&gl=IN&ceid=IN:en", cat: "GEOPO", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=Rajnath+Singh+Germany+defence+when:14d&hl=en-IN&gl=IN&ceid=IN:en", cat: "POLICY", source: "Google News" },
 ];
 
 const DEFENCE_KEYWORDS = [
@@ -207,7 +219,7 @@ export default async function handler(req) {
     if (result.status !== "fulfilled") continue;
     const { xml, cat, source } = result.value;
     const items = parseRSS(xml);
-    for (const item of items.slice(0, 20)) {
+    for (const item of items.slice(0, 25)) {
       const combined = item.title + " " + item.desc;
       if (!isDefenceRelevant(combined)) continue;
       const finalCat = inferCat(combined, cat);
@@ -229,35 +241,7 @@ export default async function handler(req) {
   }
 
   // Sort newest first, dedupe
-  // Inject notable 19 Mar crash articles as regular feed items (no pinning)
-  // These provide useful context and sort naturally below newer content
-  const MAR19_ARTICLES = [
-    { id:"m19_1", date:"19 Mar 2026", rawDate: new Date("2026-03-19T15:30:00Z").getTime(),
-      cat:"MARKET", impact:"BEARISH", hot:true, source:"Livemint",
-      url:"https://www.livemint.com/market/stock-market-news/sensex-nifty-crash-march-2026.html",
-      tickers:["HAL","BDL","BHARATFORG","BEML","SOLARINDS"],
-      headline:"Sensex Crashes 2,500 Points on 19 Mar — Investors Lose ₹12 Lakh Crore in a Day",
-      body:"India's benchmark indices saw their worst single-day fall in months. The Sensex plunged over 2,500 points and the Nifty 50 fell nearly 4% as rising crude oil prices, US-Iran war escalation, and FII selling triggered a broad-based selloff. Defence stocks bore the brunt: HAL -4%, BDL -4.7%, BHARATFORG -5.1%.", live:false },
-    { id:"m19_2", date:"19 Mar 2026", rawDate: new Date("2026-03-19T14:00:00Z").getTime(),
-      cat:"MARKET", impact:"BULLISH", hot:false, source:"Economic Times",
-      url:"https://economictimes.indiatimes.com/markets/stocks/news/defence-stocks-correction-buying-opportunity-march-2026.html",
-      tickers:["HAL","BEL","BDL","MAZDOCK"],
-      headline:"Defence Stocks Dip Offers Best Entry Point in 6 Months — Analysts Say Buy HAL, BEL, BDL",
-      body:"Analysts from Motilal Oswal, HDFC Securities and Kotak call today's correction a 'textbook accumulation opportunity'. HAL now trades at 30x PE — below its 12-month average. BDL at ₹1,258 offers 20%+ upside to consensus target of ₹1,550.", live:false },
-    { id:"m19_3", date:"19 Mar 2026", rawDate: new Date("2026-03-19T12:00:00Z").getTime(),
-      cat:"GEOPO", impact:"BEARISH", hot:true, source:"Reuters",
-      url:"https://www.reuters.com/markets/commodities/brent-crude-iran-hormuz-march-2026/",
-      tickers:["SECTOR"],
-      headline:"Brent Crude Spikes to $110/bbl as Iran Threatens to Close Strait of Hormuz Completely",
-      body:"Iran's Revolutionary Guard warned of a total Hormuz closure if US naval presence in the Persian Gulf isn't reduced within 72 hours. Brent crude hit $110/bbl intraday. India's rupee hit 92.67 — a new all-time low.", live:false },
-  ];
-  // Only add if not already present in feed (dedup by headline prefix)
-  const existingKeys = new Set(allArticles.map(a => a.headline.slice(0,40).toLowerCase()));
-  for (const a of MAR19_ARTICLES) {
-    if (!existingKeys.has(a.headline.slice(0,40).toLowerCase())) allArticles.push(a);
-  }
-
-  // Sort by date (newest first) — newest articles always appear at the top
+  // Sort by date (newest first) — newest articles always appear at top
   allArticles.sort((a, b) => b.rawDate - a.rawDate);
   const seen = new Set();
   const deduped = allArticles.filter(a => {
@@ -268,7 +252,7 @@ export default async function handler(req) {
   });
 
   // No pinned articles — sort by date, newest first (pure chronological order)
-  const finalArticles = deduped;
+  const finalArticles = deduped.slice(0, 80);
 
     return new Response(
     JSON.stringify({ ok: true, articles: finalArticles, ts: Date.now() }),
