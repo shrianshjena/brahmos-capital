@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:31.4,BEL:49.0,MAZDOCK:47.1,COCHINSHIP:55.0,GRSE:47.0,BDL:74.8,DATAPATTNS:88.6,
-  PARAS:78.7,ZENTEC:65.6,SOLARINDS:101.5,MTAR:106.6,BHARATFORG:61.5,ASTRAMICRO:102.6,BEML:47.6,
-  APOLLOMICRO:145.1,MIDHANI:70.5,IDEAFORGE:134.0,PREMEXPLN:68.3,UNIMECH:93.6,PTCIND:85.8,DCXINDIA:60.8,
-  DYNAMATECH:85.2,AVANTEL:58.9,AXISCADES:67.0,CYIENTDLM:89.3,
+  HAL:31.4,BEL:49.1,MAZDOCK:38.2,COCHINSHIP:53.8,GRSE:43.5,BDL:105.4,DATAPATTNS:83.2,
+  PARAS:78.2,ZENTEC:77.7,SOLARINDS:99.0,MTAR:237.4,BHARATFORG:84.6,ASTRAMICRO:65.3,BEML:101.5,
+  APOLLOMICRO:138.7,MIDHANI:58.6,IDEAFORGE:null,PREMEXPLN:76.7,UNIMECH:80.2,PTCIND:283.3,DCXINDIA:null,
+  DYNAMATECH:214.6,AVANTEL:326.2,AXISCADES:100.0,CYIENTDLM:50.3,
 };
 
 async function fetchPrice(sym) {
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
   const stockLines = TICKERS.map(t => {
     const px = priceMap[t] || ENTRIES[t];
     const ret = (((px - ENTRIES[t]) / ENTRIES[t]) * 100).toFixed(1);
-    return `${t}:₹${Math.round(px)} ret${ret}% pe${PE[t]}`;
+    return `${t}:₹${Math.round(px)} ret${ret}% pe${PE[t]??"NM"}`;
   }).join(" | ");
 
   const headlineStr = headlines.length > 0
