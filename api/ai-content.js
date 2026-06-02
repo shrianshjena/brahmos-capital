@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:30.2,BEL:65.1,MAZDOCK:47.3,COCHINSHIP:30.5,GRSE:42.1,BDL:83.5,DATAPATTNS:75.2,
-  PARAS:70.8,ZENTEC:45.1,SOLARINDS:94.4,MTAR:169.8,BHARATFORG:42.0,ASTRAMICRO:58.9,BEML:55.3,
-  APOLLOMICRO:84.9,MIDHANI:60.2,IDEAFORGE:145.0,PREMEXPLN:62.0,UNIMECH:68.0,PTCIND:85.0,
-  DCXINDIA:48.0,DYNAMATECH:202.8,AVANTEL:228.9,AXISCADES:62.4,CYIENTDLM:55.0,
+  HAL:31.4,BEL:49.0,MAZDOCK:47.1,COCHINSHIP:55.0,GRSE:47.0,BDL:74.8,DATAPATTNS:88.6,
+  PARAS:78.7,ZENTEC:65.6,SOLARINDS:101.5,MTAR:106.6,BHARATFORG:61.5,ASTRAMICRO:102.6,BEML:47.6,
+  APOLLOMICRO:145.1,MIDHANI:70.5,IDEAFORGE:134.0,PREMEXPLN:68.3,UNIMECH:93.6,PTCIND:85.8,DCXINDIA:60.8,
+  DYNAMATECH:85.2,AVANTEL:58.9,AXISCADES:67.0,CYIENTDLM:89.3,
 };
 
 async function fetchPrice(sym) {
@@ -105,18 +105,15 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines available.";
 
-  const prompt = `Today is ${today} (Saturday — NSE closed; last trading day was Friday 13 Mar 2026).
-You have full knowledge of events as of April 2026, including:
-- Rajnath Singh Germany visit (21-23 Apr) — €5B TKMS–MDL submarine deal expected — huge bullish for MDL
-- DAC approved Rs.2.38L Cr defence deals Apr 2026 — BEL, HAL, BDL primary beneficiaries
-- HAL Su-57 licence production talks with Russia — technical assessments underway
-- HAL Nashik 3rd Tejas Mk1A assembly line operational — output scaling to 24/year
-- Nifty India Defence index +9% last week, +7.5% YTD — outperforming Nifty 50
-- Defence stocks rally 21 Apr: Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%
-- Operation Epic Fury (US-Iran war) ongoing — ceasefire talks, Brent ~\$94/bbl easing
-- Indonesia BrahMos deal Rs.375M signed — India's first major missile export
-- India FY27 defence budget Rs.7.85L Cr (+15.2%) — largest ever
-- Nuvama price targets: HAL Rs.4,800, BDL Rs.1,900, BEL Rs.525
+  const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
+You have full knowledge of events as of 2 June 2026, including:
+- India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3) at the Shangri-La Dialogue; Indonesia pact in final stages — bullish for BDL, HAL, BEL
+- FY26 results: HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT, FY27 guidance 10–12% rev growth / 30–31% EBITDA; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr / ROE ~29%
+- Operation Epic Fury (US–Iran war) now under a FRAGILE ceasefire — Brent eased to ~$95/bbl from ~$120 April peak; Israeli strikes in Lebanon, Iran threatening to close the Strait of Hormuz
+- Ukraine war in year 4 — on-off ceasefire talks; continued NATO/European rearmament
+- India FY27 defence budget ₹7.85L Cr (+15.2%); defence exports crossed ₹21,000+ Cr toward ₹50,000 Cr FY29 target
+- Nifty India Defence index ~8,900 (mid-May), outperforming Nifty 50 YTD; sector valuations rich (P/E ~52) but backed by record order books
+- Broker targets: HAL ₹4,800–6,360, BEL ₹450–500, MAZDOCK ~₹2,850
 
 Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
 
@@ -134,7 +131,7 @@ Return this exact JSON structure:
     ...generate 8-10 signals total with SPECIFIC, REAL-SOUNDING titles and details referencing actual numbers, order values, P/E levels, order book figures, and current geo-political events. Types: STRONG BUY / BUY / HOLD / REDUCE / WATCH...
   ],
   "consensus": {
-    "HAL":{"buy":20,"hold":5,"sell":2,"target":4800,"brokers":["Motilal","HDFC Sec","Kotak","Nomura","CLSA"]},
+    "HAL":{"buy":20,"hold":5,"sell":2,"target":5300,"brokers":["Motilal","HDFC Sec","Kotak","Nomura","CLSA"]},
     ...one entry for each of the 25 tickers...
   }
 }

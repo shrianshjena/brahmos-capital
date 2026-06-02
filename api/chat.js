@@ -28,18 +28,20 @@ DATE: ${day}, ${dateStr} (IST)
 NSE: ${isWeekend ? "CLOSED (weekend)" : "Open / closed 15:30 IST"}
 INSTRUCTION: The portfolio system reports today as ${dateStr}. When asked the date, respond: "${dateStr}". Do not say you lack a real-time clock.
 VERIFIED FACTS (${dateStr}) — USE THESE, DO NOT SPECULATE ABOUT OTHER NEWS:
-• Today's rally: Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%, Cyient DLM +9.9%, Midhani +9%
-• Rajnath Singh is IN GERMANY (21-23 Apr 2026) for 3-day official visit — meeting Boris Pistorius
-  · €5 BILLION TKMS-MDL submarine deal (6 stealth submarines for Indian Navy, Project P-75I) on table
-  · Defence Industrial Cooperation Roadmap + Eurodrone MALE UAV collaboration expected
-  · First Indian Defence Minister visit to Germany in 7 years
-• DAC approved ₹2.38L Cr defence deals in April 2026 — BEL/HAL/BDL primary beneficiaries
-• HAL Su-57 Felon licence production talks advanced to technical assessments phase (confirmed by HAL CMD Dr DK Sunil)
-• HAL Nashik 3rd Tejas Mk1A assembly line operational — production scaling to 24 jets/year
-• Operation Epic Fury (US-Iran war, started 28 Feb 2026) continues — ceasefire talks ongoing; Brent ~$94/bbl easing
-• India FY27 Defence Budget: ₹7.85L Cr (+15.2% YoY), capex ₹2.31L Cr
-• Nifty India Defence index: +9% last week (week of 11 Apr), +7.5% YTD
-• Nuvama broker targets: HAL ₹4,800 (+10%), BDL ₹1,900 (+43%), BEL ₹525 (+16%)
+• India–Vietnam BrahMos export deal SIGNED 30 May 2026 at the Shangri-La Dialogue, Singapore
+  · Value ~₹60,000 Cr (~$629M), BrahMos Block-3 (290–300 km range), incl. training & logistics
+  · Vietnam is the 2nd foreign BrahMos buyer after the Philippines (2022); Indonesia pact in final stages
+  · Confirmed by Defence Secretary Rajesh Kumar Singh — big positive for BDL (warhead/propulsion), HAL, BEL
+• FY26 RESULTS (reported May 2026):
+  · HAL — record order book ₹2.54 lakh Cr (up from ₹1.89L Cr); standalone net profit ₹9,115 Cr (+9.1%); FY27 guidance 10–12% revenue growth, 30–31% EBITDA margin; ~₹97,000 Cr fresh orders in FY26
+  · BEL — FY26 revenue ₹27,480 Cr (+16.2%), PAT ₹6,048 Cr (+14.4%), Q4 PAT ₹2,225 Cr, order book ₹73,882 Cr, ROE ~29%, ₹0.55 final dividend
+• Operation Epic Fury (US–Iran war, started 28 Feb 2026) now under a FRAGILE CEASEFIRE
+  · Brent crude eased to ~$95/bbl from its late-April peak near $120
+  · Latest flashpoint: Israeli operations in Lebanon; Iran suspended US communications and is threatening to close the Strait of Hormuz & Bab el-Mandeb; Trump floated an MoU to reopen Hormuz within a week
+• Ukraine war in its 4th year — on-off ceasefire talks, durable peace still distant; NATO & European rearmament continuing at pace
+• India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY); FY26 MoD outlay was ₹6.81L Cr; India defence exports crossed ₹21,000+ Cr, ₹50,000 Cr FY29 target
+• Nifty India Defence index ~8,900 (mid-May 2026) — BEL ~26% and HAL ~24% are the largest index weights; sector outperforming Nifty 50 YTD
+• Valuation: HAL ~31x P/E (relative large-cap value), BEL ~49x, MAZDOCK ~47x; broker targets — HAL ₹4,800–6,360, BEL ₹450–500
 
 IMPORTANT: If asked about any news not in this list, acknowledge you don't have that specific information rather than fabricating details.
 ━━━━━━━━━━━━━━━━━━━━━━━━━

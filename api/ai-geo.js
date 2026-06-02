@@ -61,21 +61,21 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of March 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 2 June 2026.
 
-MANDATORY CURRENT EVENTS you must include as cards (these happened in Apr 2026):
-1. Rajnath Singh Germany Visit (21-23 Apr 2026) — €5B TKMS submarine deal for Indian Navy, Eurodrone MALE UAV collaboration, first Indian Defence Minister visit in 7 years
-2. DAC Approves Rs.2.38L Cr Deals (Apr 2026) — BEL QRSAM + Akash, HAL Su-30 SLEP + transport aircraft, BDL missiles, MDL submarines
-3. HAL Su-57 Licence Production Talks (Apr 2026) — India to become first foreign operator of a 5th-gen stealth fighter under licence
-4. HAL Nashik 3rd Tejas Mk1A Assembly Line (Apr 2026) — Output scaling to 24 jets/year, resolves historic delivery bottleneck  
-5. Defence Stocks Rally 21 Apr 2026 — Zen Tech +14.8%, Apollo Micro +21.8%, Axiscades +12%, Cyient DLM +9.9% — sector-wide bullish
-6. Operation Epic Fury (28 Feb – 21 Apr 2026) — US-Iran war, Hormuz tanker incident, ceasefire talks ongoing, Brent ~\$94/bbl
-7. Indonesia BrahMos \$375M Deal — India's first major missile export, Philippines/Vietnam pipeline opening
+MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
+1. India–Vietnam BrahMos Deal Signed (30 May 2026, Shangri-La Dialogue, Singapore) — ~₹60,000 Cr (~$629M) BrahMos Block-3 export; Indonesia pact in final stages; Vietnam is 2nd foreign buyer after Philippines (2022). Major positive for BDL, HAL, BEL. colorType green, score 9.
+2. FY26 Results Season (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. Structural execution story intact. colorType green, score 8.
+3. Operation Epic Fury — Fragile US–Iran Ceasefire (started 28 Feb 2026; ceasefire now fragile as of Jun 2026) — Brent eased to ~$95/bbl from ~$120 April peak; Israeli operations in Lebanon, Iran threatening to close Strait of Hormuz & Bab el-Mandeb; Trump floats MoU to reopen Hormuz within a week. colorType red/orange, score 9, hot true.
+4. Ukraine War Year 4 (2026) — on-off ceasefire talks, durable peace distant; NATO & European rearmament continuing at pace, sustained military aid. colorType blue, score 7.
+5. India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY) — largest ever; ₹50,000 Cr export target by FY29; defence exports already crossed ₹21,000+ Cr. colorType green, score 8.
+6. DAC / CCS Procurement Momentum (2026) — Navy cleared 200+ BrahMos (~₹19,000 Cr); DAC approvals spanning mid-air refuellers, torpedoes, air-defence radars, additional S-400 units, transport aircraft and UCAV squadrons. BEL/HAL/BDL/MDL beneficiaries. colorType green, score 8.
+7. Nifty India Defence Index Leadership (mid-2026) — index ~8,900, BEL ~26% & HAL ~24% top weights, outperforming Nifty 50 YTD; valuations rich (sector P/E ~52) but supported by record order books. colorType teal, score 7.
 
 Additional context from today's news headlines:
 ${headlineStr}
 
-Generate 8 geopolitical event cards relevant to Indian defence stocks. Return ONLY a raw JSON array.
+Generate 8 geopolitical event cards relevant to Indian defence stocks, ordered NEWEST date first. Return ONLY a raw JSON array.
 
 [
   {
