@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 2 June 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 3 June 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
 1. India–Vietnam BrahMos Deal Signed (30 May 2026, Shangri-La Dialogue, Singapore) — ~₹60,000 Cr (~$629M) BrahMos Block-3 export; Indonesia pact in final stages; Vietnam is 2nd foreign buyer after Philippines (2022). Major positive for BDL, HAL, BEL. colorType green, score 9.

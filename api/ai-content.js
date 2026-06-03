@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:31.4,BEL:49.1,MAZDOCK:38.2,COCHINSHIP:53.8,GRSE:43.5,BDL:105.4,DATAPATTNS:83.2,
-  PARAS:78.2,ZENTEC:77.7,SOLARINDS:99.0,MTAR:237.4,BHARATFORG:84.6,ASTRAMICRO:65.3,BEML:101.5,
-  APOLLOMICRO:138.7,MIDHANI:58.6,IDEAFORGE:null,PREMEXPLN:76.7,UNIMECH:80.2,PTCIND:283.3,DCXINDIA:null,
-  DYNAMATECH:214.6,AVANTEL:326.2,AXISCADES:100.0,CYIENTDLM:50.3,
+  HAL:30.9,BEL:48.8,MAZDOCK:37.3,COCHINSHIP:52.5,GRSE:42.9,BDL:103.1,DATAPATTNS:82.1,
+  PARAS:75.6,ZENTEC:77.6,SOLARINDS:99.5,MTAR:244.3,BHARATFORG:84.6,ASTRAMICRO:64.9,BEML:100.0,
+  APOLLOMICRO:130.0,MIDHANI:58.7,IDEAFORGE:null,PREMEXPLN:75.0,UNIMECH:84.0,PTCIND:276.4,DCXINDIA:null,
+  DYNAMATECH:215.2,AVANTEL:317.1,AXISCADES:100.4,CYIENTDLM:48.8,
 };
 
 async function fetchPrice(sym) {
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 2 June 2026, including:
+You have full knowledge of events as of 3 June 2026, including:
 - India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3) at the Shangri-La Dialogue; Indonesia pact in final stages — bullish for BDL, HAL, BEL
 - FY26 results: HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT, FY27 guidance 10–12% rev growth / 30–31% EBITDA; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr / ROE ~29%
 - Operation Epic Fury (US–Iran war) now under a FRAGILE ceasefire — Brent eased to ~$95/bbl from ~$120 April peak; Israeli strikes in Lebanon, Iran threatening to close the Strait of Hormuz
