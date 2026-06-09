@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:31.2,BEL:49.1,MAZDOCK:38.1,COCHINSHIP:53.3,GRSE:43.4,BDL:107.1,DATAPATTNS:82.6,
-  PARAS:76.8,ZENTEC:78.3,SOLARINDS:100.0,MTAR:246.4,BHARATFORG:86.3,ASTRAMICRO:65.4,BEML:103.7,
-  APOLLOMICRO:129.4,MIDHANI:59.4,IDEAFORGE:null,PREMEXPLN:76.6,UNIMECH:84.0,PTCIND:278.9,DCXINDIA:null,
-  DYNAMATECH:220.6,AVANTEL:319.5,AXISCADES:100.0,CYIENTDLM:48.7,
+  HAL:31.2,BEL:49.6,MAZDOCK:38.0,COCHINSHIP:52.8,GRSE:44.5,BDL:104.5,DATAPATTNS:94.1,
+  PARAS:95.3,ZENTEC:82.7,SOLARINDS:98.9,MTAR:246.0,BHARATFORG:85.5,ASTRAMICRO:71.7,BEML:104.5,
+  APOLLOMICRO:132.0,MIDHANI:64.1,IDEAFORGE:null,PREMEXPLN:84.6,UNIMECH:92.4,PTCIND:276.5,DCXINDIA:null,
+  DYNAMATECH:212.0,AVANTEL:305.4,AXISCADES:115.3,CYIENTDLM:48.1,
 };
 
 async function fetchPrice(sym) {
@@ -106,10 +106,13 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 3 June 2026, including:
-- India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3) at the Shangri-La Dialogue; Indonesia pact in final stages — bullish for BDL, HAL, BEL
+You have full knowledge of events as of 10 June 2026, including:
+- P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
+- Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
+- ICICI Securities (8 Jun): FY27 order build-up to outpace FY26; top picks HAL, Solar Industries, Astra Microwave, BEL; Buy on PTC Industries, MIDHANI
+- India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3); Indonesia pact in final stages — bullish for BDL, HAL, BEL, DATAPATTNS, PARAS
 - FY26 results: HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT, FY27 guidance 10–12% rev growth / 30–31% EBITDA; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr / ROE ~29%
-- Operation Epic Fury (US–Iran war) now under a FRAGILE ceasefire — Brent eased to ~$95/bbl from ~$120 April peak; Israeli strikes in Lebanon, Iran threatening to close the Strait of Hormuz
+- Operation Epic Fury (US–Iran war) under a FRAGILE ceasefire — Brent ~$94/bbl (down ~20% from ~$120 April peak); Iran says it ended operations vs Israel; 60-day US–Iran MoU mostly agreed; Hormuz still largely closed
 - Ukraine war in year 4 — on-off ceasefire talks; continued NATO/European rearmament
 - India FY27 defence budget ₹7.85L Cr (+15.2%); defence exports crossed ₹21,000+ Cr toward ₹50,000 Cr FY29 target
 - Nifty India Defence index ~8,900 (mid-May), outperforming Nifty 50 YTD; sector valuations rich (P/E ~52) but backed by record order books

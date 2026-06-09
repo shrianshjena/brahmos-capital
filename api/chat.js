@@ -28,20 +28,16 @@ DATE: ${day}, ${dateStr} (IST)
 NSE: ${isWeekend ? "CLOSED (weekend)" : "Open / closed 15:30 IST"}
 INSTRUCTION: The portfolio system reports today as ${dateStr}. When asked the date, respond: "${dateStr}". Do not say you lack a real-time clock.
 VERIFIED FACTS (${dateStr}) — USE THESE, DO NOT SPECULATE ABOUT OTHER NEWS:
-• India–Vietnam BrahMos export deal SIGNED 30 May 2026 at the Shangri-La Dialogue, Singapore
-  · Value ~₹60,000 Cr (~$629M), BrahMos Block-3 (290–300 km range), incl. training & logistics
-  · Vietnam is the 2nd foreign BrahMos buyer after the Philippines (2022); Indonesia pact in final stages
-  · Confirmed by Defence Secretary Rajesh Kumar Singh — big positive for BDL (warhead/propulsion), HAL, BEL
-• FY26 RESULTS (reported May 2026):
-  · HAL — record order book ₹2.54 lakh Cr (up from ₹1.89L Cr); standalone net profit ₹9,115 Cr (+9.1%); FY27 guidance 10–12% revenue growth, 30–31% EBITDA margin; ~₹97,000 Cr fresh orders in FY26
-  · BEL — FY26 revenue ₹27,480 Cr (+16.2%), PAT ₹6,048 Cr (+14.4%), Q4 PAT ₹2,225 Cr, order book ₹73,882 Cr, ROE ~29%, ₹0.55 final dividend
-• Operation Epic Fury (US–Iran war, started 28 Feb 2026) now under a FRAGILE CEASEFIRE
-  · Brent crude eased to ~$95/bbl from its late-April peak near $120
-  · Latest flashpoint: Israeli operations in Lebanon; Iran suspended US communications and is threatening to close the Strait of Hormuz & Bab el-Mandeb; Trump floated an MoU to reopen Hormuz within a week
-• Ukraine war in its 4th year — on-off ceasefire talks, durable peace still distant; NATO & European rearmament continuing at pace
-• India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY); FY26 MoD outlay was ₹6.81L Cr; India defence exports crossed ₹21,000+ Cr, ₹50,000 Cr FY29 target
-• Nifty India Defence index ~8,900 (mid-May 2026) — BEL ~26% and HAL ~24% are the largest index weights; sector outperforming Nifty 50 YTD
-• Valuation: HAL ~31x P/E (relative large-cap value), BEL ~49x, MAZDOCK ~47x; broker targets — HAL ₹4,800–6,360, BEL ₹450–500
+• P-75I STEALTH SUBMARINE programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off remains before contracting; clears the path for the ~₹70,000 Cr Navy order. Mazagon Dock (MAZDOCK) is the front-runner and has just delivered the 6th & final P-17A stealth frigate.
+• ORDER MOMENTUM (late May–early Jun 2026): BEL booked cumulative ₹2,100 Cr in fresh orders; GRSE launched the first of 11 NG-OPVs; Zen Technologies (ZENTEC) lowest bidder on AVNL remote-controlled weapon stations; US State Dept cleared $428M foreign military sales to India. DAC approvals hit an all-time high in FY26.
+• ICICI Securities (8 Jun 2026): order awarding to accelerate in FY27 vs FY26 (air-defence, missiles, EW, drones lead); top picks HAL, Solar Industries, Astra Microwave, BEL; Buy on PTC Industries and MIDHANI.
+• India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3) at the Shangri-La Dialogue; Indonesia pact in final stages; Philippines was the first buyer (2022). Beneficiaries: BDL (warhead/propulsion), HAL, BEL, plus DATAPATTNS/PARAS/PREMEXPLN on the supply chain.
+• FY26 RESULTS: HAL — record order book ₹2.54L Cr, PAT ₹9,115 Cr, FY27 guidance 10–12% revenue growth / 30–31% EBITDA; BEL — revenue ₹27,480 Cr (+16.2%), PAT ₹6,048 Cr (+14.4%), order book ₹73,882 Cr, ROE ~29%.
+• Operation Epic Fury (US–Iran war) — ceasefire holding but FRAGILE; Brent crude ~$94/bbl (down ~20% from the late-April ~$120 peak); Iran says it ended operations against Israel; a 60-day US–Iran MoU is mostly agreed; Strait of Hormuz still largely closed under a dual blockade.
+• Ukraine war in its 4th year — on-off ceasefire talks, durable peace distant; NATO & European rearmament continuing.
+• India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY); FY26 MoD outlay ₹6.81L Cr; defence exports crossed ₹21,000+ Cr toward the ₹50,000 Cr FY29 target.
+• Nifty India Defence index ~8,900 (mid-May 2026) — BEL ~26% and HAL ~24% top weights; sector P/E ~52, outperforming Nifty 50 YTD.
+• Valuation: HAL ~31x P/E (relative large-cap value), BEL ~50x, MAZDOCK ~38x; broker targets — HAL ₹4,800–6,360, BEL ₹450–500.
 
 IMPORTANT: If asked about any news not in this list, acknowledge you don't have that specific information rather than fabricating details.
 ━━━━━━━━━━━━━━━━━━━━━━━━━
