@@ -61,16 +61,16 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 10 June 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 11 June 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
-1. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy contract. Mazagon Dock (front-runner) just delivered the 6th & final P-17A stealth frigate. colorType green, score 9, hot true.
-2. Defence Order Momentum (late May–early Jun 2026) — BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; Zen Tech lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; DAC FY26 approvals at all-time high. ICICI Securities: FY27 order build-up to outpace FY26; top picks HAL, Solar, Astra Microwave, BEL. colorType green, score 8.
-3. India–Vietnam BrahMos Deal Signed (30 May 2026, Shangri-La) — ~₹60,000 Cr (~$629M) Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 9.
-4. FY26 Results (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. colorType green, score 8.
-5. Operation Epic Fury — Fragile US–Iran Ceasefire (Jun 2026) — Brent ~$94/bbl (down ~20% from ~$120 April peak); Iran says it ended operations vs Israel; a 60-day US–Iran MoU is mostly agreed; Strait of Hormuz still largely closed under a dual blockade. colorType orange, score 8, hot true.
-6. Ukraine War Year 4 (2026) — on-off ceasefire talks, durable peace distant; NATO & European rearmament continuing. colorType blue, score 7.
-7. India FY27 Defence Budget ₹7.85L Cr (+15.2% YoY) — largest ever; ₹50,000 Cr FY29 export target; exports already crossed ₹21,000+ Cr. colorType green, score 8.
+1. Iran Shuts Strait of Hormuz to All Vessels (11 Jun 2026) — ceasefire broken down; Iran declared Hormuz closed to all shipping (any vessel will be attacked), choking ~20% of global energy flows; Brent above $95/bbl; Trump issued fresh ultimatum. EIA sees Hormuz below pre-conflict levels into early 2027. colorType red, score 9, hot true.
+2. Indian Defence Stocks Correct ~3% (11 Jun 2026) — profit-booking after a strong run; MTAR fell ~10% as its largest client Bloom Energy (>55% of revenue) dropped 10% overnight in the US (stock-specific concentration risk, not a sector signal). Fundamentals intact. colorType orange, score 5.
+3. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) just delivered the 6th & final P-17A frigate. colorType green, score 9, hot true.
+4. Defence Order Momentum (early Jun 2026) — BEL ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; Zen Tech lowest bidder AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high. ICICI top picks HAL, Solar, Astra Microwave, BEL. colorType green, score 8.
+5. India–Vietnam BrahMos Deal Signed (30 May 2026) — ~₹60,000 Cr Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 9.
+6. FY26 Results (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. colorType green, score 8.
+7. Ukraine War Year 4 (2026) — on-off ceasefire talks, durable peace distant; NATO & European rearmament continuing. colorType blue, score 7.
 
 Additional context from today's news headlines:
 ${headlineStr}

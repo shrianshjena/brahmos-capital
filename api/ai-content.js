@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:31.2,BEL:49.6,MAZDOCK:38.0,COCHINSHIP:52.8,GRSE:44.5,BDL:104.5,DATAPATTNS:94.1,
-  PARAS:95.3,ZENTEC:82.7,SOLARINDS:98.9,MTAR:246.0,BHARATFORG:85.5,ASTRAMICRO:71.7,BEML:104.5,
-  APOLLOMICRO:132.0,MIDHANI:64.1,IDEAFORGE:null,PREMEXPLN:84.6,UNIMECH:92.4,PTCIND:276.5,DCXINDIA:null,
-  DYNAMATECH:212.0,AVANTEL:305.4,AXISCADES:115.3,CYIENTDLM:48.1,
+  HAL:30.6,BEL:48.5,MAZDOCK:36.7,COCHINSHIP:50.9,GRSE:42.2,BDL:101.1,DATAPATTNS:87.0,
+  PARAS:90.5,ZENTEC:79.8,SOLARINDS:92.2,MTAR:206.3,BHARATFORG:86.7,ASTRAMICRO:69.0,BEML:101.6,
+  APOLLOMICRO:121.6,MIDHANI:62.4,IDEAFORGE:null,PREMEXPLN:77.0,UNIMECH:86.8,PTCIND:271.9,DCXINDIA:null,
+  DYNAMATECH:207.0,AVANTEL:302.2,AXISCADES:111.9,CYIENTDLM:46.9,
 };
 
 async function fetchPrice(sym) {
@@ -106,7 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 10 June 2026, including:
+You have full knowledge of events as of 11 June 2026, including:
+- ESCALATION: on 11 Jun Iran shut the Strait of Hormuz to all vessels (any ship will be attacked), choking ~20% of global energy flows; Brent above $95/bbl; Trump issued a fresh ultimatum. War-premium back; structural tailwind for defence but near-term sentiment volatile.
+- MARKET 11 Jun: Indian defence stocks corrected ~3% on profit-booking; MTAR fell ~10% as its largest client Bloom Energy (>55% of MTAR revenue) crashed 10% overnight in the US (stock-specific concentration risk). Sector fundamentals intact.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
 - Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
 - ICICI Securities (8 Jun): FY27 order build-up to outpace FY26; top picks HAL, Solar Industries, Astra Microwave, BEL; Buy on PTC Industries, MIDHANI
