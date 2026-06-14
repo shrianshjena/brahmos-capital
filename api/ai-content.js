@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:30.6,BEL:48.5,MAZDOCK:36.7,COCHINSHIP:50.9,GRSE:42.2,BDL:101.1,DATAPATTNS:87.0,
-  PARAS:90.5,ZENTEC:79.8,SOLARINDS:92.2,MTAR:206.3,BHARATFORG:86.7,ASTRAMICRO:69.0,BEML:101.6,
-  APOLLOMICRO:121.6,MIDHANI:62.4,IDEAFORGE:null,PREMEXPLN:77.0,UNIMECH:86.8,PTCIND:271.9,DCXINDIA:null,
-  DYNAMATECH:207.0,AVANTEL:302.2,AXISCADES:111.9,CYIENTDLM:46.9,
+  HAL:30.8,BEL:49.2,MAZDOCK:37.6,COCHINSHIP:52.4,GRSE:44.1,BDL:104.3,DATAPATTNS:93.0,
+  PARAS:100.2,ZENTEC:83.5,SOLARINDS:92.7,MTAR:232.1,BHARATFORG:85.9,ASTRAMICRO:71.3,BEML:104.0,
+  APOLLOMICRO:130.0,MIDHANI:62.1,IDEAFORGE:null,PREMEXPLN:80.8,UNIMECH:93.3,PTCIND:277.7,DCXINDIA:null,
+  DYNAMATECH:213.3,AVANTEL:301.8,AXISCADES:117.5,CYIENTDLM:49.0,
 };
 
 async function fetchPrice(sym) {
@@ -106,9 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 11 June 2026, including:
-- ESCALATION: on 11 Jun Iran shut the Strait of Hormuz to all vessels (any ship will be attacked), choking ~20% of global energy flows; Brent above $95/bbl; Trump issued a fresh ultimatum. War-premium back; structural tailwind for defence but near-term sentiment volatile.
-- MARKET 11 Jun: Indian defence stocks corrected ~3% on profit-booking; MTAR fell ~10% as its largest client Bloom Energy (>55% of MTAR revenue) crashed 10% overnight in the US (stock-specific concentration risk). Sector fundamentals intact.
+You have full knowledge of events as of 15 June 2026, including:
+- DE-ESCALATION: after the 11 Jun Hormuz shutdown, US & Iran agreed the final MoU text — reopen Hormuz immediately (no tolls, prewar shipping ~30 days), 60-day ceasefire, lift sanctions, nuclear talks; Trump says it could be signed over the weekend. Brent fell to ~$87/bbl from ~$95; equities rebounded. Wildcard: Israeli strikes in Lebanon.
+- MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
 - Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
 - ICICI Securities (8 Jun): FY27 order build-up to outpace FY26; top picks HAL, Solar Industries, Astra Microwave, BEL; Buy on PTC Industries, MIDHANI

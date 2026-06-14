@@ -61,12 +61,12 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 11 June 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 15 June 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
-1. Iran Shuts Strait of Hormuz to All Vessels (11 Jun 2026) — ceasefire broken down; Iran declared Hormuz closed to all shipping (any vessel will be attacked), choking ~20% of global energy flows; Brent above $95/bbl; Trump issued fresh ultimatum. EIA sees Hormuz below pre-conflict levels into early 2027. colorType red, score 9, hot true.
-2. Indian Defence Stocks Correct ~3% (11 Jun 2026) — profit-booking after a strong run; MTAR fell ~10% as its largest client Bloom Energy (>55% of revenue) dropped 10% overnight in the US (stock-specific concentration risk, not a sector signal). Fundamentals intact. colorType orange, score 5.
-3. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) just delivered the 6th & final P-17A frigate. colorType green, score 9, hot true.
+1. US–Iran Peace Deal Near Signing (15 Jun 2026) — after the 11 Jun Hormuz shutdown, the US and Iran agreed the final MoU text: reopen Strait of Hormuz immediately (no tolls, prewar shipping within ~30 days), 60-day ceasefire extension, lift US sanctions, nuclear talks. Trump says it could be signed over the weekend. Brent fell to ~$87/bbl from ~$95; equities rebounded. Wildcard: Israeli strikes in Lebanon. colorType teal/green, score 8, hot true.
+2. Defence Sector V-Recovery (12 Jun 2026) — after a ~3% selloff on 11 Jun (profit-booking), the sector rebounded sharply (MTAR +13%, recovering its Bloom Energy drop; PARAS +11%; DATAPATTNS +8%). Structural drivers intact. colorType green, score 6.
+3. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) delivered the 6th & final P-17A frigate. colorType green, score 9, hot true.
 4. Defence Order Momentum (early Jun 2026) — BEL ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; Zen Tech lowest bidder AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high. ICICI top picks HAL, Solar, Astra Microwave, BEL. colorType green, score 8.
 5. India–Vietnam BrahMos Deal Signed (30 May 2026) — ~₹60,000 Cr Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 9.
 6. FY26 Results (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. colorType green, score 8.
