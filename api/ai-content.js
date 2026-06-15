@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:30.8,BEL:49.2,MAZDOCK:37.6,COCHINSHIP:52.4,GRSE:44.1,BDL:104.3,DATAPATTNS:93.0,
-  PARAS:100.2,ZENTEC:83.5,SOLARINDS:92.7,MTAR:232.1,BHARATFORG:85.9,ASTRAMICRO:71.3,BEML:104.0,
-  APOLLOMICRO:130.0,MIDHANI:62.1,IDEAFORGE:null,PREMEXPLN:80.8,UNIMECH:93.3,PTCIND:277.7,DCXINDIA:null,
-  DYNAMATECH:213.3,AVANTEL:301.8,AXISCADES:117.5,CYIENTDLM:49.0,
+  HAL:31.4,BEL:49.4,MAZDOCK:38.1,COCHINSHIP:51.9,GRSE:44.4,BDL:105.0,DATAPATTNS:91.0,
+  PARAS:101.0,ZENTEC:83.1,SOLARINDS:93.3,MTAR:238.5,BHARATFORG:89.6,ASTRAMICRO:72.1,BEML:104.3,
+  APOLLOMICRO:133.9,MIDHANI:62.2,IDEAFORGE:null,PREMEXPLN:80.2,UNIMECH:92.4,PTCIND:278.6,DCXINDIA:null,
+  DYNAMATECH:221.8,AVANTEL:303.7,AXISCADES:113.8,CYIENTDLM:50.8,
 };
 
 async function fetchPrice(sym) {
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
 You have full knowledge of events as of 15 June 2026, including:
-- DE-ESCALATION: after the 11 Jun Hormuz shutdown, US & Iran agreed the final MoU text — reopen Hormuz immediately (no tolls, prewar shipping ~30 days), 60-day ceasefire, lift sanctions, nuclear talks; Trump says it could be signed over the weekend. Brent fell to ~$87/bbl from ~$95; equities rebounded. Wildcard: Israeli strikes in Lebanon.
+- PEACE DEAL REACHED (14-15 Jun): the US-Iran war (since 28 Feb) is ending — both sides declared permanent termination of military operations incl. Lebanon; Trump authorized toll-free Hormuz reopening + naval-blockade removal; signing set for Fri 19 Jun in Switzerland; MoU lifts US oil sanctions, prewar shipping within ~30 days. Brent eased into the mid-$80s. Indian defence stocks still rose 15 Jun — structural demand independent of the ceasefire.
 - MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
 - Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
