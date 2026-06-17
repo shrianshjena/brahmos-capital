@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:31.4,BEL:49.4,MAZDOCK:38.1,COCHINSHIP:51.9,GRSE:44.4,BDL:105.0,DATAPATTNS:91.0,
-  PARAS:101.0,ZENTEC:83.1,SOLARINDS:93.3,MTAR:238.5,BHARATFORG:89.6,ASTRAMICRO:72.1,BEML:104.3,
-  APOLLOMICRO:133.9,MIDHANI:62.2,IDEAFORGE:null,PREMEXPLN:80.2,UNIMECH:92.4,PTCIND:278.6,DCXINDIA:null,
-  DYNAMATECH:221.8,AVANTEL:303.7,AXISCADES:113.8,CYIENTDLM:50.8,
+  HAL:32.8,BEL:50.8,MAZDOCK:39.8,COCHINSHIP:55.2,GRSE:46.8,BDL:113.9,DATAPATTNS:98.6,
+  PARAS:118.1,ZENTEC:87.7,SOLARINDS:94.4,MTAR:270.2,BHARATFORG:90.3,ASTRAMICRO:77.6,BEML:106.8,
+  APOLLOMICRO:139.7,MIDHANI:63.8,IDEAFORGE:null,PREMEXPLN:90.3,UNIMECH:93.6,PTCIND:264.6,DCXINDIA:null,
+  DYNAMATECH:223.1,AVANTEL:323.7,AXISCADES:114.1,CYIENTDLM:50.4,
 };
 
 async function fetchPrice(sym) {
@@ -106,8 +106,8 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 15 June 2026, including:
-- PEACE DEAL REACHED (14-15 Jun): the US-Iran war (since 28 Feb) is ending — both sides declared permanent termination of military operations incl. Lebanon; Trump authorized toll-free Hormuz reopening + naval-blockade removal; signing set for Fri 19 Jun in Switzerland; MoU lifts US oil sanctions, prewar shipping within ~30 days. Brent eased into the mid-$80s. Indian defence stocks still rose 15 Jun — structural demand independent of the ceasefire.
+You have full knowledge of events as of 17 June 2026, including:
+- PEACE DEAL REACHED (14-15 Jun): the US-Iran war (since 28 Feb) is ending — both sides declared permanent termination of military operations incl. Lebanon; Trump authorized toll-free Hormuz reopening + naval-blockade removal; signing set for Fri 19 Jun in Switzerland; MoU lifts US oil sanctions, prewar shipping within ~30 days. Brent fell below $80. India's FY26 defence production hit a record ₹1.78L Cr; Nifty India Defence index rose ~3% to a fresh high ~9,400 on 17 Jun (Paras +14%, MTAR +7.6%). Structural demand independent of the (ending) war.
 - MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
 - Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
@@ -117,7 +117,7 @@ You have full knowledge of events as of 15 June 2026, including:
 - Operation Epic Fury (US–Iran war) under a FRAGILE ceasefire — Brent ~$94/bbl (down ~20% from ~$120 April peak); Iran says it ended operations vs Israel; 60-day US–Iran MoU mostly agreed; Hormuz still largely closed
 - Ukraine war in year 4 — on-off ceasefire talks; continued NATO/European rearmament
 - India FY27 defence budget ₹7.85L Cr (+15.2%); defence exports crossed ₹21,000+ Cr toward ₹50,000 Cr FY29 target
-- Nifty India Defence index ~8,900 (mid-May), outperforming Nifty 50 YTD; sector valuations rich (P/E ~52) but backed by record order books
+- Nifty India Defence index ~9,400 (mid-Jun, fresh high), outperforming Nifty 50 YTD; sector P/E ~54, backed by record order books and record ₹1.78L Cr FY26 production
 - Broker targets: HAL ₹4,800–6,360, BEL ₹450–500, MAZDOCK ~₹2,850
 
 Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.
