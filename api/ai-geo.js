@@ -61,10 +61,10 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 17 June 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 18 June 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
-1. US–Iran Peace Deal REACHED (announced 14–15 Jun 2026) — the war (since 28 Feb) is ending: both sides declared immediate and permanent termination of military operations on all fronts including Lebanon; Trump authorized the toll-free reopening of the Strait of Hormuz and removal of the US naval blockade. Formal signing set for Friday 19 Jun in Switzerland; MoU lifts US oil sanctions, restores prewar shipping within ~30 days. Brent fell below $80/bbl from the ~$95 closure peak; G7/Europe welcomed it. colorType teal/green, score 9, hot true.
+1. US–Iran Peace Deal REACHED — Hormuz Reopening Underway (signing 19 Jun, Geneva) — the 108-day war (since 28 Feb) is ending; MoU signed by Trump, VP Vance and Iranian speaker Qalibaf mandates permanent end to operations on all fronts incl. Lebanon, lifts the US naval blockade and reopens Hormuz toll-free. First India-bound LNG carrier (Disha) transited Hormuz, reaches Dahej on 18 Jun; Brent below $80/bbl, rupee firmer ~95.1. Residual risk: Israel rejected the framework (Netanyahu/Katz/Ben Gvir). colorType teal/green, score 9, hot true.
 2. India Record FY26 Defence Production ₹1.78 Lakh Cr — Sector Hits Fresh Highs (17 Jun 2026) — Nifty India Defence index +3% to ~9,400 (17 of 19 up); Paras +14%, MTAR +7.6%, Astra Micro +5.2%, Data Patterns +4.9%. Record production + record order books + Brent below $80 + Nifty crossing 24,000. colorType green, score 8, hot true.
 3. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) delivered the 6th & final P-17A frigate. colorType green, score 9, hot true.
 4. Defence Order Momentum (early Jun 2026) — BEL ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; Zen Tech lowest bidder AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high. ICICI top picks HAL, Solar, Astra Microwave, BEL. colorType green, score 8.

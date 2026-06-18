@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:32.8,BEL:50.8,MAZDOCK:39.8,COCHINSHIP:55.2,GRSE:46.8,BDL:113.9,DATAPATTNS:98.6,
-  PARAS:118.1,ZENTEC:87.7,SOLARINDS:94.4,MTAR:270.2,BHARATFORG:90.3,ASTRAMICRO:77.6,BEML:106.8,
-  APOLLOMICRO:139.7,MIDHANI:63.8,IDEAFORGE:null,PREMEXPLN:90.3,UNIMECH:93.6,PTCIND:264.6,DCXINDIA:null,
-  DYNAMATECH:223.1,AVANTEL:323.7,AXISCADES:114.1,CYIENTDLM:50.4,
+  HAL:32.4,BEL:51.8,MAZDOCK:39.5,COCHINSHIP:54.0,GRSE:46.9,BDL:114.1,DATAPATTNS:99.3,
+  PARAS:120.3,ZENTEC:89.7,SOLARINDS:96.1,MTAR:269.7,BHARATFORG:89.6,ASTRAMICRO:82.3,BEML:104.7,
+  APOLLOMICRO:135.9,MIDHANI:61.3,IDEAFORGE:null,PREMEXPLN:87.4,UNIMECH:91.4,PTCIND:259.4,DCXINDIA:null,
+  DYNAMATECH:226.6,AVANTEL:332.9,AXISCADES:115.7,CYIENTDLM:50.8,
 };
 
 async function fetchPrice(sym) {
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 17 June 2026, including:
+You have full knowledge of events as of 18 June 2026, including:
 - PEACE DEAL REACHED (14-15 Jun): the US-Iran war (since 28 Feb) is ending — both sides declared permanent termination of military operations incl. Lebanon; Trump authorized toll-free Hormuz reopening + naval-blockade removal; signing set for Fri 19 Jun in Switzerland; MoU lifts US oil sanctions, prewar shipping within ~30 days. Brent fell below $80. India's FY26 defence production hit a record ₹1.78L Cr; Nifty India Defence index rose ~3% to a fresh high ~9,400 on 17 Jun (Paras +14%, MTAR +7.6%). Structural demand independent of the (ending) war.
 - MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
