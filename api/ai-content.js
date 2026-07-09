@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:32.4,BEL:51.8,MAZDOCK:39.5,COCHINSHIP:54.0,GRSE:46.9,BDL:114.1,DATAPATTNS:99.3,
-  PARAS:120.3,ZENTEC:89.7,SOLARINDS:96.1,MTAR:269.7,BHARATFORG:89.6,ASTRAMICRO:82.3,BEML:104.7,
-  APOLLOMICRO:135.9,MIDHANI:61.3,IDEAFORGE:null,PREMEXPLN:87.4,UNIMECH:91.4,PTCIND:259.4,DCXINDIA:null,
-  DYNAMATECH:226.6,AVANTEL:332.9,AXISCADES:115.7,CYIENTDLM:50.8,
+  HAL:32.2,BEL:49.1,MAZDOCK:37.1,COCHINSHIP:51.6,GRSE:43.6,BDL:115.3,DATAPATTNS:88.4,
+  PARAS:110.8,ZENTEC:84.5,SOLARINDS:93.9,MTAR:225.9,BHARATFORG:94.8,ASTRAMICRO:90.5,BEML:106.5,
+  APOLLOMICRO:126.4,MIDHANI:58.3,IDEAFORGE:null,PREMEXPLN:84.0,UNIMECH:97.4,PTCIND:255.2,DCXINDIA:null,
+  DYNAMATECH:228.4,AVANTEL:326.9,AXISCADES:95.0,CYIENTDLM:58.3,
 };
 
 async function fetchPrice(sym) {
@@ -106,8 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 18 June 2026, including:
-- PEACE DEAL REACHED (14-15 Jun): the US-Iran war (since 28 Feb) is ending — both sides declared permanent termination of military operations incl. Lebanon; Trump authorized toll-free Hormuz reopening + naval-blockade removal; signing set for Fri 19 Jun in Switzerland; MoU lifts US oil sanctions, prewar shipping within ~30 days. Brent fell below $80. India's FY26 defence production hit a record ₹1.78L Cr; Nifty India Defence index rose ~3% to a fresh high ~9,400 on 17 Jun (Paras +14%, MTAR +7.6%). Structural demand independent of the (ending) war.
+You have full knowledge of events as of 9 July 2026, including:
+- US-IRAN CEASEFIRE (fragile, 3 weeks on): MoU signed 18 Jun at Versailles (Trump + Iran's President Pezeshkian, Pakistan-mediated) ended the intense fighting; 60-day ceasefire for nuclear talks; Hormuz reopening only PARTIAL (~1/3 normal traffic, several tankers turned back 8 Jul). Oil tumbled post-signing then climbed back to Brent ~$78. War premium fading.
+- DAC PROCUREMENT (3 Jul): DAC (Rajnath Singh) cleared ~₹52,000 Cr (further ~₹79,000 Cr referenced) — air-defence, unmanned/ISR, localisation — lifting the sector. Post-DAC: B&K Buy BEL (₹513)/HAL, Hold BDL; ICICI picks BEL/HAL/Astra/Solar (Buy PTC ₹21,000); Antique HAL ₹6,356, BEL ₹454, Solar ₹16,600, MDL ₹3,856. India FY26 defence production record ₹1.78L Cr.
 - MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate
 - Order momentum: BEL booked ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; ZENTEC lowest bidder on AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high
@@ -117,7 +118,7 @@ You have full knowledge of events as of 18 June 2026, including:
 - Operation Epic Fury (US–Iran war) under a FRAGILE ceasefire — Brent ~$94/bbl (down ~20% from ~$120 April peak); Iran says it ended operations vs Israel; 60-day US–Iran MoU mostly agreed; Hormuz still largely closed
 - Ukraine war in year 4 — on-off ceasefire talks; continued NATO/European rearmament
 - India FY27 defence budget ₹7.85L Cr (+15.2%); defence exports crossed ₹21,000+ Cr toward ₹50,000 Cr FY29 target
-- Nifty India Defence index ~9,400 (mid-Jun, fresh high), outperforming Nifty 50 YTD; sector P/E ~54, backed by record order books and record ₹1.78L Cr FY26 production
+- Nifty India Defence index consolidated off its ~9,400 mid-Jun high as the war premium faded, still outperforming Nifty 50 YTD; sector P/E ~52–54, backed by record order books, record ₹1.78L Cr FY26 production and the 3 Jul DAC clearances
 - Broker targets: HAL ₹4,800–6,360, BEL ₹450–500, MAZDOCK ~₹2,850
 
 Analyse this NSE defence portfolio and return ONLY a valid JSON object — no markdown, no explanation, just the raw JSON.

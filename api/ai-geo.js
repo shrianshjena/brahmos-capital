@@ -61,15 +61,15 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 18 June 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 9 July 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
-1. US–Iran Peace Deal REACHED — Hormuz Reopening Underway (signing 19 Jun, Geneva) — the 108-day war (since 28 Feb) is ending; MoU signed by Trump, VP Vance and Iranian speaker Qalibaf mandates permanent end to operations on all fronts incl. Lebanon, lifts the US naval blockade and reopens Hormuz toll-free. First India-bound LNG carrier (Disha) transited Hormuz, reaches Dahej on 18 Jun; Brent below $80/bbl, rupee firmer ~95.1. Residual risk: Israel rejected the framework (Netanyahu/Katz/Ben Gvir). colorType teal/green, score 9, hot true.
-2. India Record FY26 Defence Production ₹1.78 Lakh Cr — Sector Hits Fresh Highs (17 Jun 2026) — Nifty India Defence index +3% to ~9,400 (17 of 19 up); Paras +14%, MTAR +7.6%, Astra Micro +5.2%, Data Patterns +4.9%. Record production + record order books + Brent below $80 + Nifty crossing 24,000. colorType green, score 8, hot true.
-3. P-75I Stealth Submarine Programme Cleared (early Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) delivered the 6th & final P-17A frigate. colorType green, score 9, hot true.
-4. Defence Order Momentum (early Jun 2026) — BEL ₹2,100 Cr fresh orders; GRSE launched first of 11 NG-OPVs; Zen Tech lowest bidder AVNL weapon stations; US cleared $428M FMS to India; FY26 DAC approvals at all-time high. ICICI top picks HAL, Solar, Astra Microwave, BEL. colorType green, score 8.
-5. India–Vietnam BrahMos Deal Signed (30 May 2026) — ~₹60,000 Cr Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 9.
-6. FY26 Results (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. colorType green, score 8.
+1. DAC Clears ₹52,000 Cr Procurement (3 Jul 2026) — the Defence Acquisition Council (chaired by Rajnath Singh) approved ~₹52,000 Cr of capital acquisitions (further ~₹79,000 Cr referenced by brokers) — air-defence layering, unmanned/ISR, localisation via Buy-and-Make. Nifty India Defence index rose (BDL/BEML/Cochin Shipyard/Paras +2%+). Post-DAC: B&K Buy BEL (₹513)/HAL, Hold BDL; ICICI picks BEL/HAL/Astra/Solar. colorType green, score 8, hot true.
+2. US–Iran Ceasefire Holds, Fragile (as of 9 Jul 2026) — MoU signed 18 Jun at Versailles (Trump + Iran's President Pezeshkian, Pakistan-mediated) ended intense fighting; 60-day ceasefire for nuclear talks; Hormuz reopening only PARTIAL (~1/3 normal traffic, several tankers turned back 8 Jul). Oil tumbled post-signing then climbed back to Brent ~$78; low US stockpiles keep a floor. Net positive for India (lower import bill, firmer rupee). Residual risk: fragile implementation, Israel's rejection of the framework. colorType teal, score 7, hot true.
+3. P-75I Stealth Submarine Programme Cleared (Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) delivered the 6th & final P-17A frigate. colorType green, score 8.
+4. India Record FY26 Defence Production ₹1.78 Lakh Cr — record domestic output underscores indigenisation and long-term order visibility; alongside record order books it anchors the structural growth runway. colorType green, score 7.
+5. India–Vietnam BrahMos Deal Signed (30 May 2026) — ~₹60,000 Cr Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 8.
+6. FY26 Results (May 2026) — HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr. colorType green, score 7.
 7. Ukraine War Year 4 (2026) — on-off ceasefire talks, durable peace distant; NATO & European rearmament continuing. colorType blue, score 7.
 
 Additional context from today's news headlines:
