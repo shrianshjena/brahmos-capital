@@ -66,7 +66,7 @@ const CONSENSUS_STATIC={
   SOLARINDS:  {buy:18,hold:5, sell:2, target:21000,brokers:["ICICI Sec","Motilal","Emkay","Kotak","Jefferies"]},
   MTAR:       {buy:12,hold:6, sell:3, target:9320, brokers:["Motilal","HDFC Sec","Kotak","Emkay","Nuvama"]},
   BHARATFORG: {buy:16,hold:7, sell:2, target:2390, brokers:["Motilal","ICICI Sec","Kotak","CLSA","Nomura"]},
-  ASTRAMICRO: {buy:14,hold:5, sell:2, target:2050, brokers:["ICICI Sec","Motilal","Axis","BOB Cap","Prabhudas"]},
+  ASTRAMICRO: {buy:5, hold:9, sell:4, target:1440, brokers:["Trendlyne cons.","Motilal","ICICI Sec","Axis","BOB Cap"]},
   BEML:       {buy:11,hold:8, sell:3, target:1950, brokers:["HDFC Sec","Motilal","Axis","Emkay","ICICI Sec"]},
   APOLLOMICRO:{buy:12,hold:5, sell:3, target:480,  brokers:["HDFC Sec","Motilal","YES Sec","Nirmal Bang","Monarch"]},
   MIDHANI:    {buy:10,hold:6, sell:3, target:505,  brokers:["ICICI Sec","Motilal","Axis","Emkay","Kotak"]},
