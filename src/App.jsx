@@ -20,29 +20,29 @@ function mkSpark(seed,up){const r=rng(seed);const p=[100];for(let i=1;i<24;i++)p
 
 const STOCKS=[
   {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4511.3, day:0.1,pe:32.2,pb:7.1, roe:24.0,mc:2928,  ob:1855,seed:1001,sector:"Aerospace"},
-  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:409.45, day:0.58,pe:49.1,pb:12.4, roe:27.6,mc:2969,  ob:740, seed:1002,sector:"Electronics"},
-  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2342.8, day:-0.78,pe:37.1,pb:9.8, roe:28.8,mc:957,  ob:380, seed:1003,sector:"Naval"},
-  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1402.2, day:-0.33,pe:51.6,pb:6.3, roe:12.5,mc:370,  ob:220, seed:1004,sector:"Naval"},
-  {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2590.8, day:-1.12,pe:43.6,pb:11.5, roe:31.8,mc:301,  ob:250, seed:1005,sector:"Naval"},
-  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1254.8, day:-0.63,pe:115.3,pb:11.5, roe:9.9,mc:486,  ob:225, seed:1006,sector:"Missiles"},
-  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4085.8, day:-1.37,pe:88.4,pb:13.8, roe:16.7,mc:240,  ob:14,  seed:1007,sector:"Electronics"},
-  {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1216.9, day:1.21,pe:110.8,pb:13.5, roe:13.1,mc:98,  ob:8,  seed:1008,sector:"Space"},
+  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:408.15, day:-0.32,pe:49.1,pb:12.4, roe:27.6,mc:2969,  ob:740, seed:1002,sector:"Electronics"},
+  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2346.5, day:0.16,pe:37.1,pb:9.8, roe:28.8,mc:957,  ob:380, seed:1003,sector:"Naval"},
+  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1407.6, day:0.39,pe:51.6,pb:6.3, roe:12.5,mc:370,  ob:220, seed:1004,sector:"Naval"},
+  {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2561.7, day:-0.76,pe:43.6,pb:11.5, roe:31.8,mc:301,  ob:250, seed:1005,sector:"Naval"},
+  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1257.6, day:0.22,pe:115.3,pb:11.5, roe:9.9,mc:486,  ob:225, seed:1006,sector:"Missiles"},
+  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:3990.7, day:-2.33,pe:88.4,pb:13.8, roe:16.7,mc:240,  ob:14,  seed:1007,sector:"Electronics"},
+  {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1206.6, day:2.58,pe:110.8,pb:13.5, roe:13.1,mc:98,  ob:8,  seed:1008,sector:"Space"},
   {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1823.1, day:1.13,pe:84.5,pb:9.1, roe:11.8,mc:163,  ob:12,  seed:1009,sector:"Electronics"},
   {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:18467.0, day:0.36,pe:93.9,pb:25.1, roe:31.3,mc:1573,  ob:54,seed:2001,sector:"Explosives"},
-  {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:6046.0, day:-5.0,pe:225.9,pb:25.9, roe:12.6,mc:213,  ob:9, seed:2002,sector:"Aerospace"},
-  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:2190.5, day:4.08,pe:94.8,pb:10.6, roe:11.6,mc:1019,  ob:70,seed:2003,sector:"Forgings"},
-  {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1721.7, day:-1.67,pe:90.5,pb:13.2, roe:16.5,mc:174,  ob:6, seed:2004,sector:"Electronics"},
+  {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:5744.0, day:-5.0,pe:225.9,pb:25.9, roe:12.6,mc:213,  ob:9, seed:2002,sector:"Aerospace"},
+  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:2209.0, day:0.84,pe:94.8,pb:10.6, roe:11.6,mc:1019,  ob:70,seed:2003,sector:"Forgings"},
+  {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1751.0, day:1.75,pe:90.5,pb:13.2, roe:16.5,mc:174,  ob:6, seed:2004,sector:"Electronics"},
   {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1812.4, day:-0.45,pe:106.5,pb:5.2, roe:5.1,mc:151,  ob:14, seed:2005,sector:"Vehicles"},
-  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:397.8, day:-0.15,pe:126.4,pb:10.5, roe:11.2,mc:148,  ob:8, seed:2006,sector:"Electronics"},
-  {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:408.0, day:-1.03,pe:58.3,pb:5.0, roe:8.9,mc:77,  ob:6, seed:2007,sector:"Materials"},
-  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:843.75, day:-1.09,pe:null,pb:6.3, roe:-2.8,mc:37,  ob:3, seed:2008,sector:"Drones"},
+  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:392.8, day:-1.26,pe:126.4,pb:10.5, roe:11.2,mc:148,  ob:8, seed:2006,sector:"Electronics"},
+  {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:409.55, day:0.38,pe:58.3,pb:5.0, roe:8.9,mc:77,  ob:6, seed:2007,sector:"Materials"},
+  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:857.3, day:1.61,pe:null,pb:6.3, roe:-2.8,mc:37,  ob:3, seed:2008,sector:"Drones"},
   {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:665.7, day:-0.86,pe:84.0,pb:13.3, roe:16.5,mc:38,  ob:4, seed:2009,sector:"Explosives"},
-  {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1282.8, day:-1.09,pe:97.4,pb:8.7, roe:9.0,mc:62,  ob:2, seed:2010,sector:"Aerospace"},
-  {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:17553.0, day:-0.22,pe:255.2,pb:17.3, roe:7.2,mc:260,  ob:3, seed:2011,sector:"Aerospace"},
-  {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:187.36, day:-1.72,pe:null,pb:1.3, roe:-0.5,mc:22,  ob:7, seed:2012,sector:"Electronics"},
-  {ticker:"DYNAMATECH", name:"Dynamatic Technologies",    sub:"Aerospace Structures · UAV",   shares:30,  buy:3800, px:10537.0, day:2.68,pe:228.4,pb:9.3, roe:4.3,mc:74,  ob:4, seed:2013,sector:"Aerospace"},
+  {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1274.5, day:-0.65,pe:97.4,pb:8.7, roe:9.0,mc:62,  ob:2, seed:2010,sector:"Aerospace"},
+  {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:18030.0, day:0.5,pe:255.2,pb:17.3, roe:7.2,mc:260,  ob:3, seed:2011,sector:"Aerospace"},
+  {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:185.43, day:-1.03,pe:null,pb:1.3, roe:-0.5,mc:22,  ob:7, seed:2012,sector:"Electronics"},
+  {ticker:"DYNAMATECH", name:"Dynamatic Technologies",    sub:"Aerospace Structures · UAV",   shares:30,  buy:3800, px:10285.0, day:-0.23,pe:228.4,pb:9.3, roe:4.3,mc:74,  ob:4, seed:2013,sector:"Aerospace"},
   {ticker:"AVANTEL",    name:"Avantel Ltd",               sub:"Satellite Comms · Defence",    shares:600, buy:95,   px:170.14, day:-1.66,pe:326.9,pb:14.1, roe:5.2,mc:48,  ob:2, seed:2014,sector:"Electronics"},
-  {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1561.8, day:-3.04,pe:95.0,pb:9.4, roe:10.4,mc:68,  ob:3, seed:2015,sector:"Aerospace"},
+  {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1583.8, day:2.31,pe:95.0,pb:9.4, roe:10.4,mc:68,  ob:3, seed:2015,sector:"Aerospace"},
   {ticker:"CYIENTDLM",  name:"Cyient DLM",                sub:"PCB · Defence Electronics",    shares:200, buy:850,  px:578.65, day:-1.41,pe:58.3,pb:4.2, roe:7.5,mc:43,  ob:1, seed:2016,sector:"Electronics"},
 ].map(s=>({...s,mktVal:s.shares*s.px,cost:s.shares*s.buy,ret:((s.px-s.buy)/s.buy)*100,spark:mkSpark(s.seed,s.px>s.buy)}));
 
@@ -1112,7 +1112,7 @@ function GeoView({geoCards,geoAiStatus}){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>
         <Flame size={15} color={A.red}/>
-        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 17 Jul 2026 — US-Iran war (fragile ceasefire, re-escalating early Jul), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
+        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 20 Jul 2026 — US-Iran war (fragile ceasefire, re-escalating early Jul), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
       {liveGeo.length>0&&(
         <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:"1px solid rgba(48,209,88,0.2)",marginBottom:16}}>
