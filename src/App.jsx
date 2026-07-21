@@ -64,7 +64,7 @@ const CONSENSUS_STATIC={
   PARAS:      {buy:10,hold:5, sell:4, target:1440,  brokers:["ICICI Sec","Axis","YES Sec","Nirmal Bang","Monarch"]},
   ZENTEC:     {buy:7,hold:10, sell:4, target:1500, brokers:["Motilal","HDFC Sec","Emkay","Nirmal Bang","BOB Cap"]},
   SOLARINDS:  {buy:18,hold:5, sell:2, target:21000,brokers:["ICICI Sec","Motilal","Emkay","Kotak","Jefferies"]},
-  MTAR:       {buy:12,hold:6, sell:3, target:9320, brokers:["Motilal","HDFC Sec","Kotak","Emkay","Nuvama"]},
+  MTAR:       {buy:6, hold:8, sell:4, target:6500, brokers:["Motilal ₹6,000","Trendlyne cons ₹7,358","Kotak","Emkay","Nuvama"]},
   BHARATFORG: {buy:16,hold:7, sell:2, target:2390, brokers:["Motilal","ICICI Sec","Kotak","CLSA","Nomura"]},
   ASTRAMICRO: {buy:9, hold:7, sell:3, target:1650, brokers:["Trendlyne cons.","Motilal","ICICI Sec","Axis","BOB Cap"]},
   BEML:       {buy:11,hold:8, sell:3, target:1950, brokers:["HDFC Sec","Motilal","Axis","Emkay","ICICI Sec"]},
