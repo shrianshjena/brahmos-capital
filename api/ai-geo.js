@@ -61,11 +61,11 @@ export default async function handler(req, res) {
     ? headlines.map((h,i) => `${i+1}. ${h}`).join("\n")
     : "No live headlines. Use your knowledge of current global events as of 2026.";
 
-  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 21 July 2026.
+  const prompt = `Today is ${today}. You are operating with full knowledge of events as of 23 July 2026.
 
 MANDATORY CURRENT EVENTS you must include as cards (order them NEWEST first):
 1. DAC Clears ₹52,000 Cr Procurement (3 Jul 2026) — the Defence Acquisition Council (chaired by Rajnath Singh) approved ~₹52,000 Cr of capital acquisitions (further ~₹79,000 Cr referenced by brokers) — air-defence layering, unmanned/ISR, localisation via Buy-and-Make. Nifty India Defence index rose (BDL/BEML/Cochin Shipyard/Paras +2%+). Post-DAC: B&K Buy BEL (₹513)/HAL, Hold BDL; ICICI picks BEL/HAL/Astra/Solar. colorType green, score 8, hot true.
-2. US–Iran Ceasefire Collapses — US Reimposes Naval Blockade (as of 21 Jul 2026) — the 18 Jun MoU broke down; US resumed airstrikes on Iran + reimposed a naval blockade (~14 Jul), revoked the Iranian oil waiver (17 Jul), Trump declared the ceasefire 'over.' Iran struck vessels in Hormuz, fired at US assets in Bahrain/Kuwait. Brent ~$84 from sub-$74 lows. War premium back. colorType red, score 9, hot true.
+2. US–Iran War Escalates — 95 Strikes in 10 Days, US Troops Killed (as of 23 Jul 2026) — US struck 95 locations across 12 Iranian cities in ten days (another round 20 Jul); several US troops killed, Trump vowing retaliation; Iran hit a tanker in Hormuz 21 Jul; Yemen's Houthis declared a maritime embargo on Saudi Arabia (new front, Bab el-Mandeb at risk). Brent ~$90 from sub-$74 early-July lows. Mediators have floated a 10-day ceasefire that could revive the MoU. colorType red, score 9, hot true.
 3. P-75I Stealth Submarine Programme Cleared (Jun 2026) — Ministry of Finance approved; only CCS sign-off remains before the ~₹70,000 Cr Navy order. Mazagon Dock (front-runner) delivered the 6th & final P-17A frigate. colorType green, score 8.
 4. India Record FY26 Defence Production ₹1.78 Lakh Cr — record domestic output underscores indigenisation and long-term order visibility; alongside record order books it anchors the structural growth runway. colorType green, score 7.
 5. India–Vietnam BrahMos Deal Signed (30 May 2026) — ~₹60,000 Cr Block-3 export; Indonesia pact in final stages; Philippines first buyer (2022). Positive for BDL, HAL, BEL, DATAPATTNS, PARAS. colorType green, score 8.

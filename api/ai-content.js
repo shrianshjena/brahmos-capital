@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:33.6,BEL:49.5,MAZDOCK:36.7,COCHINSHIP:51.5,GRSE:43.5,BDL:111.3,DATAPATTNS:87.9,
-  PARAS:111.3,ZENTEC:84.2,SOLARINDS:103.2,MTAR:190.3,BHARATFORG:97.7,ASTRAMICRO:86.0,BEML:105.1,
-  APOLLOMICRO:126.0,MIDHANI:58.7,IDEAFORGE:null,PREMEXPLN:77.1,UNIMECH:103.3,PTCIND:260.6,DCXINDIA:null,
-  DYNAMATECH:218.8,AVANTEL:397.7,AXISCADES:93.8,CYIENTDLM:67.4,
+  HAL:33.7,BEL:48.8,MAZDOCK:35.8,COCHINSHIP:51.3,GRSE:42.9,BDL:107.8,DATAPATTNS:95.2,
+  PARAS:110.0,ZENTEC:83.4,SOLARINDS:100.8,MTAR:193.1,BHARATFORG:96.6,ASTRAMICRO:88.2,BEML:101.7,
+  APOLLOMICRO:125.2,MIDHANI:56.1,IDEAFORGE:null,PREMEXPLN:78.0,UNIMECH:97.4,PTCIND:264.0,DCXINDIA:null,
+  DYNAMATECH:213.2,AVANTEL:382.5,AXISCADES:92.7,CYIENTDLM:64.4,
 };
 
 async function fetchPrice(sym) {
@@ -106,8 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 21 July 2026, including:
-- US-IRAN CONFLICT (re-escalated): the 18 Jun MoU COLLAPSED in mid-July — US airstrikes on Iran + naval blockade reimposed (~14 Jul), Iranian-oil waiver revoked (17 Jul), Trump declared the ceasefire 'over'; Iran struck Hormuz vessels and fired at US assets in Bahrain/Kuwait. Brent back to ~$84 from sub-$74 lows (below the ~$120 April peak). War premium is BACK. Q1 FY27 earnings season underway (BEL reports 27 Jul, won ₹572 Cr order).
+You have full knowledge of events as of 23 July 2026, including:
+- US-IRAN WAR ESCALATED: US struck 95 locations across 12 Iranian cities in ten days (another round 20 Jul); several US troops killed; Iran hit a tanker in Hormuz 21 Jul; Houthis declared a maritime embargo on Saudi Arabia (new front). Brent ~$90 from sub-$74 early-July lows. Mediators floated a 10-day ceasefire. War premium elevated, but rising crude now pressures India's import bill.
+- CATALYST: MOFSL expects BEL to win the ~₹30,000 Cr QRSAM order within weeks; cascades to BDL, ASTRAMICRO, APOLLOMICRO. BROKER SPLIT: Kotak SELL Mazagon (₹1,950)/Solar (₹10,300), REDUCE BEL, ADD HAL (₹4,810); Antique Buy across the board. Stock selection > sector beta.
 - DAC PROCUREMENT (3 Jul): DAC (Rajnath Singh) cleared ~₹52,000 Cr (further ~₹79,000 Cr referenced) — air-defence, unmanned/ISR, localisation — lifting the sector. Post-DAC: B&K Buy BEL (₹513)/HAL, Hold BDL; ICICI picks BEL/HAL/Astra/Solar (Buy PTC ₹21,000); Antique HAL ₹6,356, BEL ₹454, Solar ₹16,600, MDL ₹3,856. India FY26 defence production record ₹1.78L Cr.
 - MARKET: defence sector rebounded sharply on 12 Jun (MTAR +13% recovering its Bloom Energy drop, PARAS +11%, DATAPATTNS +8%) after the 11 Jun profit-booking selloff. India structural drivers intact and independent of the ceasefire.
 - P-75I stealth submarine programme approved by the Ministry of Finance (early Jun 2026) — only CCS sign-off left before the ~₹70,000 Cr Navy order; MAZDOCK front-runner, just delivered 6th & final P-17A frigate

@@ -88,7 +88,10 @@ def fetch_price(ticker: str, symbol: str, retries: int = 3) -> dict | None:
                 if not px:
                     continue
                 day = round(((px - prev) / prev) * 100, 2) if prev else 0.0
-                return {"ticker": ticker, "px": round(float(px), 2), "day": day}
+                # regularMarketTime lets us detect cached/stale quotes (see staleness
+                # guard in main()) — Yahoo occasionally serves a prior-session close.
+                ts = meta.get("regularMarketTime") or 0
+                return {"ticker": ticker, "px": round(float(px), 2), "day": day, "ts": int(ts)}
             except Exception as e:
                 print(f"    attempt {attempt+1} failed for {ticker} ({url[:50]}): {e}")
                 time.sleep(1.0 + attempt * 2.0)  # backoff: 1s, 3s, 5s
@@ -178,6 +181,38 @@ def main():
     if len(prices) < 10:
         print("Too few prices — aborting to avoid corrupting the file.")
         raise SystemExit(1)
+
+    # 1b. Staleness guard — Yahoo sometimes serves a cached prior-session quote for a
+    # few symbols while reporting success. Most tickers carry the latest session's
+    # timestamp, so anything materially older than the newest is stale. Retry those
+    # once, then report loudly so the failure is visible in the workflow log.
+    STALE_TOLERANCE = 6 * 3600   # seconds behind the newest quote before we call it stale
+    def stale_tickers(pr):
+        stamps = [v["ts"] for v in pr.values() if v.get("ts")]
+        if not stamps:
+            return []
+        newest = max(stamps)
+        return [t for t, v in pr.items() if v.get("ts") and v["ts"] < newest - STALE_TOLERANCE]
+
+    stale = stale_tickers(prices)
+    if stale:
+        print(f"\n⚠  {len(stale)} stale quote(s) detected (prior-session close): {', '.join(stale)}")
+        print("   Retrying those symbols…")
+        for ticker in stale:
+            time.sleep(1.0)
+            retry = fetch_price(ticker, SYMBOL_MAP[ticker])
+            if retry and retry.get("ts", 0) > prices[ticker].get("ts", 0):
+                prices[ticker] = retry
+                print(f"   ✅ {ticker:<14} refreshed to ₹{retry['px']:.2f}")
+            else:
+                print(f"   ⚠  {ticker:<14} still stale — patching prior close (verify manually)")
+        still = stale_tickers(prices)
+        if still:
+            print(f"\n⚠  STALE AFTER RETRY: {', '.join(still)} — these carry a prior-session close.")
+        else:
+            print("\n✅ All quotes now current after retry.")
+    else:
+        print("✅ Staleness check passed — all quotes from the latest session.")
 
     # 2. Read App.jsx
     with open(APP_JSX, "r", encoding="utf-8") as f:
