@@ -93,8 +93,13 @@ def fetch_price(ticker: str, symbol: str, retries: int = 3) -> dict | None:
                 ts = meta.get("regularMarketTime") or 0
                 return {"ticker": ticker, "px": round(float(px), 2), "day": day, "ts": int(ts)}
             except Exception as e:
+                # Yahoo rate-limits (HTTP 429) when 25 symbols are fetched in quick
+                # succession. A 1-5s backoff is useless against it — the limit window
+                # is far longer — so back off hard on 429 and let the second pass in
+                # main() pick up anything still failing.
+                is_429 = "429" in str(e)
                 print(f"    attempt {attempt+1} failed for {ticker} ({url[:50]}): {e}")
-                time.sleep(1.0 + attempt * 2.0)  # backoff: 1s, 3s, 5s
+                time.sleep((8.0 + attempt * 7.0) if is_429 else (1.0 + attempt * 2.0))
                 continue
     return None
 
@@ -174,9 +179,36 @@ def main():
             print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%")
         else:
             print(f"  ❌ {ticker:<14} fetch failed — keeping existing value")
-        time.sleep(0.25)   # gentle rate limit
+        time.sleep(0.6)    # gentle rate limit — 0.25s was tripping Yahoo 429s
 
     print(f"\nFetched {len(prices)}/{len(SYMBOL_MAP)} prices")
+
+    # 1a. Second pass — Yahoo rate-limits (429) a handful of symbols when all 25 are
+    # pulled in quick succession. Those tickers previously fell through to "keeping
+    # existing value", silently leaving a prior-session close in App.jsx while the
+    # workflow still reported success. Wait out the rate-limit window and retry.
+    missing = [t for t in SYMBOL_MAP if t not in prices]
+    if missing:
+        print(f"\n⚠  {len(missing)} ticker(s) failed the first pass: {', '.join(missing)}")
+        print("   Cooling down 75s to clear the rate limit, then retrying…")
+        time.sleep(75)
+        for ticker in missing:
+            result = fetch_price(ticker, SYMBOL_MAP[ticker])
+            if result:
+                prices[ticker] = result
+                sign = "+" if result["day"] >= 0 else ""
+                print(f"   ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%  (2nd pass)")
+            else:
+                print(f"   ❌ {ticker:<14} still failing")
+            time.sleep(2.0)
+        print(f"\nAfter second pass: {len(prices)}/{len(SYMBOL_MAP)} prices")
+
+    # Surface incomplete coverage as a GitHub Actions annotation so it is visible on
+    # the run page — a "success" conclusion alone hid this failure mode before.
+    unresolved = [t for t in SYMBOL_MAP if t not in prices]
+    if unresolved:
+        print(f"::warning title=Stale prices::{len(unresolved)} ticker(s) kept a prior-session "
+              f"close (fetch failed twice): {', '.join(unresolved)}")
 
     if len(prices) < 10:
         print("Too few prices — aborting to avoid corrupting the file.")
