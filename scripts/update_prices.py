@@ -10,6 +10,7 @@ import time
 import json
 import urllib.request
 import urllib.error
+import urllib.parse
 from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -64,6 +65,59 @@ HEADERS_LIST = [
 ]
 import random
 HEADERS = random.choice(HEADERS_LIST)
+
+
+# ── Batched fetch (primary) ───────────────────────────────────────────────────
+# One /v7/finance/quote request returns all 25 symbols at once. This is the same
+# endpoint used for manual pulls and is essentially never rate-limited, unlike the
+# per-ticker /v8/chart calls which trip Yahoo's 429 limiter when fired 25x in a row.
+def fetch_all_quotes() -> dict:
+    """Return {ticker: {px, day, ts}} for as many symbols as the batch endpoint gives."""
+    rev = {v: k for k, v in SYMBOL_MAP.items()}
+    ua = random.choice(HEADERS_LIST)["User-Agent"]
+    opener = urllib.request.build_opener(
+        urllib.request.HTTPCookieProcessor(__import__("http.cookiejar", fromlist=["CookieJar"]).CookieJar())
+    )
+    opener.addheaders = [("User-Agent", ua), ("Accept", "*/*"), ("Accept-Language", "en-US,en;q=0.9")]
+    # Seed cookies + obtain a crumb (required by /v7/finance/quote)
+    for u in ("https://fc.yahoo.com/", "https://finance.yahoo.com/quote/HAL.NS/"):
+        try:
+            opener.open(u, timeout=12).read()
+        except Exception:
+            pass
+    crumb = None
+    for host in ("query1", "query2"):
+        try:
+            c = opener.open(f"https://{host}.finance.yahoo.com/v1/test/getcrumb", timeout=12).read().decode().strip()
+            if c and len(c) < 20:
+                crumb = c
+                break
+        except Exception:
+            pass
+    if not crumb:
+        print("  ⚠  batch: could not obtain crumb — falling back to per-ticker fetch")
+        return {}
+    syms = ",".join(SYMBOL_MAP.values())
+    url = (f"https://query1.finance.yahoo.com/v7/finance/quote"
+           f"?symbols={urllib.parse.quote(syms)}&crumb={urllib.parse.quote(crumb)}")
+    out = {}
+    try:
+        data = json.loads(opener.open(url, timeout=20).read())
+        for q in data.get("quoteResponse", {}).get("result", []):
+            t = rev.get(q.get("symbol"))
+            px = q.get("regularMarketPrice")
+            if not t or not px:
+                continue
+            out[t] = {
+                "ticker": t,
+                "px": round(float(px), 2),
+                "day": round(q.get("regularMarketChangePercent", 0) or 0, 2),
+                "ts": int(q.get("regularMarketTime") or 0),
+            }
+    except Exception as e:
+        print(f"  ⚠  batch quote request failed: {e} — falling back to per-ticker fetch")
+        return {}
+    return out
 
 
 # ── Fetch one stock ───────────────────────────────────────────────────────────
@@ -169,27 +223,40 @@ def main():
     date_str = now.strftime("%-d %b %Y")          # e.g. "13 Mar 2026"
     print(f"Brahmos Capital — Daily Update  {date_str}\n")
 
-    # 1. Fetch all prices
+    # 1. Fetch all prices — batched quote endpoint first (one request, not rate-limited).
     prices = {}
-    for ticker, symbol in SYMBOL_MAP.items():
-        result = fetch_price(ticker, symbol)
-        if result:
-            prices[ticker] = result
-            sign = "+" if result["day"] >= 0 else ""
-            print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%")
-        else:
-            print(f"  ❌ {ticker:<14} fetch failed — keeping existing value")
-        time.sleep(0.6)    # gentle rate limit — 0.25s was tripping Yahoo 429s
+    print("Fetching batched quotes (all symbols in one request)…")
+    batch = fetch_all_quotes()
+    for ticker, result in batch.items():
+        prices[ticker] = result
+        sign = "+" if result["day"] >= 0 else ""
+        print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%  (batch)")
+    if batch:
+        print(f"  Batch returned {len(batch)}/{len(SYMBOL_MAP)}")
+
+    # Per-ticker chart fallback for anything the batch missed (or if batch failed whole)
+    fallback = [t for t in SYMBOL_MAP if t not in prices]
+    if fallback:
+        print(f"\nPer-ticker fallback for {len(fallback)} symbol(s): {', '.join(fallback)}")
+        for ticker in fallback:
+            result = fetch_price(ticker, SYMBOL_MAP[ticker])
+            if result:
+                prices[ticker] = result
+                sign = "+" if result["day"] >= 0 else ""
+                print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%")
+            else:
+                print(f"  ❌ {ticker:<14} fetch failed — keeping existing value")
+            time.sleep(0.6)
 
     print(f"\nFetched {len(prices)}/{len(SYMBOL_MAP)} prices")
 
-    # 1a. Second pass — Yahoo rate-limits (429) a handful of symbols when all 25 are
-    # pulled in quick succession. Those tickers previously fell through to "keeping
-    # existing value", silently leaving a prior-session close in App.jsx while the
-    # workflow still reported success. Wait out the rate-limit window and retry.
+    # 1a. Second pass — if the batch failed wholesale and per-ticker calls got
+    # rate-limited (429), wait out the limit window and retry whatever is still
+    # missing. Previously these fell through to "keeping existing value", silently
+    # leaving a prior-session close in App.jsx while the workflow reported success.
     missing = [t for t in SYMBOL_MAP if t not in prices]
     if missing:
-        print(f"\n⚠  {len(missing)} ticker(s) failed the first pass: {', '.join(missing)}")
+        print(f"\n⚠  {len(missing)} ticker(s) still missing: {', '.join(missing)}")
         print("   Cooling down 75s to clear the rate limit, then retrying…")
         time.sleep(75)
         for ticker in missing:
