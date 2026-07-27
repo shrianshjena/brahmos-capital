@@ -67,7 +67,53 @@ import random
 HEADERS = random.choice(HEADERS_LIST)
 
 
-# ── Batched fetch (primary) ───────────────────────────────────────────────────
+# ── Crumb-free batched fetch (PRIMARY) ────────────────────────────────────────
+# The /v7/finance/spark endpoint returns price + previous close for many symbols
+# in one request WITHOUT a crumb. This matters because Yahoo blocks the crumb
+# handshake from datacenter IPs (GitHub Actions runners), which forced the old
+# path to fall back to per-ticker /v8/chart calls that hit 429 rate limits and
+# left tickers on a stale prior-session close. Spark works from those runners.
+# Symbols are chunked (a 25-symbol URL 400s) into batches of 8.
+def fetch_spark_quotes() -> dict:
+    """Return {ticker: {px, day, ts}} via the crumb-free spark endpoint."""
+    rev = {v: k for k, v in SYMBOL_MAP.items()}
+    syms = list(SYMBOL_MAP.values())
+    ua = random.choice(HEADERS_LIST)["User-Agent"]
+    out = {}
+    for i in range(0, len(syms), 8):
+        batch = syms[i:i + 8]
+        url = (f"https://query1.finance.yahoo.com/v7/finance/spark"
+               f"?symbols={urllib.parse.quote(','.join(batch))}&range=1d&interval=1d")
+        for host in ("query1", "query2"):
+            u = url.replace("query1", host, 1) if host != "query1" else url
+            try:
+                req = urllib.request.Request(u, headers={"User-Agent": ua, "Accept": "application/json"})
+                data = json.loads(urllib.request.urlopen(req, timeout=15).read())
+                for r in data.get("spark", {}).get("result", []):
+                    try:
+                        meta = r["response"][0]["meta"]
+                    except (KeyError, IndexError):
+                        continue
+                    t = rev.get(r.get("symbol"))
+                    px = meta.get("regularMarketPrice")
+                    pc = meta.get("chartPreviousClose") or meta.get("previousClose")
+                    if not t or not px:
+                        continue
+                    out[t] = {
+                        "ticker": t,
+                        "px": round(float(px), 2),
+                        "day": round((px - pc) / pc * 100, 2) if pc else 0.0,
+                        "ts": int(meta.get("regularMarketTime") or 0),
+                    }
+                break  # this chunk succeeded on this host
+            except Exception as e:
+                if host == "query2":
+                    print(f"  ⚠  spark chunk {i//8+1} failed on both hosts: {e}")
+        time.sleep(0.3)
+    return out
+
+
+# ── Crumb-based batched fetch (secondary) ─────────────────────────────────────
 # One /v7/finance/quote request returns all 25 symbols at once. This is the same
 # endpoint used for manual pulls and is essentially never rate-limited, unlike the
 # per-ticker /v8/chart calls which trip Yahoo's 429 limiter when fired 25x in a row.
@@ -95,7 +141,7 @@ def fetch_all_quotes() -> dict:
         except Exception:
             pass
     if not crumb:
-        print("  ⚠  batch: could not obtain crumb — falling back to per-ticker fetch")
+        print("  ⚠  quote: could not obtain crumb — skipping to per-ticker fetch")
         return {}
     syms = ",".join(SYMBOL_MAP.values())
     url = (f"https://query1.finance.yahoo.com/v7/finance/quote"
@@ -223,18 +269,29 @@ def main():
     date_str = now.strftime("%-d %b %Y")          # e.g. "13 Mar 2026"
     print(f"Brahmos Capital — Daily Update  {date_str}\n")
 
-    # 1. Fetch all prices — batched quote endpoint first (one request, not rate-limited).
+    # 1. Fetch all prices. Primary: crumb-free spark endpoint (works from GitHub
+    # runners). Secondary: crumb-based batch quote (works locally). Tertiary:
+    # per-ticker chart calls for any stragglers.
     prices = {}
-    print("Fetching batched quotes (all symbols in one request)…")
-    batch = fetch_all_quotes()
-    for ticker, result in batch.items():
-        prices[ticker] = result
-        sign = "+" if result["day"] >= 0 else ""
-        print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%  (batch)")
-    if batch:
-        print(f"  Batch returned {len(batch)}/{len(SYMBOL_MAP)}")
+    print("Fetching via spark endpoint (crumb-free, all symbols)…")
+    prices = fetch_spark_quotes()
+    if prices:
+        print(f"  Spark returned {len(prices)}/{len(SYMBOL_MAP)}")
 
-    # Per-ticker chart fallback for anything the batch missed (or if batch failed whole)
+    if len(prices) < len(SYMBOL_MAP):
+        print("Trying crumb-based batch quote for the remainder…")
+        batch = fetch_all_quotes()
+        for ticker, result in batch.items():
+            prices.setdefault(ticker, result)
+        if batch:
+            print(f"  After batch quote: {len(prices)}/{len(SYMBOL_MAP)}")
+
+    for ticker, result in list(prices.items()):
+        sign = "+" if result["day"] >= 0 else ""
+        src_tag = "batch"
+        print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%")
+
+    # Per-ticker chart fallback for anything both batch methods missed
     fallback = [t for t in SYMBOL_MAP if t not in prices]
     if fallback:
         print(f"\nPer-ticker fallback for {len(fallback)} symbol(s): {', '.join(fallback)}")
@@ -250,9 +307,9 @@ def main():
 
     print(f"\nFetched {len(prices)}/{len(SYMBOL_MAP)} prices")
 
-    # 1a. Second pass — if the batch failed wholesale and per-ticker calls got
-    # rate-limited (429), wait out the limit window and retry whatever is still
-    # missing. Previously these fell through to "keeping existing value", silently
+    # 1a. Second pass — if some tickers are still missing (e.g. all batch paths
+    # failed and per-ticker calls got 429'd), wait out the rate-limit window and
+    # retry. Previously these fell through to "keeping existing value", silently
     # leaving a prior-session close in App.jsx while the workflow reported success.
     missing = [t for t in SYMBOL_MAP if t not in prices]
     if missing:
