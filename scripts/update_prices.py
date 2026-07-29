@@ -75,15 +75,21 @@ HEADERS = random.choice(HEADERS_LIST)
 # left tickers on a stale prior-session close. Spark works from those runners.
 # Symbols are chunked (a 25-symbol URL 400s) into batches of 8.
 def fetch_spark_quotes() -> dict:
-    """Return {ticker: {px, day, ts}} via the crumb-free spark endpoint."""
+    """Return {ticker: {px, day, ts}} via the crumb-free spark endpoint.
+
+    Yahoo's spark endpoint sometimes returns HTTP 200 but silently omits some
+    requested symbols from the response body (seen on 29 Jul: 16/25 with no error).
+    So we check each chunk for the symbols we asked for and retry the shortfall —
+    first the same chunk once, then a final sweep of any still-missing symbols in
+    small pairs — before the caller falls through to the crumb/per-ticker paths.
+    """
     rev = {v: k for k, v in SYMBOL_MAP.items()}
-    syms = list(SYMBOL_MAP.values())
     ua = random.choice(HEADERS_LIST)["User-Agent"]
     out = {}
-    for i in range(0, len(syms), 8):
-        batch = syms[i:i + 8]
+
+    def pull(symbols) -> None:
         url = (f"https://query1.finance.yahoo.com/v7/finance/spark"
-               f"?symbols={urllib.parse.quote(','.join(batch))}&range=1d&interval=1d")
+               f"?symbols={urllib.parse.quote(','.join(symbols))}&range=1d&interval=1d")
         for host in ("query1", "query2"):
             u = url.replace("query1", host, 1) if host != "query1" else url
             try:
@@ -105,11 +111,28 @@ def fetch_spark_quotes() -> dict:
                         "day": round((px - pc) / pc * 100, 2) if pc else 0.0,
                         "ts": int(meta.get("regularMarketTime") or 0),
                     }
-                break  # this chunk succeeded on this host
+                return  # this host answered (even if partially)
             except Exception as e:
                 if host == "query2":
-                    print(f"  ⚠  spark chunk {i//8+1} failed on both hosts: {e}")
+                    print(f"  ⚠  spark request failed on both hosts for {len(symbols)} sym; {e}")
+
+    syms = list(SYMBOL_MAP.values())
+    # First pass in chunks of 8, retrying each chunk once if it comes back short.
+    for i in range(0, len(syms), 8):
+        batch = syms[i:i + 8]
+        pull(batch)
+        missing_in_chunk = [s for s in batch if rev[s] not in out]
+        if missing_in_chunk:
+            time.sleep(1.0)
+            pull(missing_in_chunk)
         time.sleep(0.3)
+    # Final sweep: any symbols still missing across the whole set, in pairs.
+    still = [s for s in syms if rev[s] not in out]
+    if still:
+        print(f"  spark: retrying {len(still)} still-missing symbol(s) in small batches…")
+        for i in range(0, len(still), 2):
+            pull(still[i:i + 2])
+            time.sleep(0.5)
     return out
 
 
