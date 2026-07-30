@@ -326,7 +326,10 @@ def main():
                 print(f"  ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%")
             else:
                 print(f"  ❌ {ticker:<14} fetch failed — keeping existing value")
-            time.sleep(0.6)
+            # 1.5s spacing: the /v8/chart endpoint works crumb-free for every ticker
+            # from GitHub runners; the ONLY failure mode is 429 from bursting requests
+            # too fast. Pacing wide enough avoids the rate limit rather than fighting it.
+            time.sleep(1.5)
 
     print(f"\nFetched {len(prices)}/{len(SYMBOL_MAP)} prices")
 
@@ -349,6 +352,25 @@ def main():
                 print(f"   ❌ {ticker:<14} still failing")
             time.sleep(2.0)
         print(f"\nAfter second pass: {len(prices)}/{len(SYMBOL_MAP)} prices")
+
+    # 1b. Third pass — a symbol that fails two passes (BDL has been the recurring
+    # straggler) gets one more attempt after a longer cooldown, spaced very wide.
+    # This is the last line of defence before we accept a prior-session close.
+    still_missing = [t for t in SYMBOL_MAP if t not in prices]
+    if still_missing:
+        print(f"\n⚠  {len(still_missing)} still missing after 2 passes: {', '.join(still_missing)}")
+        print("   Final cooldown 120s, then one more spaced retry…")
+        time.sleep(120)
+        for ticker in still_missing:
+            result = fetch_price(ticker, SYMBOL_MAP[ticker])
+            if result:
+                prices[ticker] = result
+                sign = "+" if result["day"] >= 0 else ""
+                print(f"   ✅ {ticker:<14} ₹{result['px']:>10.2f}  {sign}{result['day']:.2f}%  (3rd pass)")
+            else:
+                print(f"   ❌ {ticker:<14} still failing after 3 passes")
+            time.sleep(3.0)
+        print(f"\nAfter third pass: {len(prices)}/{len(SYMBOL_MAP)} prices")
 
     # Surface incomplete coverage as a GitHub Actions annotation so it is visible on
     # the run page — a "success" conclusion alone hid this failure mode before.
