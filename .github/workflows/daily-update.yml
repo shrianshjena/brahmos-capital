@@ -38,7 +38,33 @@ jobs:
           git config user.name  "brahmos-bot"
           git config user.email "brahmos-bot@brahmos-capital.vercel.app"
           DATE=$(TZ=Asia/Kolkata date '+%d %b %Y')
-          git add src/App.jsx
-          git commit -m "auto: daily price update ${DATE} [skip ci]"
-          git pull --rebase origin main
-          git push
+          # Retry loop: a manual review commit may land on main while this run is
+          # executing (the run takes several minutes, longer if the 2nd/3rd price
+          # passes hit cooldowns). If our push is rejected as non-fast-forward, or a
+          # rebase conflicts on the same STOCKS px lines, we re-sync to the latest
+          # main and re-apply the price patch on top — the freshly fetched close is
+          # authoritative for px/day — rather than failing the whole run.
+          for attempt in 1 2 3; do
+            git add src/App.jsx api/ai-content.js 2>/dev/null || git add src/App.jsx
+            git commit -m "auto: daily price update ${DATE} [skip ci]" || {
+              echo "Nothing to commit on attempt ${attempt}"; break; }
+            # Rebase onto latest main; on conflict, take latest main and re-patch.
+            if git pull --rebase origin main; then
+              :
+            else
+              echo "Rebase conflict on attempt ${attempt} — re-syncing to main and re-applying price patch"
+              git rebase --abort || true
+              git reset --hard origin/main
+              git pull origin main
+              python scripts/update_prices.py
+              git add src/App.jsx api/ai-content.js 2>/dev/null || git add src/App.jsx
+              git diff --cached --quiet && { echo "Already current after re-sync — nothing to push"; exit 0; }
+              git commit -m "auto: daily price update ${DATE} [skip ci]"
+            fi
+            if git push; then
+              echo "Pushed successfully on attempt ${attempt}"; exit 0
+            fi
+            echo "Push rejected on attempt ${attempt} — retrying"
+            sleep 5
+          done
+          echo "::warning title=Auto-push contention::Could not push after 3 attempts (likely a concurrent manual commit); prices will refresh on the next run."
