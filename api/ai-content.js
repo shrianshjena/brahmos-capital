@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:34.4,BEL:46.6,MAZDOCK:36.0,COCHINSHIP:53.1,GRSE:43.0,BDL:109.7,DATAPATTNS:92.4,
-  PARAS:118.2,ZENTEC:82.9,SOLARINDS:100.5,MTAR:138.1,BHARATFORG:97.6,ASTRAMICRO:91.1,BEML:102.7,
-  APOLLOMICRO:125.7,MIDHANI:57.6,IDEAFORGE:null,PREMEXPLN:77.9,UNIMECH:101.9,PTCIND:266.8,DCXINDIA:null,
-  DYNAMATECH:226.3,AVANTEL:388.1,AXISCADES:93.7,CYIENTDLM:65.1,
+  HAL:36.0,BEL:47.6,MAZDOCK:38.1,COCHINSHIP:54.7,GRSE:37.2,BDL:112.9,DATAPATTNS:91.5,
+  PARAS:121.0,ZENTEC:86.6,SOLARINDS:99.5,MTAR:161.5,BHARATFORG:97.7,ASTRAMICRO:88.6,BEML:101.2,
+  APOLLOMICRO:128.6,MIDHANI:61.8,IDEAFORGE:null,PREMEXPLN:77.8,UNIMECH:108.0,PTCIND:266.7,DCXINDIA:null,
+  DYNAMATECH:241.2,AVANTEL:391.5,AXISCADES:96.8,CYIENTDLM:64.1,
 };
 
 async function fetchPrice(sym) {
@@ -106,8 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 3 August 2026, including:
-- US-IRAN (unresolved, war premium elevated into August, 3 Aug): Brent closed July ~$88 (+~24% MTD) after late-July diplomacy collapsed (US struck dozens of IRGC sites, no deal, Tehran insists on Hormuz control); Houthi Red Sea attacks + Saudi strikes continue. Counterweight: OPEC+ raising output a 5th straight month in August (~188kbpd core), pre-war surplus caps upside. Brent high-$80s a negative for India.
+You have full knowledge of events as of 6 August 2026, including:
+- US-IRAN (DE-ESCALATING sharply, 6 Aug): Trump called off a planned strike ('perimeters of a deal' agreed); Iran+Oman reached a temporary Hormuz shipping-route deal (2-4 months, not a full reopening); US/Iran/Oman close to a 60-day interim deal to reopen without tolls. Brent fell 3 sessions to ~$77 (off late-July ~$92); Saudi Aramco cut Asian price, US inventories rebounded. Houthi Red Sea attacks continue. Read-through: Indian defence rallied EVEN AS war premium drained — domestic orders/Budget capex drive it now; lower crude helps India.
+- SECTOR (6 Aug): HAL/Mazagon/GRSE +up to 7% in a session on hopes of a 20-25% defence capex hike in the Union Budget. Apollo Micro won ₹213 Cr orders (DRDO/PSUs/private) + IPREK Prime Development Agency empanelment. Risk: HAL fining GE over a ~$716m engine crisis constraining Tejas Mk-1A.
 - ASTRA MICROWAVE ₹2,205 Cr HAL ORDER (31 Jul): transformational order for 122 AAAU + 121 interface frames for the indigenous Uttam AESA radar (5-yr execution), larger than Astra's entire prior order book; stock +14% to record high, Q1 FY27 on 10 Aug. Mazagon Q1: PAT ₹550 Cr (+22% YoY), revenue +12%, EBITDA +48%, Antique BUY ₹3,275.
 - Q1 FY27 RESULTS (27 Jul): BEL net profit ₹1,054 Cr (+8.7% YoY), revenue +25% YoY, FY27 margin guide 27%+ reiterated; Zen fell ~9% on an earnings miss. QRSAM expected Q2 FY27.
 - CATALYST: MOFSL expects BEL to win the ~₹30,000 Cr QRSAM order within weeks; cascades to BDL, ASTRAMICRO, APOLLOMICRO. BROKER SPLIT: Kotak SELL Mazagon (₹1,950)/Solar (₹10,300), REDUCE BEL, ADD HAL (₹4,810); Antique Buy across the board. Stock selection > sector beta.
