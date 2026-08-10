@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:36.0,BEL:47.6,MAZDOCK:38.1,COCHINSHIP:54.7,GRSE:37.2,BDL:112.9,DATAPATTNS:91.5,
-  PARAS:121.0,ZENTEC:86.6,SOLARINDS:99.5,MTAR:161.5,BHARATFORG:97.7,ASTRAMICRO:88.6,BEML:101.2,
-  APOLLOMICRO:128.6,MIDHANI:61.8,IDEAFORGE:null,PREMEXPLN:77.8,UNIMECH:108.0,PTCIND:266.7,DCXINDIA:null,
-  DYNAMATECH:241.2,AVANTEL:391.5,AXISCADES:96.8,CYIENTDLM:64.1,
+  HAL:36.0,BEL:47.9,MAZDOCK:37.9,COCHINSHIP:55.9,GRSE:37.1,BDL:112.3,DATAPATTNS:91.6,
+  PARAS:116.1,ZENTEC:85.9,SOLARINDS:101.0,MTAR:162.0,BHARATFORG:100.0,ASTRAMICRO:90.9,BEML:83.7,
+  APOLLOMICRO:127.9,MIDHANI:62.0,IDEAFORGE:null,PREMEXPLN:75.8,UNIMECH:116.2,PTCIND:278.1,DCXINDIA:null,
+  DYNAMATECH:233.9,AVANTEL:388.8,AXISCADES:95.1,CYIENTDLM:66.1,
 };
 
 async function fetchPrice(sym) {
@@ -106,8 +106,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 6 August 2026, including:
-- US-IRAN (DE-ESCALATING sharply, 6 Aug): Trump called off a planned strike ('perimeters of a deal' agreed); Iran+Oman reached a temporary Hormuz shipping-route deal (2-4 months, not a full reopening); US/Iran/Oman close to a 60-day interim deal to reopen without tolls. Brent fell 3 sessions to ~$77 (off late-July ~$92); Saudi Aramco cut Asian price, US inventories rebounded. Houthi Red Sea attacks continue. Read-through: Indian defence rallied EVEN AS war premium drained — domestic orders/Budget capex drive it now; lower crude helps India.
+You have full knowledge of events as of 10 August 2026, including:
+- US-IRAN (talks stall on Iranian conditions, oil rebounds, 10 Aug): Tehran said Oman talks 'nearing agreement' but warned NO immediate Hormuz reopening; Iran rejected direct US negotiations for now (citing June-deal breaches), demanding blockade end/sanctions relief/war-damage compensation. FM Araghchi: not in direct talks with US, contradicting US 'deal near' claims. Houthis hit Saudi's Jazan refinery; ADNOC tanker attacked in Hormuz. Brent back above $84 (3rd straight up session), off last week's slide. Sector's own drivers (Budget capex, orders) in control.
+- ASTRA Q1 FY27: board meeting 10 Aug, earnings call 11 Aug (results imminent).
 - SECTOR (6 Aug): HAL/Mazagon/GRSE +up to 7% in a session on hopes of a 20-25% defence capex hike in the Union Budget. Apollo Micro won ₹213 Cr orders (DRDO/PSUs/private) + IPREK Prime Development Agency empanelment. Risk: HAL fining GE over a ~$716m engine crisis constraining Tejas Mk-1A.
 - ASTRA MICROWAVE ₹2,205 Cr HAL ORDER (31 Jul): transformational order for 122 AAAU + 121 interface frames for the indigenous Uttam AESA radar (5-yr execution), larger than Astra's entire prior order book; stock +14% to record high, Q1 FY27 on 10 Aug. Mazagon Q1: PAT ₹550 Cr (+22% YoY), revenue +12%, EBITDA +48%, Antique BUY ₹3,275.
 - Q1 FY27 RESULTS (27 Jul): BEL net profit ₹1,054 Cr (+8.7% YoY), revenue +25% YoY, FY27 margin guide 27%+ reiterated; Zen fell ~9% on an earnings miss. QRSAM expected Q2 FY27.
