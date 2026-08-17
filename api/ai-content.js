@@ -65,8 +65,9 @@ async function callGroq(apiKey, prompt) {
             { role:"system", content:"You are a senior Indian equity research analyst. Return ONLY valid JSON — no markdown, no explanation, no preamble." },
             { role:"user", content:prompt }
           ],
-          max_tokens:2000,
+          max_tokens:4000,
           temperature:0.4,
+          reasoning_effort:"low",
           stream:false,
           response_format: { type: "json_object" }
         }),

@@ -35,8 +35,9 @@ async function callGroq(apiKey, prompt) {
             { role:"system", content:"You are a geopolitical risk analyst for Indian defence stocks. Return ONLY valid JSON — no markdown, no explanation." },
             { role:"user", content:prompt }
           ],
-          max_tokens:2500,
+          max_tokens:4000,
           temperature:0.4,
+          reasoning_effort:"low",
           stream:false
         }),
       });
