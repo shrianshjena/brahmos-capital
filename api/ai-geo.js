@@ -20,7 +20,8 @@ async function fetchGeoNews() {
   return [...allTitles].slice(0, 20);
 }
 
-// Groq only — Gemini quota reserved exclusively for Ask Shri
+// Primary: Groq (gpt-oss). Falls back to Gemini if Groq is unavailable
+// (e.g. a model decommission or outage) so the geo feed never goes fully dark.
 async function callGroq(apiKey, prompt) {
   if (!apiKey) return null;
   const models = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
@@ -50,10 +51,37 @@ async function callGroq(apiKey, prompt) {
   return null;
 }
 
+// Fallback only (used when Groq yields nothing). Kept lightweight to preserve
+// Gemini quota for Ask Shri under normal operation.
+async function callGemini(apiKey, prompt) {
+  if (!apiKey) return null;
+  const models = ["gemini-2.0-flash", "gemini-2.5-flash"];
+  for (const model of models) {
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          systemInstruction:{ parts:[{ text:"You are a geopolitical risk analyst for Indian defence stocks. Return ONLY valid JSON — no markdown, no explanation." }] },
+          contents:[{ role:"user", parts:[{ text:prompt }] }],
+          generationConfig:{ maxOutputTokens:4000, temperature:0.4, thinkingConfig:{ thinkingBudget:0 } },
+        }),
+      });
+      const d = await r.json();
+      if (d.error) continue;
+      const parts = d?.candidates?.[0]?.content?.parts || [];
+      const t = parts.filter(p => !p.thought).map(p => p.text || "").join("").trim();
+      if (t && t.length > 100) return t;
+    } catch { continue; }
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
-  const groqKey = process.env.GROQ_API_KEY;
-  if (!groqKey) {
-    return res.status(500).json({ ok: false, error: "GROQ_API_KEY not configured" });
+  const groqKey   = process.env.GROQ_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!groqKey && !geminiKey) {
+    return res.status(500).json({ ok: false, error: "No LLM API key configured" });
   }
 
   const headlines = await fetchGeoNews();
@@ -104,7 +132,9 @@ Rules:
 - Return ONLY the JSON array. Nothing else.`;
 
   try {
-    let raw = await callGroq(groqKey, prompt) || "";
+    let raw = await callGroq(groqKey, prompt);
+    if (!raw) raw = await callGemini(geminiKey, prompt);   // fallback if Groq is down
+    raw = raw || "";
     raw = raw.replace(/```json\s*/g,"").replace(/```\s*/g,"").trim();
     // Sanitize literal control chars that Groq/Llama sometimes emits in JSON strings
     raw = raw.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, " ");
