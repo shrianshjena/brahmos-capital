@@ -53,7 +53,7 @@ async function fetchNewsHeadlines() {
 // Groq only — Gemini quota reserved exclusively for Ask Shri
 async function callGroq(apiKey, prompt) {
   if (!apiKey) return null;
-  const models = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"];
+  const models = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"];
   for (const model of models) {
     try {
       const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
