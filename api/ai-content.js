@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:36.3,BEL:49.2,MAZDOCK:38.6,COCHINSHIP:53.5,GRSE:37.2,BDL:96.8,DATAPATTNS:95.0,
-  PARAS:118.6,ZENTEC:92.9,SOLARINDS:91.0,MTAR:164.0,BHARATFORG:140.8,ASTRAMICRO:86.1,BEML:89.3,
-  APOLLOMICRO:115.5,MIDHANI:59.4,IDEAFORGE:883.4,PREMEXPLN:78.8,UNIMECH:106.7,PTCIND:245.6,DCXINDIA:null,
-  DYNAMATECH:177.5,AVANTEL:366.3,AXISCADES:92.6,CYIENTDLM:71.5,
+  HAL:36.0,BEL:48.7,MAZDOCK:38.6,COCHINSHIP:57.5,GRSE:37.8,BDL:94.9,DATAPATTNS:99.8,
+  PARAS:127.2,ZENTEC:96.5,SOLARINDS:89.2,MTAR:159.0,BHARATFORG:140.8,ASTRAMICRO:86.0,BEML:91.8,
+  APOLLOMICRO:115.8,MIDHANI:59.3,IDEAFORGE:897.0,PREMEXPLN:78.1,UNIMECH:106.2,PTCIND:234.3,DCXINDIA:null,
+  DYNAMATECH:188.1,AVANTEL:390.1,AXISCADES:107.7,CYIENTDLM:69.4,
 };
 
 async function fetchPrice(sym) {
@@ -135,8 +135,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 17 August 2026, including:
-- US-IRAN (ceasefire expires, US escalates to economic warfare, 17 Aug): the interim ceasefire formally expires today with no successor deal; Treasury Sec Bessent said the US will impose 'unprecedented economic measures' + keep the naval blockade, Trump preparing new sanctions to force Iran to 'surrender'. Tehran: blockade must lift before Hormuz reopens; Iran-Oman talks unresolved. Widening: Israel struck Lebanon (11 killed); Houthis hit Saudi's Jazan refinery. IEA warns widest global supply deficit in 5 years for 2026. Brent held above $88 (+5% last week, +~33% YoY), a persistent negative for India. Sector's own drivers (Budget capex, orders) in control.
+You have full knowledge of events as of 19 August 2026, including:
+- US-IRAN (widening, oil climbs toward $92, 19 Aug): with the ceasefire lapsed and no talks, Brent climbed toward $92 (4th straight up session). UAE suspended ALL financial/economic transactions with Iran after accusing Tehran of a ballistic-missile attack. Trump: no ongoing negotiations, naval blockade remains; claims Hormuz open but traffic very limited. 3 China-linked supertankers turned back; ~8 attacks on Hormuz ships this month. US refinery activity highest since Sept 2019. War premium firm; sector's own drivers (Budget capex, orders) in control; Brent ~$92 a growing negative for India.
+- SECTOR (18 Aug): MoD notified its sixth Positive Indigenisation List (SRIJAN portal — 33,000+ items offered, 15,700+ indigenised, ~₹9,000 Cr import substitution) reinforcing the Atmanirbhar/localisation theme for BEL/HAL/BDL.
 - ASTRA Q1 FY27 (reported 10 Aug): consolidated PAT ₹12 Cr (-24% YoY), revenue ₹177 Cr (-11.5% YoY), EBITDA margin 18.7% on execution delays, stock -6-9%; BUT record order book ₹2,849 Cr (multi-year visibility). MD S.G. Reddy exits 30 Sep, Dr M.V. Reddy MD from 1 Oct.
 - SECTOR (6 Aug): HAL/Mazagon/GRSE +up to 7% in a session on hopes of a 20-25% defence capex hike in the Union Budget. Apollo Micro won ₹213 Cr orders (DRDO/PSUs/private) + IPREK Prime Development Agency empanelment. Risk: HAL fining GE over a ~$716m engine crisis constraining Tejas Mk-1A.
 - ASTRA MICROWAVE ₹2,205 Cr HAL ORDER (31 Jul): transformational order for 122 AAAU + 121 interface frames for the indigenous Uttam AESA radar (5-yr execution), larger than Astra's entire prior order book; stock +14% to record high, Q1 FY27 on 10 Aug. Mazagon Q1: PAT ₹550 Cr (+22% YoY), revenue +12%, EBITDA +48%, Antique BUY ₹3,275.
