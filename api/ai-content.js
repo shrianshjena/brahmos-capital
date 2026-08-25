@@ -179,7 +179,7 @@ Return this exact JSON structure:
 }
 
 Rules:
-- Targets should be 10-35% above current price for BUY stocks, realistic for HOLD/REDUCE
+- Use realistic analyst price targets grounded in actual recent broker research, NOT anchored to the current price. A target may imply upside OR downside — if a stock trades above fair value after a strong run, an honest target below the current price is correct. Do not inflate targets to manufacture upside.
 - buy+hold+sell should roughly add to ~20 analysts per stock
 - Brokers from: Motilal, HDFC Sec, Kotak, Emkay, ICICI Sec, Axis, Jefferies, Nomura, CLSA, Prabhudas
 - Return ONLY the JSON. No markdown fences. No text before or after.`;
