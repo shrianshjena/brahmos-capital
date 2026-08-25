@@ -19,31 +19,31 @@ function rng(s){let v=s;return()=>{v=(v*16807)%2147483647;return(v-1)/2147483646
 function mkSpark(seed,up){const r=rng(seed);const p=[100];for(let i=1;i<24;i++)p.push(Math.max(68,p[i-1]+(up?.5:-.2)+(r()-.46)*4));return p.map(v=>({v}));}
 
 const STOCKS=[
-  {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4906.0, day:-1.88,pe:35.8,pb:8.1, roe:24.0,mc:3344,  ob:1855,seed:1001,sector:"Aerospace"},
-  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:409.0, day:-1.21,pe:49.3,pb:12.6, roe:27.6,mc:3026,  ob:740, seed:1002,sector:"Electronics"},
-  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2540.0, day:-0.47,pe:38.5,pb:10.6, roe:28.8,mc:1029,  ob:380, seed:1003,sector:"Naval"},
-  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1514.0, day:2.26,pe:57.1,pb:6.6, roe:12.5,mc:389,  ob:220, seed:1004,sector:"Naval"},
-  {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2596.1, day:-0.21,pe:37.2,pb:11.3, roe:31.8,mc:298,  ob:250, seed:1005,sector:"Naval"},
-  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1368.0, day:0.66,pe:95.2,pb:11.7, roe:9.9,mc:498,  ob:225, seed:1006,sector:"Missiles"},
-  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4736.2, day:-1.94,pe:101.0,pb:15.6, roe:16.7,mc:270,  ob:14,  seed:1007,sector:"Electronics"},
-  {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1520.0, day:1.36,pe:128.2,pb:16.6, roe:13.1,mc:121,  ob:8,  seed:1008,sector:"Space"},
-  {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1903.3, day:-1.19,pe:96.2,pb:9.6, roe:11.8,mc:173,  ob:12,  seed:1009,sector:"Electronics"},
-  {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:19925.0, day:0.13,pe:90.1,pb:28.7, roe:31.3,mc:1801,  ob:54,seed:2001,sector:"Explosives"},
-  {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:6812.0, day:-3.09,pe:161.3,pb:26.3, roe:12.6,mc:216,  ob:9, seed:2002,sector:"Aerospace"},
-  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:2041.0, day:-1.07,pe:138.9,pb:10.3, roe:11.6,mc:986,  ob:70,seed:2003,sector:"Forgings"},
-  {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1664.9, day:0.16,pe:84.0,pb:12.0, roe:16.5,mc:158,  ob:6, seed:2004,sector:"Electronics"},
-  {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1915.0, day:-1.05,pe:90.1,pb:5.5, roe:5.1,mc:161,  ob:14, seed:2005,sector:"Vehicles"},
-  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:385.15, day:0.16,pe:114.8,pb:10.1, roe:11.2,mc:143,  ob:8, seed:2006,sector:"Electronics"},
-  {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:418.1, day:-1.38,pe:58.8,pb:5.2, roe:8.9,mc:79,  ob:6, seed:2007,sector:"Materials"},
-  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:796.45, day:-1.98,pe:912.9,pb:5.9, roe:-2.8,mc:40,  ob:3, seed:2008,sector:"Drones"},
-  {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:667.35, day:0.33,pe:106.4,pb:12.4, roe:16.5,mc:36,  ob:4, seed:2009,sector:"Explosives"},
-  {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1499.4, day:0.54,pe:105.3,pb:10.3, roe:9.0,mc:76,  ob:2, seed:2010,sector:"Aerospace"},
-  {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:21672.0, day:5.06,pe:243.9,pb:20.5, roe:7.2,mc:309,  ob:3, seed:2011,sector:"Aerospace"},
-  {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:175.72, day:0.13,pe:null,pb:1.2, roe:-0.5,mc:20,  ob:7, seed:2012,sector:"Electronics"},
-  {ticker:"DYNAMATECH", name:"Dynamatic Technologies",    sub:"Aerospace Structures · UAV",   shares:30,  buy:3800, px:11646.0, day:0.5,pe:185.2,pb:9.9, roe:4.3,mc:79,  ob:4, seed:2013,sector:"Aerospace"},
-  {ticker:"AVANTEL",    name:"Avantel Ltd",               sub:"Satellite Comms · Defence",    shares:600, buy:95,   px:158.66, day:-0.97,pe:381.5,pb:12.6, roe:5.2,mc:43,  ob:2, seed:2014,sector:"Electronics"},
-  {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1556.9, day:-2.54,pe:107.5,pb:9.4, roe:10.4,mc:68,  ob:3, seed:2015,sector:"Aerospace"},
-  {ticker:"CYIENTDLM",  name:"Cyient DLM",                sub:"PCB · Defence Electronics",    shares:200, buy:850,  px:735.85, day:2.04,pe:69.9,pb:5.7, roe:7.5,mc:57,  ob:1, seed:2016,sector:"Electronics"},
+  {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4900.0, day:-0.12,pe:35.8,pb:8.1, roe:24.0,mc:3344,  ob:1855,seed:1001,sector:"Aerospace"},
+  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:413.25, day:1.04,pe:49.3,pb:12.6, roe:27.6,mc:3026,  ob:740, seed:1002,sector:"Electronics"},
+  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2610.0, day:2.76,pe:38.5,pb:10.6, roe:28.8,mc:1029,  ob:380, seed:1003,sector:"Naval"},
+  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1518.5, day:0.3,pe:57.1,pb:6.6, roe:12.5,mc:389,  ob:220, seed:1004,sector:"Naval"},
+  {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2607.5, day:0.44,pe:37.2,pb:11.3, roe:31.8,mc:298,  ob:250, seed:1005,sector:"Naval"},
+  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1359.9, day:-0.59,pe:95.2,pb:11.7, roe:9.9,mc:498,  ob:225, seed:1006,sector:"Missiles"},
+  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4542.3, day:-4.09,pe:101.0,pb:15.6, roe:16.7,mc:270,  ob:14,  seed:1007,sector:"Electronics"},
+  {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1445.2, day:-4.92,pe:128.2,pb:16.6, roe:13.1,mc:121,  ob:8,  seed:1008,sector:"Space"},
+  {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1877.7, day:-1.35,pe:96.2,pb:9.6, roe:11.8,mc:173,  ob:12,  seed:1009,sector:"Electronics"},
+  {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:19800.0, day:-0.63,pe:90.1,pb:28.7, roe:31.3,mc:1801,  ob:54,seed:2001,sector:"Explosives"},
+  {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:6928.5, day:1.71,pe:161.3,pb:26.3, roe:12.6,mc:216,  ob:9, seed:2002,sector:"Aerospace"},
+  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:2052.5, day:0.56,pe:138.9,pb:10.3, roe:11.6,mc:986,  ob:70,seed:2003,sector:"Forgings"},
+  {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1708.0, day:2.59,pe:84.0,pb:12.0, roe:16.5,mc:158,  ob:6, seed:2004,sector:"Electronics"},
+  {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1923.0, day:0.42,pe:90.1,pb:5.5, roe:5.1,mc:161,  ob:14, seed:2005,sector:"Vehicles"},
+  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:389.65, day:1.17,pe:114.8,pb:10.1, roe:11.2,mc:143,  ob:8, seed:2006,sector:"Electronics"},
+  {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:414.4, day:-0.88,pe:58.8,pb:5.2, roe:8.9,mc:79,  ob:6, seed:2007,sector:"Materials"},
+  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:788.8, day:-0.96,pe:912.9,pb:5.9, roe:-2.8,mc:40,  ob:3, seed:2008,sector:"Drones"},
+  {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:665.55, day:-0.27,pe:106.4,pb:12.4, roe:16.5,mc:36,  ob:4, seed:2009,sector:"Explosives"},
+  {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1473.5, day:-1.73,pe:105.3,pb:10.3, roe:9.0,mc:76,  ob:2, seed:2010,sector:"Aerospace"},
+  {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:21116.0, day:-2.57,pe:243.9,pb:20.5, roe:7.2,mc:309,  ob:3, seed:2011,sector:"Aerospace"},
+  {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:173.76, day:-1.12,pe:null,pb:1.2, roe:-0.5,mc:20,  ob:7, seed:2012,sector:"Electronics"},
+  {ticker:"DYNAMATECH", name:"Dynamatic Technologies",    sub:"Aerospace Structures · UAV",   shares:30,  buy:3800, px:11514.0, day:-1.13,pe:185.2,pb:9.9, roe:4.3,mc:79,  ob:4, seed:2013,sector:"Aerospace"},
+  {ticker:"AVANTEL",    name:"Avantel Ltd",               sub:"Satellite Comms · Defence",    shares:600, buy:95,   px:157.78, day:-0.55,pe:381.5,pb:12.6, roe:5.2,mc:43,  ob:2, seed:2014,sector:"Electronics"},
+  {ticker:"AXISCADES",  name:"Axiscades Technologies",    sub:"Aerospace Engineering R&D",    shares:250, buy:450,  px:1604.1, day:3.03,pe:107.5,pb:9.4, roe:10.4,mc:68,  ob:3, seed:2015,sector:"Aerospace"},
+  {ticker:"CYIENTDLM",  name:"Cyient DLM",                sub:"PCB · Defence Electronics",    shares:200, buy:850,  px:769.35, day:4.55,pe:69.9,pb:5.7, roe:7.5,mc:57,  ob:1, seed:2016,sector:"Electronics"},
 ].map(s=>({...s,mktVal:s.shares*s.px,cost:s.shares*s.buy,ret:((s.px-s.buy)/s.buy)*100,spark:mkSpark(s.seed,s.px>s.buy)}));
 
 const TOTVAL=STOCKS.reduce((a,s)=>a+s.mktVal,0);
@@ -1119,7 +1119,7 @@ function GeoView({geoCards,geoAiStatus}){
     <div style={{padding:"24px 28px"}}>
       <div style={{background:"linear-gradient(90deg,rgba(255,69,58,0.1),transparent)",borderRadius:14,padding:"14px 20px",border:"1px solid rgba(255,69,58,0.25)",marginBottom:18,display:"flex",gap:12,alignItems:"center"}}>
         <Flame size={15} color={A.red}/>
-        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 24 Aug 2026 — US-Iran war (possible inflection, Iran signals war-end, Brent ~$94), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
+        <p style={{fontSize:13,color:A.t2}}><span style={{color:A.t1,fontWeight:600}}>4 simultaneous active conflicts</span> as of 25 Aug 2026 — US-Iran war (possible inflection, Iran signals war-end, Brent ~$94), Russia-Ukraine Year 4, Gaza Year 3, South China Sea escalation. Global military spending at $2.65 trillion and growing at 8.6% CAGR. India sits at the intersection of every major flashpoint.</p>
       </div>
       {liveGeo.length>0&&(
         <div style={{background:A.card,borderRadius:14,padding:"14px 18px",border:"1px solid rgba(48,209,88,0.2)",marginBottom:16}}>
