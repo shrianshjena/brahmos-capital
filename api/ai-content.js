@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:35.8,BEL:49.3,MAZDOCK:38.5,COCHINSHIP:57.1,GRSE:37.2,BDL:95.2,DATAPATTNS:101.0,
-  PARAS:128.2,ZENTEC:96.2,SOLARINDS:90.1,MTAR:161.3,BHARATFORG:138.9,ASTRAMICRO:84.0,BEML:90.1,
-  APOLLOMICRO:114.8,MIDHANI:58.8,IDEAFORGE:912.9,PREMEXPLN:106.4,UNIMECH:105.3,PTCIND:243.9,DCXINDIA:null,
-  DYNAMATECH:185.2,AVANTEL:381.5,AXISCADES:107.5,CYIENTDLM:69.9,
+  HAL:35.2,BEL:49.3,MAZDOCK:39.0,COCHINSHIP:58.7,GRSE:37.3,BDL:95.6,DATAPATTNS:94.9,
+  PARAS:125.1,ZENTEC:92.8,SOLARINDS:90.3,MTAR:158.9,BHARATFORG:139.6,ASTRAMICRO:86.3,BEML:88.7,
+  APOLLOMICRO:117.7,MIDHANI:57.6,IDEAFORGE:896.4,PREMEXPLN:106.1,UNIMECH:105.1,PTCIND:249.8,DCXINDIA:null,
+  DYNAMATECH:184.0,AVANTEL:366.9,AXISCADES:105.7,CYIENTDLM:75.6,
 };
 
 async function fetchPrice(sym) {
@@ -135,8 +135,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 21 August 2026, including:
-- US-IRAN (possible inflection, Iran's president signals war-end, Brent ~$94, 21 Aug): the most conciliatory signal from Tehran in weeks — President Pezeshkian said Iran wants the war to end soon ('better to end the war today' while 'in a position of power'), calling the June 17 MoU a victory. Markets read a potential inflection, though Treasury Sec Bessent countered with a 'toughest-ever sanctions' threat. Brent closed ~$94 Friday (+5-6% for a 2nd straight week, highest since July); US military helped move 660M+ barrels through Hormuz since early May. De-escalation would drain the war premium but the sector's domestic drivers (Budget capex, orders, indigenisation) stay intact; Brent ~$94 a headwind for India.
+You have full knowledge of events as of 25 August 2026, including:
+- US-IRAN (rhetoric re-hardens, Brent ~$94, 25 Aug): Friday's conciliatory signal proved short-lived. Iran's new security chief Rezaei threatened to halt ALL oil movement through Hormuz if neighbours help the US weaken Tehran's economy; Iran published enforcement protocols (violating vessels face fines/detention). Treasury Sec Bessent promised an 'economic D-Day' with fresh sanctions as talks stay at a stalemate. Brent held ~$94. Structurally, more crude now leaves via a southern Oman-coast route, eroding Iran's leverage. War premium in place; sector's own drivers (Budget capex, orders, indigenisation) in control.
+- SECTOR (24 Aug): HAL's Tejas Mk-1A execution is constrained by GE F404 engine deliveries (~6 of 99 arrived since 2021; ~30 airframes built/flown/tested awaiting engines); HAL ~₹4,906, ~4.7% below its 17 Aug ATH. Order-book CONVERSION (BDL converted just 2.2% of its OB to revenue in Q1 vs Mazagon's 16.2%) is the key execution variable, not just backlog size.
 - SECTOR (18 Aug): MoD notified its sixth Positive Indigenisation List (SRIJAN portal — 33,000+ items offered, 15,700+ indigenised, ~₹9,000 Cr import substitution) reinforcing the Atmanirbhar/localisation theme for BEL/HAL/BDL.
 - ASTRA Q1 FY27 (reported 10 Aug): consolidated PAT ₹12 Cr (-24% YoY), revenue ₹177 Cr (-11.5% YoY), EBITDA margin 18.7% on execution delays, stock -6-9%; BUT record order book ₹2,849 Cr (multi-year visibility). MD S.G. Reddy exits 30 Sep, Dr M.V. Reddy MD from 1 Oct.
 - SECTOR (6 Aug): HAL/Mazagon/GRSE +up to 7% in a session on hopes of a 20-25% defence capex hike in the Union Budget. Apollo Micro won ₹213 Cr orders (DRDO/PSUs/private) + IPREK Prime Development Agency empanelment. Risk: HAL fining GE over a ~$716m engine crisis constraining Tejas Mk-1A.
