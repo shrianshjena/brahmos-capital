@@ -2,8 +2,16 @@ name: Daily Market Update
 
 on:
   schedule:
-    # 10:30 UTC = 16:00 IST — 30 min after NSE close (15:30 IST)
+    # Primary: 10:30 UTC = 16:00 IST — 30 min after NSE close (15:30 IST).
     - cron: '30 10 * * 1-5'
+    # Backup: 13:30 UTC = 19:00 IST. GitHub throttles/drops scheduled runs under
+    # load (observed late-Aug 2026: primary runs firing 6-10h late, one dropped).
+    # This second fire is a safety net — if the primary already updated prices the
+    # backup finds no diff and exits without committing (and the "as of" banner /
+    # session-date labeling is driven by the market timestamp, so a later run for
+    # the same session stays correctly dated). Both are guarded by the no-change
+    # check, so a redundant run is harmless.
+    - cron: '30 13 * * 1-5'
   # Allow manual trigger from GitHub Actions UI
   workflow_dispatch:
 
@@ -37,7 +45,9 @@ jobs:
         run: |
           git config user.name  "brahmos-bot"
           git config user.email "brahmos-bot@brahmos-capital.vercel.app"
-          DATE=$(TZ=Asia/Kolkata date '+%d %b %Y')
+          # Prefer the session date the updater resolved from the exchange timestamp
+          # (immune to GitHub cron drift past IST midnight); fall back to wall-clock.
+          DATE="${SESSION_DATE:-$(TZ=Asia/Kolkata date '+%d %b %Y')}"
           # Retry loop: a manual review commit may land on main while this run is
           # executing (the run takes several minutes, longer if the 2nd/3rd price
           # passes hit cooldowns). If our push is rejected as non-fast-forward, or a

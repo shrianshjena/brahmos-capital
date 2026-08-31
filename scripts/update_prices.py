@@ -5,6 +5,7 @@ Runs via GitHub Action at 16:00 IST (30 min after NSE close).
 Fetches closing prices from Yahoo Finance and patches src/App.jsx.
 """
 
+import os
 import re
 import time
 import json
@@ -414,6 +415,31 @@ def main():
             print("\n✅ All quotes now current after retry.")
     else:
         print("✅ Staleness check passed — all quotes from the latest session.")
+
+    # 1c. Derive the label date from the MARKET SESSION, not wall-clock execution
+    # time. GitHub sometimes fires this scheduled job many hours late (cron drift
+    # under load); when a run lands after ~18:30 UTC it is already the next calendar
+    # day in IST, which previously mislabeled the commit/banner by +1 day (e.g. a
+    # Fri-session run firing 21:00 UTC Fri = 02:30 IST Sat was tagged "Sat"). The
+    # fetched quotes carry the exchange's own regularMarketTime ("ts"); the latest
+    # of those is the true session date regardless of when the job actually runs.
+    session_ts = max((r.get("ts") or 0) for r in prices.values()) if prices else 0
+    if session_ts:
+        session_date = datetime.fromtimestamp(session_ts, ist)
+        session_str = session_date.strftime("%-d %b %Y")
+        if session_str != date_str:
+            print(f"   ⓘ  Label date corrected to session date {session_str} "
+                  f"(wall-clock IST was {date_str} — run fired late)")
+        date_str = session_str
+    # Expose the resolved session date to the workflow so the commit message matches
+    # the banner (and is immune to the same wall-clock drift in the YAML).
+    gh_env = os.environ.get("GITHUB_ENV")
+    if gh_env:
+        try:
+            with open(gh_env, "a", encoding="utf-8") as fh:
+                fh.write(f"SESSION_DATE={date_str}\n")
+        except OSError:
+            pass
 
     # 2. Read App.jsx
     with open(APP_JSX, "r", encoding="utf-8") as f:
