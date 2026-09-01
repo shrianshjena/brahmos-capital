@@ -20,7 +20,7 @@ function mkSpark(seed,up){const r=rng(seed);const p=[100];for(let i=1;i<24;i++)p
 
 const STOCKS=[
   {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4807.6, day:0.12,pe:34.4,pb:7.8, roe:24.0,mc:3211,  ob:1855,seed:1001,sector:"Aerospace"},
-  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:414.45, day:0.62,pe:49.3,pb:12.6, roe:27.6,mc:3030,  ob:740, seed:1002,sector:"Electronics"},
+  {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:411.2, day:-0.78,pe:49.3,pb:12.6, roe:27.6,mc:3030,  ob:740, seed:1002,sector:"Electronics"},
   {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2485.0, day:0.2,pe:37.3,pb:10.3, roe:28.8,mc:1000,  ob:380, seed:1003,sector:"Naval"},
   {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1475.9, day:-2.26,pe:58.5,pb:6.8, roe:12.5,mc:397,  ob:220, seed:1004,sector:"Naval"},
   {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2530.2, day:-1.38,pe:36.8,pb:11.2, roe:31.8,mc:294,  ob:250, seed:1005,sector:"Naval"},
@@ -35,7 +35,7 @@ const STOCKS=[
   {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1970.2, day:1.76,pe:90.3,pb:5.5, roe:5.1,mc:161,  ob:14, seed:2005,sector:"Vehicles"},
   {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:379.5, day:-1.71,pe:115.9,pb:10.1, roe:11.2,mc:143,  ob:8, seed:2006,sector:"Electronics"},
   {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:417.45, day:0.8,pe:57.3,pb:5.1, roe:8.9,mc:78,  ob:6, seed:2007,sector:"Materials"},
-  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:795.25, day:-1.54,pe:893.5,pb:5.8, roe:-2.8,mc:40,  ob:3, seed:2008,sector:"Drones"},
+  {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:783.6, day:-1.46,pe:893.5,pb:5.8, roe:-2.8,mc:40,  ob:3, seed:2008,sector:"Drones"},
   {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:663.95, day:0.17,pe:106.4,pb:12.4, roe:16.5,mc:36,  ob:4, seed:2009,sector:"Explosives"},
   {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1475.1, day:-1.0,pe:105.4,pb:10.3, roe:9.0,mc:76,  ob:2, seed:2010,sector:"Aerospace"},
   {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:22755.0, day:2.9,pe:263.2,pb:22.0, roe:7.2,mc:332,  ob:3, seed:2011,sector:"Aerospace"},
