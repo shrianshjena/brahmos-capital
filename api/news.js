@@ -12,10 +12,13 @@
 export const config = { runtime: "edge" };
 
 const FEEDS = [
-  // ── Livemint — direct RSS, fast and reliable ─────────────────────────────
-  { url: "https://www.livemint.com/rss/markets",   cat: "MARKET",  source: "Livemint" },
-  { url: "https://www.livemint.com/rss/companies", cat: "ORDER",   source: "Livemint" },
-  { url: "https://www.livemint.com/rss/economy",   cat: "POLICY",  source: "Livemint" },
+  // ── Broad Google News queries (no site: filter) — high-yield, reliable ────
+  // Livemint/Moneycontrol direct RSS now 403 (bot protection); site:-filtered
+  // Google News queries have become sparse. Broad keyword queries return
+  // abundant results which the DEFENCE_KEYWORDS filter below then narrows.
+  { url: "https://news.google.com/rss/search?q=india+defence+stocks+HAL+BEL+BDL+when:7d&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=nifty+sensex+stock+market+india+when:3d&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Google News" },
+  { url: "https://news.google.com/rss/search?q=india+defence+ministry+order+procurement+when:7d&hl=en-IN&gl=IN&ceid=IN:en", cat: "ORDER", source: "Google News" },
   // ── Economic Times — via Google News site: operator (14-day window) ───────
   { url: "https://news.google.com/rss/search?q=HAL+BEL+BDL+defence+stocks+when:14d+site:economictimes.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "MARKET", source: "Economic Times" },
   { url: "https://news.google.com/rss/search?q=india+defence+procurement+MoD+when:14d+site:economictimes.indiatimes.com&hl=en-IN&gl=IN&ceid=IN:en", cat: "ORDER", source: "Economic Times" },
