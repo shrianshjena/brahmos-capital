@@ -33,7 +33,7 @@ const STOCKS=[
   {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:1954.9, day:-1.25,pe:133.6,pb:9.9, roe:11.6,mc:947,  ob:70,seed:2003,sector:"Forgings"},
   {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1696.8, day:-0.55,pe:83.8,pb:12.0, roe:16.5,mc:158,  ob:6, seed:2004,sector:"Electronics"},
   {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:2029.0, day:-3.28,pe:97.4,pb:5.9, roe:5.1,mc:173,  ob:14, seed:2005,sector:"Vehicles"},
-  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:422.45, day:1.09,pe:115.1,pb:10.1, roe:11.2,mc:142,  ob:8, seed:2006,sector:"Electronics"},
+  {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:413.2, day:-2.19,pe:115.1,pb:10.1, roe:11.2,mc:142,  ob:8, seed:2006,sector:"Electronics"},
   {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:463.35, day:-0.1,pe:57.8,pb:5.1, roe:8.9,mc:78,  ob:6, seed:2007,sector:"Materials"},
   {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:743.45, day:-0.54,pe:844.1,pb:5.7, roe:-2.8,mc:39,  ob:3, seed:2008,sector:"Drones"},
   {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:667.05, day:0.07,pe:107.1,pb:12.4, roe:16.5,mc:36,  ob:4, seed:2009,sector:"Explosives"},
