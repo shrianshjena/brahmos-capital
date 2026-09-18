@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:34.1,BEL:48.6,MAZDOCK:37.3,COCHINSHIP:57.4,GRSE:35.9,BDL:88.8,DATAPATTNS:95.8,
-  PARAS:120.3,ZENTEC:90.0,SOLARINDS:97.5,MTAR:157.5,BHARATFORG:133.6,ASTRAMICRO:83.8,BEML:97.4,
-  APOLLOMICRO:115.1,MIDHANI:57.8,IDEAFORGE:844.1,PREMEXPLN:107.1,UNIMECH:104.1,PTCIND:283.4,DCXINDIA:null,
-  DYNAMATECH:183.5,AVANTEL:372.6,AXISCADES:116.4,CYIENTDLM:80.9,
+  HAL:34.5,BEL:46.9,MAZDOCK:34.3,COCHINSHIP:54.0,GRSE:34.5,BDL:84.4,DATAPATTNS:94.7,
+  PARAS:117.8,ZENTEC:84.3,SOLARINDS:85.0,MTAR:167.2,BHARATFORG:132.8,ASTRAMICRO:82.5,BEML:99.1,
+  APOLLOMICRO:106.5,MIDHANI:57.8,IDEAFORGE:784.5,PREMEXPLN:107.6,UNIMECH:112.5,PTCIND:271.9,DCXINDIA:null,
+  DYNAMATECH:192.5,AVANTEL:350.5,AXISCADES:122.2,CYIENTDLM:90.8,
 };
 
 async function fetchPrice(sym) {
@@ -135,8 +135,10 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 3 September 2026, including:
-- US-IRAN (war reignites, heavy strikes both ways, Brent ~$95, 3 Sep): the conflict flared back into open military exchange after ~a month of calm. Over the weekend US CENTCOM launched dozens of strikes on Iran (hundreds of targets) after accusing Iran of attacking a Cyprus-flagged container ship (MV GFS Galaxy) in Hormuz; Iran retaliated with missiles/drones at US bases across Jordan, Kuwait, Bahrain, Iraq, UAE. WTI +~9% over 3 sessions; Brent ~$95.25 (up ~20% on the month, ~42% YoY), US diesel at a four-year high. Trump said strikes short-lived; Bessent framed economic pressure as making a large-scale kinetic restart unlikely. Strait largely shut (~8M bpd). Reinforces the war premium; sector returns still anchored by domestic drivers (Budget capex, orders, indigenisation, Tejas).
+You have full knowledge of events as of 18 September 2026, including:
+- US-IRAN / OIL (crude spiked past $100 to a ~$110 peak, easing to ~$104, 18 Sep): the two weeks to 18 Sep saw the sharpest energy shock of the war. 8 Sep US destroyed 5 IRGC oil tankers in Hormuz; 9 Sep Brent crossed $100 first time since July (~$100.19), closing WTI +6.7% $102.48 / Brent +6.3% $107.63; Iran hit US forces in Jordan with missiles, Houthis hit Saudi energy facilities. 11 Sep Saudi East-West pipeline shut. Brent peaked ~$108-110 around 15-16 Sep, eased to ~$103.61 (17th) then ~$104 (18th). Brent ~$104 (+~54% YoY) a serious headwind for India (rupee ~88/$).
+- MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
+- INDIA DEFENCE (12 Sep): Nifty logged its 8th straight gain with defence outperforming after the govt began talks for six next-generation submarines (P-75I follow-on); BEL among top gainers. Order-pipeline thesis intact.
 - SECTOR (24 Aug): HAL's Tejas Mk-1A execution is constrained by GE F404 engine deliveries (~6 of 99 arrived since 2021; ~30 airframes built/flown/tested awaiting engines); HAL ~₹4,906, ~4.7% below its 17 Aug ATH. Order-book CONVERSION (BDL converted just 2.2% of its OB to revenue in Q1 vs Mazagon's 16.2%) is the key execution variable, not just backlog size.
 - SECTOR (18 Aug): MoD notified its sixth Positive Indigenisation List (SRIJAN portal — 33,000+ items offered, 15,700+ indigenised, ~₹9,000 Cr import substitution) reinforcing the Atmanirbhar/localisation theme for BEL/HAL/BDL.
 - ASTRA Q1 FY27 (reported 10 Aug): consolidated PAT ₹12 Cr (-24% YoY), revenue ₹177 Cr (-11.5% YoY), EBITDA margin 18.7% on execution delays, stock -6-9%; BUT record order book ₹2,849 Cr (multi-year visibility). MD S.G. Reddy exits 30 Sep, Dr M.V. Reddy MD from 1 Oct.
