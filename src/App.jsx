@@ -1327,7 +1327,11 @@ export default function BrahmosCapital(){
     fetch("/api/ai-content").then(r=>r.json()).then(d=>{
       if(d.ok&&d.signals&&d.consensus){
         setLiveSignals(d.signals);
-        setLiveCons({...CONSENSUS_STATIC,...d.consensus});
+        // Consensus stays anchored to the curated, sourced CONSENSUS_STATIC
+        // (disciplined: no >40% upside outliers, honest below-price reads kept).
+        // The AI endpoint's consensus can drift to all-BUY / inflated targets,
+        // so static wins the merge; only the live AI *signals* are surfaced.
+        setLiveCons({...d.consensus,...CONSENSUS_STATIC});
         setAiStatus("live");
       }else{setAiStatus("error");}
     }).catch(()=>setAiStatus("error"));
