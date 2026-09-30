@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:34.9,BEL:47.4,MAZDOCK:33.1,COCHINSHIP:53.2,GRSE:33.7,BDL:80.9,DATAPATTNS:92.5,
-  PARAS:113.0,ZENTEC:83.8,SOLARINDS:90.5,MTAR:157.9,BHARATFORG:135.8,ASTRAMICRO:82.0,BEML:97.7,
-  APOLLOMICRO:115.3,MIDHANI:57.5,IDEAFORGE:776.4,PREMEXPLN:108.7,UNIMECH:118.3,PTCIND:263.0,DCXINDIA:null,
-  DYNAMATECH:209.6,AVANTEL:371.3,AXISCADES:128.3,CYIENTDLM:90.3,
+  HAL:33.9,BEL:46.8,MAZDOCK:31.8,COCHINSHIP:50.8,GRSE:31.7,BDL:78.8,DATAPATTNS:89.7,
+  PARAS:112.1,ZENTEC:80.0,SOLARINDS:90.3,MTAR:178.4,BHARATFORG:130.3,ASTRAMICRO:82.7,BEML:95.6,
+  APOLLOMICRO:117.6,MIDHANI:62.1,IDEAFORGE:777.6,PREMEXPLN:109.3,UNIMECH:122.5,PTCIND:267.6,DCXINDIA:null,
+  DYNAMATECH:216.9,AVANTEL:366.8,AXISCADES:151.3,CYIENTDLM:88.6,
 };
 
 async function fetchPrice(sym) {
@@ -135,8 +135,8 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 25 September 2026, including:
-- US-IRAN / OIL (tentative de-escalation, Brent ~$106, 25 Sep): US and Iranian negotiators are holding talks in New York exploring a PHASED deal to reopen the Strait of Hormuz, moderating an oil rally that hit ~$108 intraday on 24 Sep; Brent eased 0.9% to ~$105.70 (above $100 for a 2nd straight week, off the ~$110 prior-week peak). Tankers resuming (four VLCCs exited Thursday). Bumpy: Iran threatened to widen the war to the Indian Ocean (24 Sep), Saudi intercepted Houthi missiles; BofA warned $150 possible if disruptions persist. A credible de-escalation drains the war premium but leaves the domestic thesis intact; lower oil = macro positive for India.
+You have full knowledge of events as of 30 September 2026, including:
+- US-IRAN / OIL (supply shock eases, Brent below $100 to ~$98, 30 Sep): Saudi restored its East-West pipeline + restarted Yanbu (Red Sea) shipments, opening an alternative route around Hormuz; Middle East crude exports recovered to ~17.5M bpd (~98% of pre-war). Brent slipped below $100 to ~$98.3 (+2% on 30 Sep), down from ~$106 a week earlier. US-Iran keep exchanging proposals on reopening the strait but no deal concluded (a ceasefire proposal reportedly rejected). Easing oil drains the war premium; domestic thesis intact; Brent <$100 a clear macro positive for India (import bill/rupee/inflation).
 - INDIA DEFENCE (this week): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
