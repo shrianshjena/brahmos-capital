@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:33.9,BEL:46.8,MAZDOCK:31.8,COCHINSHIP:50.8,GRSE:31.7,BDL:78.8,DATAPATTNS:89.7,
-  PARAS:112.1,ZENTEC:80.0,SOLARINDS:90.3,MTAR:178.4,BHARATFORG:130.3,ASTRAMICRO:82.7,BEML:95.6,
-  APOLLOMICRO:117.6,MIDHANI:62.1,IDEAFORGE:777.6,PREMEXPLN:109.3,UNIMECH:122.5,PTCIND:267.6,DCXINDIA:null,
-  DYNAMATECH:216.9,AVANTEL:366.8,AXISCADES:151.3,CYIENTDLM:88.6,
+  HAL:33.4,BEL:46.2,MAZDOCK:31.1,COCHINSHIP:49.7,GRSE:30.7,BDL:77.2,DATAPATTNS:89.0,
+  PARAS:109.1,ZENTEC:78.5,SOLARINDS:88.9,MTAR:178.4,BHARATFORG:126.8,ASTRAMICRO:82.1,BEML:94.2,
+  APOLLOMICRO:114.8,MIDHANI:61.5,IDEAFORGE:781.9,PREMEXPLN:109.0,UNIMECH:126.0,PTCIND:265.6,DCXINDIA:null,
+  DYNAMATECH:219.2,AVANTEL:357.8,AXISCADES:156.5,CYIENTDLM:86.6,
 };
 
 async function fetchPrice(sym) {
@@ -135,9 +135,10 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 30 September 2026, including:
-- US-IRAN / OIL (supply shock eases, Brent below $100 to ~$98, 30 Sep): Saudi restored its East-West pipeline + restarted Yanbu (Red Sea) shipments, opening an alternative route around Hormuz; Middle East crude exports recovered to ~17.5M bpd (~98% of pre-war). Brent slipped below $100 to ~$98.3 (+2% on 30 Sep), down from ~$106 a week earlier. US-Iran keep exchanging proposals on reopening the strait but no deal concluded (a ceasefire proposal reportedly rejected). Easing oil drains the war premium; domestic thesis intact; Brent <$100 a clear macro positive for India (import bill/rupee/inflation).
-- INDIA DEFENCE (this week): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip.
+You have full knowledge of events as of 2 October 2026, including:
+- US-IRAN / OIL (G7 intervenes on diesel, Brent hovers near $100, 2 Oct): the oil war's crunch has shifted from crude scarcity to refined fuel (diesel). On 2 Oct France's Macron announced a historic G7/IEA coordinated release of up to 100M barrels over four months (~50M European diesel + ~50M IEA crude), completing a prior 400M-barrel release begun in March, triggered by an acute diesel shortage (Mideast refinery outages, Russian refinery damage, China halting Oct fuel exports, US diesel at a record $6.50/gal). Markets welcomed it: European gasoil fell >4%, Brent dropped ~$3 back below $100 (to ~$99), diesel-crude premium compressed ~$77 to ~$69. Underlying crude has largely healed (Gulf exports ~16.3M bpd, ~80-85% of the ~19.5M bpd pre-war baseline, Hormuz flows resuming). Diplomacy stuck: Iran's 7-day Hormuz-reopening roadmap rejected by Trump over sequencing, no ceasefire. Brent capped near/below $100 by coordinated G7 action is a clear macro positive for India (import bill/rupee/inflation); domestic thesis intact.
+- INDIA MARKET (1 Oct): risk-off session, Nifty -0.9% to ~22,422, Sensex's 4th straight fall, heavy FII outflows ~₹9,484 Cr; defence drifted with the tape (no stock-specific negative). 2 Oct was an NSE holiday (Gandhi Jayanti).
+- INDIA DEFENCE (late Sep): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip before drifting with the broad market into early Oct.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
 - SECTOR (24 Aug): HAL's Tejas Mk-1A execution is constrained by GE F404 engine deliveries (~6 of 99 arrived since 2021; ~30 airframes built/flown/tested awaiting engines); HAL ~₹4,906, ~4.7% below its 17 Aug ATH. Order-book CONVERSION (BDL converted just 2.2% of its OB to revenue in Q1 vs Mazagon's 16.2%) is the key execution variable, not just backlog size.
