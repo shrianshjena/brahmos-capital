@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:33.4,BEL:46.2,MAZDOCK:31.1,COCHINSHIP:49.7,GRSE:30.7,BDL:77.2,DATAPATTNS:89.0,
-  PARAS:109.1,ZENTEC:78.5,SOLARINDS:88.9,MTAR:178.4,BHARATFORG:126.8,ASTRAMICRO:82.1,BEML:94.2,
-  APOLLOMICRO:114.8,MIDHANI:61.5,IDEAFORGE:781.9,PREMEXPLN:109.0,UNIMECH:126.0,PTCIND:265.6,DCXINDIA:null,
-  DYNAMATECH:219.2,AVANTEL:357.8,AXISCADES:156.5,CYIENTDLM:86.6,
+  HAL:35.0,BEL:46.7,MAZDOCK:31.7,COCHINSHIP:49.5,GRSE:31.1,BDL:78.2,DATAPATTNS:90.0,
+  PARAS:113.1,ZENTEC:80.4,SOLARINDS:92.0,MTAR:176.6,BHARATFORG:127.1,ASTRAMICRO:86.2,BEML:98.0,
+  APOLLOMICRO:118.9,MIDHANI:65.6,IDEAFORGE:769.6,PREMEXPLN:109.5,UNIMECH:133.1,PTCIND:278.9,DCXINDIA:null,
+  DYNAMATECH:227.5,AVANTEL:359.7,AXISCADES:155.2,CYIENTDLM:91.0,
 };
 
 async function fetchPrice(sym) {
@@ -135,9 +135,9 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 2 October 2026, including:
-- US-IRAN / OIL (G7 intervenes on diesel, Brent hovers near $100, 2 Oct): the oil war's crunch has shifted from crude scarcity to refined fuel (diesel). On 2 Oct France's Macron announced a historic G7/IEA coordinated release of up to 100M barrels over four months (~50M European diesel + ~50M IEA crude), completing a prior 400M-barrel release begun in March, triggered by an acute diesel shortage (Mideast refinery outages, Russian refinery damage, China halting Oct fuel exports, US diesel at a record $6.50/gal). Markets welcomed it: European gasoil fell >4%, Brent dropped ~$3 back below $100 (to ~$99), diesel-crude premium compressed ~$77 to ~$69. Underlying crude has largely healed (Gulf exports ~16.3M bpd, ~80-85% of the ~19.5M bpd pre-war baseline, Hormuz flows resuming). Diplomacy stuck: Iran's 7-day Hormuz-reopening roadmap rejected by Trump over sequencing, no ceasefire. Brent capped near/below $100 by coordinated G7 action is a clear macro positive for India (import bill/rupee/inflation); domestic thesis intact.
-- INDIA MARKET (1 Oct): risk-off session, Nifty -0.9% to ~22,422, Sensex's 4th straight fall, heavy FII outflows ~₹9,484 Cr; defence drifted with the tape (no stock-specific negative). 2 Oct was an NSE holiday (Gandhi Jayanti).
+You have full knowledge of events as of 6 October 2026, including:
+- US-IRAN / OIL (war premium draining out, Brent steady near $100, 6 Oct): the acute energy shock has essentially unwound. Gulf export flows have recovered to ~98% of pre-war (JP Morgan); Goldman puts regional exports back near ~23.3M bpd (the 2025 average); Saudi more than doubled Sept exports YoY. The 2 Oct G7/IEA release of up to 100M barrels (half diesel) continues working through the refined-fuel market. Brent has stabilized near $100 (~$100.3 on 6 Oct, roughly flat, +3% on the month), off the ~$110 mid-Sep peak. Markets now shrug off residual risk: three tankers struck by unknown projectiles in the Strait (UKMTO) drew no price reaction. Diplomacy unresolved (no ceasefire; stuck on sequencing). Oil war premium largely drained; Brent capped near $100 is a clear macro positive for India (import bill/rupee/inflation); domestic thesis intact. RBI MPC decision due 7 Oct.
+- INDIA DEFENCE CATALYSTS (6 Oct): Nifty India Defence +1.6% to ~9,328, led by MIDHANI +5.8%, Paras +4.6%, Astra Microwave +4.4%, HAL +2.8%, Bharat Forge +2.6%. The MoD signed a ₹661.5 Cr contract with BrahMos Aerospace for Navy fire-control systems & launchers (68% indigenous); Rajnath Singh laid the foundation for a ₹218 Cr Shakti-engine facility at HAL's Koraput unit and marked HAL's 2,000th aero-engine delivery; Bharat Forge won a long-term aerospace-components contract with Pratt & Whitney Canada (India-made). Broad market firm: Sensex +685, Nifty ~22,776 (recovering from the 1 Oct risk-off low ~22,422) ahead of the RBI decision.
 - INDIA DEFENCE (late Sep): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip before drifting with the broad market into early Oct.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
