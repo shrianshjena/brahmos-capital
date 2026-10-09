@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:35.0,BEL:46.7,MAZDOCK:31.7,COCHINSHIP:49.5,GRSE:31.1,BDL:78.2,DATAPATTNS:90.0,
-  PARAS:113.1,ZENTEC:80.4,SOLARINDS:92.0,MTAR:176.6,BHARATFORG:127.1,ASTRAMICRO:86.2,BEML:98.0,
-  APOLLOMICRO:118.9,MIDHANI:65.6,IDEAFORGE:769.6,PREMEXPLN:109.5,UNIMECH:133.1,PTCIND:278.9,DCXINDIA:null,
-  DYNAMATECH:227.5,AVANTEL:359.7,AXISCADES:155.2,CYIENTDLM:91.0,
+  HAL:33.8,BEL:44.4,MAZDOCK:30.3,COCHINSHIP:47.5,GRSE:29.8,BDL:76.4,DATAPATTNS:85.5,
+  PARAS:108.4,ZENTEC:76.1,SOLARINDS:91.7,MTAR:178.0,BHARATFORG:122.8,ASTRAMICRO:83.5,BEML:90.9,
+  APOLLOMICRO:113.2,MIDHANI:62.5,IDEAFORGE:711.3,PREMEXPLN:109.8,UNIMECH:123.3,PTCIND:295.9,DCXINDIA:null,
+  DYNAMATECH:212.2,AVANTEL:342.8,AXISCADES:141.2,CYIENTDLM:92.3,
 };
 
 async function fetchPrice(sym) {
@@ -135,9 +135,10 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 6 October 2026, including:
-- US-IRAN / OIL (war premium draining out, Brent steady near $100, 6 Oct): the acute energy shock has essentially unwound. Gulf export flows have recovered to ~98% of pre-war (JP Morgan); Goldman puts regional exports back near ~23.3M bpd (the 2025 average); Saudi more than doubled Sept exports YoY. The 2 Oct G7/IEA release of up to 100M barrels (half diesel) continues working through the refined-fuel market. Brent has stabilized near $100 (~$100.3 on 6 Oct, roughly flat, +3% on the month), off the ~$110 mid-Sep peak. Markets now shrug off residual risk: three tankers struck by unknown projectiles in the Strait (UKMTO) drew no price reaction. Diplomacy unresolved (no ceasefire; stuck on sequencing). Oil war premium largely drained; Brent capped near $100 is a clear macro positive for India (import bill/rupee/inflation); domestic thesis intact. RBI MPC decision due 7 Oct.
-- INDIA DEFENCE CATALYSTS (6 Oct): Nifty India Defence +1.6% to ~9,328, led by MIDHANI +5.8%, Paras +4.6%, Astra Microwave +4.4%, HAL +2.8%, Bharat Forge +2.6%. The MoD signed a ₹661.5 Cr contract with BrahMos Aerospace for Navy fire-control systems & launchers (68% indigenous); Rajnath Singh laid the foundation for a ₹218 Cr Shakti-engine facility at HAL's Koraput unit and marked HAL's 2,000th aero-engine delivery; Bharat Forge won a long-term aerospace-components contract with Pratt & Whitney Canada (India-made). Broad market firm: Sensex +685, Nifty ~22,776 (recovering from the 1 Oct risk-off low ~22,422) ahead of the RBI decision.
+You have full knowledge of events as of 9 October 2026, including:
+- US-IRAN / OIL (war premium snaps back, Brent rebounds to ~$104, 9 Oct): the late-Sep calm reversed. On 8 Oct Brent jumped ~5.7% intraday in a twin supply shock — Iran stepped up tanker attacks in the Strait of Hormuz and Hurricane Isaias forced Gulf of Mexico producers to shut in output. Brent sits ~$104.5 on 9 Oct (+2% on the week), easing from the spike after Trump called Iran talks 'productive' (no ceasefire). The brief early-Oct normalization (Gulf flows ~98% recovered, Brent near $100, 2 Oct G7 diesel release) has given way to a renewed risk premium. For India the macro backdrop is now a headwind; the structural domestic defence thesis (order pipeline, indigenisation, Tejas deliveries) stays intact and independent.
+- RBI MPC (7 Oct): HIKED repo rate 25bp to 5.50%, stance to 'calibrated tightening' (4-2), citing oil-driven inflation (Indian crude basket avg ~$116/bbl Sept vs $82 Jul) and a weak monsoon; inflation outlook 'not benign', ~6% CPI peak expected Q3, rate cuts off the table; FY27 GDP nudged to 7.1%. Higher oil + hawkish RBI pressures the rupee/import bill/FPI flows.
+- INDIA MARKET & DEFENCE (7-9 Oct): defence gave back ~3-5% over the week (HAL, BEL, MAZDOCK) as the RBI hike + oil rebound drove rotation to IT; broad market rebounded 9 Oct (Sensex +879, Nifty ~22,536, IT-led) but net lower on the week. Q2 FY27 earnings begin late Oct; Choice Institutional (9 Oct) Buy HAL ₹5,650/GRSE ₹3,500/BDL ₹1,600/MAZDOCK ₹3,100/BEL ₹500, Reduce Data Patterns/Astra/Apollo, Sell DCX ₹150. Recent catalysts (6 Oct): ₹661.5 Cr MoD-BrahMos Navy FCS/launcher contract, HAL Koraput ₹218 Cr Shakti-engine facility + 2,000th aero-engine, Bharat Forge-Pratt & Whitney Canada deal.
 - INDIA DEFENCE (late Sep): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip before drifting with the broad market into early Oct.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
