@@ -22,7 +22,7 @@ const STOCKS=[
   {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4989.0, day:1.61,pe:33.8,pb:7.6, roe:24.0,mc:3114,  ob:1855,seed:1001,sector:"Aerospace"},
   {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:376.85, day:-0.93,pe:44.4,pb:11.1, roe:27.6,mc:2691,  ob:740, seed:1002,sector:"Electronics"},
   {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:2092.0, day:-0.62,pe:30.3,pb:8.3, roe:28.8,mc:810,  ob:380, seed:1003,sector:"Naval"},
-  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1254.0, day:0.08,pe:47.5,pb:5.6, roe:12.5,mc:324,  ob:220, seed:1004,sector:"Naval"},
+  {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1248.8, day:-0.41,pe:47.5,pb:5.6, roe:12.5,mc:324,  ob:220, seed:1004,sector:"Naval"},
   {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2120.2, day:0.85,pe:29.8,pb:8.9, roe:31.8,mc:235,  ob:250, seed:1005,sector:"Naval"},
   {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1114.7, day:-1.03,pe:76.4,pb:9.2, roe:9.9,mc:395,  ob:225, seed:1006,sector:"Missiles"},
   {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4072.0, day:0.82,pe:85.5,pb:13.3, roe:16.7,mc:229,  ob:14,  seed:1007,sector:"Electronics"},
