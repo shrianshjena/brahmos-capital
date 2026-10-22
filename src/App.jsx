@@ -36,7 +36,7 @@ const STOCKS=[
   {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:388.7, day:-1.78,pe:113.2,pb:10.2, roe:11.2,mc:144,  ob:8, seed:2006,sector:"Electronics"},
   {ticker:"MIDHANI",    name:"Mishra Dhatu Nigam",        sub:"Special Alloys · Titanium",    shares:250, buy:280,  px:381.8, day:-3.03,pe:62.5,pb:5.4, roe:8.9,mc:82,  ob:6, seed:2007,sector:"Materials"},
   {ticker:"IDEAFORGE",  name:"Ideaforge Technology",      sub:"Drones · UAV Systems",         shares:300, buy:310,  px:679.8, day:-2.88,pe:711.3,pb:4.8, roe:-2.8,mc:32,  ob:3, seed:2008,sector:"Drones"},
-  {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:692.5, day:0,pe:109.8,pb:12.9, roe:16.5,mc:37,  ob:4, seed:2009,sector:"Explosives"},
+  {ticker:"PREMEXPLN",  name:"Premier Explosives",        sub:"Explosives · Propellants",     shares:400, buy:320,  px:692.5, day:0.0,pe:109.8,pb:12.9, roe:16.5,mc:37,  ob:4, seed:2009,sector:"Explosives"},
   {ticker:"UNIMECH",    name:"Unimech Aerospace",         sub:"Aerospace Precision Parts",    shares:350, buy:560,  px:1558.5, day:-1.09,pe:123.3,pb:11.9, roe:9.0,mc:88,  ob:2, seed:2010,sector:"Aerospace"},
   {ticker:"PTCIND",     name:"PTC Industries",            sub:"Precision Castings · Aero",    shares:20,  buy:9500, px:24745.0, day:-1.47,pe:295.9,pb:24.4, roe:7.2,mc:369,  ob:3, seed:2011,sector:"Aerospace"},
   {ticker:"DCXINDIA",   name:"DCX Systems",               sub:"Cable Harness · Electronics",  shares:800, buy:150,  px:139.21, day:-2.95,pe:null,pb:1.0, roe:-0.5,mc:17,  ob:7, seed:2012,sector:"Electronics"},
