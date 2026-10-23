@@ -30,7 +30,7 @@ const STOCKS=[
   {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1493.8, day:-4.38,pe:76.1,pb:7.6, roe:11.8,mc:136,  ob:12,  seed:1009,sector:"Electronics"},
   {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:18365.0, day:-3.39,pe:91.7,pb:28.9, roe:31.3,mc:1811,  ob:54,seed:2001,sector:"Explosives"},
   {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:6460.0, day:-5.0,pe:178.0,pb:29.1, roe:12.6,mc:240,  ob:9, seed:2002,sector:"Aerospace"},
-  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:1741.0, day:-1.86,pe:122.8,pb:9.0, roe:11.6,mc:887,  ob:70,seed:2003,sector:"Forgings"},
+  {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:1711.2, day:-1.71,pe:122.8,pb:9.0, roe:11.6,mc:887,  ob:70,seed:2003,sector:"Forgings"},
   {ticker:"ASTRAMICRO", name:"Astra Microwave Products",  sub:"Radar · EW Systems",           shares:180, buy:660,  px:1485.0, day:-3.74,pe:83.5,pb:11.9, roe:16.5,mc:157,  ob:6, seed:2004,sector:"Electronics"},
   {ticker:"BEML",       name:"BEML Ltd",                  sub:"Combat Vehicles · Rail",       shares:100, buy:1100, px:1851.3, day:-2.96,pe:90.9,pb:5.4, roe:5.1,mc:158,  ob:14, seed:2005,sector:"Vehicles"},
   {ticker:"APOLLOMICRO",name:"Apollo Micro Systems",      sub:"Embedded Defence Electronics", shares:500, buy:165,  px:374.75, day:-3.59,pe:113.2,pb:10.2, roe:11.2,mc:144,  ob:8, seed:2006,sector:"Electronics"},
