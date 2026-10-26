@@ -27,7 +27,7 @@ const STOCKS=[
   {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1029.0, day:1.13,pe:76.4,pb:9.2, roe:9.9,mc:395,  ob:225, seed:1006,sector:"Missiles"},
   {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:3773.8, day:-0.49,pe:85.5,pb:13.3, roe:16.7,mc:229,  ob:14,  seed:1007,sector:"Electronics"},
   {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1254.0, day:6.52,pe:108.4,pb:14.1, roe:13.1,mc:102,  ob:8,  seed:1008,sector:"Space"},
-  {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1493.8, day:-4.38,pe:76.1,pb:7.6, roe:11.8,mc:136,  ob:12,  seed:1009,sector:"Electronics"},
+  {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1544.7, day:3.41,pe:76.1,pb:7.6, roe:11.8,mc:136,  ob:12,  seed:1009,sector:"Electronics"},
   {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:18683.0, day:1.73,pe:91.7,pb:28.9, roe:31.3,mc:1811,  ob:54,seed:2001,sector:"Explosives"},
   {ticker:"MTAR",       name:"MTAR Technologies",         sub:"Precision Aero · Propulsion",  shares:60,  buy:1600, px:6582.5, day:1.9,pe:178.0,pb:29.1, roe:12.6,mc:240,  ob:9, seed:2002,sector:"Aerospace"},
   {ticker:"BHARATFORG", name:"Bharat Forge",              sub:"Forgings · Artillery · UAV",   shares:100, buy:1250, px:1730.4, day:1.12,pe:122.8,pb:9.0, roe:11.6,mc:887,  ob:70,seed:2003,sector:"Forgings"},
