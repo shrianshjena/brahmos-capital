@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:35.2,BEL:43.8,MAZDOCK:26.1,COCHINSHIP:43.6,GRSE:27.6,BDL:70.5,DATAPATTNS:83.4,
-  PARAS:111.4,ZENTEC:78.1,SOLARINDS:88.2,MTAR:159.6,BHARATFORG:119.0,ASTRAMICRO:79.2,BEML:94.3,
-  APOLLOMICRO:120.9,MIDHANI:52.8,IDEAFORGE:722.2,PREMEXPLN:90.0,UNIMECH:116.4,PTCIND:289.5,DCXINDIA:null,
-  DYNAMATECH:194.5,AVANTEL:320.1,AXISCADES:136.6,CYIENTDLM:74.0,
+  HAL:35.2,BEL:42.3,MAZDOCK:25.7,COCHINSHIP:43.0,GRSE:28.3,BDL:69.2,DATAPATTNS:79.5,
+  PARAS:106.9,ZENTEC:79.1,SOLARINDS:86.2,MTAR:156.4,BHARATFORG:116.3,ASTRAMICRO:76.5,BEML:95.5,
+  APOLLOMICRO:116.2,MIDHANI:51.2,IDEAFORGE:668.7,PREMEXPLN:89.1,UNIMECH:112.2,PTCIND:288.8,DCXINDIA:null,
+  DYNAMATECH:184.7,AVANTEL:321.0,AXISCADES:127.2,CYIENTDLM:72.7,
 };
 
 async function fetchPrice(sym) {
@@ -135,10 +135,10 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 29 October 2026, including:
-- US-IRAN / OIL (STRAIT OF HORMUZ DECLARED CLOSED, Brent above $114, 29 Oct): the war has hit its severest phase. On 26 Oct the IRGC formally declared Hormuz closed; transits collapsed to ~4/day (from ~85 pre-war), Saudi loadings fell >70%, and a tanker reportedly struck mines east of the strait on 28 Oct. Iran expanded its tanker blockade to the Gulf of Oman (27 Oct); the US naval blockade of Iranian ports remains, and Washington pulled non-emergency staff from Saudi Arabia (CENTCOM disputes Iran's full-control claim). Brent spiked above $114 (~$114 on 29 Oct, +~17% on the month), after touching $110 on 16 Oct and settling ~$116 on 26 Oct. Tehran offers to reopen in 4-5 days if the US lifts the blockade and meets its demands, but 26 Oct talks ended with no ceasefire; diplomacy is paused until the 3 Nov US midterms. For India a serious macro headwind; the structural domestic defence thesis stays intact and independent.
+You have full knowledge of events as of 31 October 2026, including:
+- US-IRAN / OIL (STRAIT OF HORMUZ STILL CLOSED Day 244, Brent at a 6-month high near $116, 31 Oct): the Strait has been shut since the IRGC declared it closed on 26 Oct; transits ~4/day (from ~85 pre-war), Saudi loadings down >70%. On 30 Oct oil jumped ~2% to 6-month highs after Houthi forces attacked Saudi targets; Brent settled ~$116 on 31 Oct and ended October up ~13.6% (4th straight monthly gain). Diplomacy active but unresolved: Trump says the war is 'going to end soon' and Qatar is pushing a deal, but no ceasefire exists, the US naval blockade holds, and Trump's pre-election strike moratorium is expiring with the 3 Nov US midterms days away. For India a serious macro headwind; the structural domestic defence thesis stays intact and independent.
 - RBI (7 Oct, still in force): repo rate hiked 25bp to 5.50%, stance 'calibrated tightening' (4-2), citing oil-driven inflation and a weak monsoon; ~6% CPI peak expected Q3, rate cuts off the table, FY27 GDP 7.1%. With Brent back above $114, the rupee/import bill/FPI flows are under renewed pressure.
-- INDIA MARKET & DEFENCE (late Oct): ~$114 crude drove a broad selloff — 28 Oct Sensex -826, Nifty ~22,500 (IT/O&G drag). Defence corrected hard from highs (Zen ~-49%, Cochin ~-39%, GRSE ~-38%, Mazagon ~-36%, Paras ~-34%, BDL ~-26%, HAL ~-18%). OFFSETTING POSITIVE: the DAC cleared a fresh ~₹2.12 lakh crore procurement package in late Oct (Army/Navy/Air Force); defence stocks jumped up to 9% (Data Patterns, Paras, Apollo Micro, BEL, HAL). Q2 FY27 earnings open 30 Oct with BEL; HAL and peers report through Nov.
+- INDIA MARKET & DEFENCE (late Oct): ~$114 crude drove a broad selloff — 28 Oct Sensex -826, Nifty ~22,500 (IT/O&G drag). Defence corrected hard from highs (Zen ~-49%, Cochin ~-39%, GRSE ~-38%, Mazagon ~-36%, Paras ~-34%, BDL ~-26%, HAL ~-18%). OFFSETTING POSITIVE: the DAC cleared a fresh ~₹2.12 lakh crore procurement package in late Oct (Army/Navy/Air Force); defence stocks jumped up to 9% (Data Patterns, Paras, Apollo Micro, BEL, HAL). Q2 FY27 earnings underway: BEL reported 30 Oct (PAT +20% to ₹1,541 Cr, revenue +27% to ₹7,291 Cr, order book ₹68,717 Cr); Apollo Micro (+72% revenue), Mazagon Dock (healthy + dividend), Paras Defence also out; HAL and peers report through Nov.
 - INDIA DEFENCE (late Sep): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip before drifting with the broad market into early Oct.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
