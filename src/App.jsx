@@ -21,7 +21,7 @@ function mkSpark(seed,up){const r=rng(seed);const p=[100];for(let i=1;i<24;i++)p
 const STOCKS=[
   {ticker:"HAL",        name:"Hindustan Aeronautics",    sub:"Aerospace · MRO",              shares:50,  buy:3200, px:4958.6, day:2.13,pe:35.2,pb:7.9, roe:24.0,mc:3246,  ob:1855,seed:1001,sector:"Aerospace"},
   {ticker:"BEL",        name:"Bharat Electronics",       sub:"Electronics · C4ISR",          shares:500, buy:310,  px:380.1, day:0.96,pe:42.3,pb:11.1, roe:28.0,mc:2704,  ob:740, seed:1002,sector:"Electronics"},
-  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:1736.6, day:1.84,pe:25.7,pb:7.1, roe:28.8,mc:687,  ob:380, seed:1003,sector:"Naval"},
+  {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:1785.1, day:2.79,pe:25.7,pb:7.1, roe:28.8,mc:687,  ob:380, seed:1003,sector:"Naval"},
   {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1201.0, day:2.91,pe:43.0,pb:5.0, roe:12.5,mc:294,  ob:220, seed:1004,sector:"Naval"},
   {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2131.0, day:4.11,pe:28.3,pb:8.5, roe:31.8,mc:223,  ob:250, seed:1005,sector:"Naval"},
   {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1017.0, day:2.11,pe:69.2,pb:8.3, roe:9.9,mc:357,  ob:225, seed:1006,sector:"Missiles"},
