@@ -24,7 +24,7 @@ const STOCKS=[
   {ticker:"MAZDOCK",    name:"Mazagon Dock Shipbuilders", sub:"Naval · Submarines",           shares:80,  buy:1800, px:1839.0, day:0.6,pe:30.0,pb:7.0, roe:29.2,mc:736,  ob:380, seed:1003,sector:"Naval"},
   {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1232.9, day:-0.37,pe:48.0,pb:5.5, roe:12.5,mc:327,  ob:220, seed:1004,sector:"Naval"},
   {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2137.2, day:-0.29,pe:31.2,pb:9.4, roe:31.8,mc:246,  ob:250, seed:1005,sector:"Naval"},
-  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1075.0, day:0.0,pe:76.4,pb:9.2, roe:9.9,mc:394,  ob:225, seed:1006,sector:"Missiles"},
+  {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1075.0, day:0,pe:76.4,pb:9.2, roe:9.9,mc:394,  ob:225, seed:1006,sector:"Missiles"},
   {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:3959.9, day:-2.9,pe:85.3,pb:13.3, roe:16.7,mc:229,  ob:14,  seed:1007,sector:"Electronics"},
   {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1264.5, day:-0.08,pe:108.3,pb:14.1, roe:13.1,mc:102,  ob:8,  seed:1008,sector:"Space"},
   {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1724.5, day:-0.27,pe:86.1,pb:8.6, roe:11.8,mc:155,  ob:12,  seed:1009,sector:"Electronics"},
