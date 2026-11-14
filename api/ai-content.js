@@ -25,10 +25,10 @@ const ENTRIES = {
 };
 
 const PE = {
-  HAL:36.5, BEL:45.5, MAZDOCK:30.0, COCHINSHIP:48.0, GRSE:31.2, BDL:76.4, DATAPATTNS:85.3,
-  PARAS:108.3, ZENTEC:86.1, SOLARINDS:77.7, MTAR:136.8, BHARATFORG:88.1, ASTRAMICRO:79.8, BEML:102.0,
-  APOLLOMICRO:126.8, MIDHANI:55.2, IDEAFORGE:758.9, PREMEXPLN:84.7, UNIMECH:125.9, PTCIND:294.4, DCXINDIA:null,
-  DYNAMATECH:201.4, AVANTEL:330.5, AXISCADES:129.5, CYIENTDLM:73.0
+  HAL:33.6, BEL:45.8, MAZDOCK:31.0, COCHINSHIP:49.5, GRSE:30.6, BDL:77.3, DATAPATTNS:98.6,
+  PARAS:107.0, ZENTEC:74.1, SOLARINDS:77.5, MTAR:137.2, BHARATFORG:85.4, ASTRAMICRO:74.8, BEML:108.0,
+  APOLLOMICRO:123.0, MIDHANI:57.3, IDEAFORGE:753.7, PREMEXPLN:112.0, UNIMECH:543.0, PTCIND:1289.0, DCXINDIA:null,
+  DYNAMATECH:243.0, AVANTEL:158.0, AXISCADES:129.8, CYIENTDLM:102.0
 };
 
 async function fetchPrice(sym) {
@@ -135,10 +135,10 @@ export default async function handler(req, res) {
     : "No live headlines available.";
 
   const prompt = `Today is ${today}. NSE trades Mon–Fri, closing 15:30 IST.
-You have full knowledge of events as of 4 November 2026, including:
-- US-IRAN / OIL (DE-ESCALATING after the 3 Nov US midterms, Brent back to ~$100, 4 Nov): tensions have eased sharply from the 31 Oct peak near $116 (height of the Strait of Hormuz standoff) — Brent has fallen ~8% on the week to ~$100/bbl, a four-week low, as the acute disruption unwinds. Trump told the FT the US has 'no immediate plans to strike Iran'; Qatar is mediating talks, both sides weighing proposals, but no ceasefire is signed and Tehran calls the US response 'unsatisfactory' (de-escalation, not settlement). For India the ~$16 crude pullback is a macro relief (import bill, rupee, inflation, FPI) and helped drive a sharp defence rebound; the structural domestic thesis stays intact and independent.
-- RBI (7 Oct, still in force): repo rate hiked 25bp to 5.50%, stance 'calibrated tightening' (4-2), citing oil-driven inflation and a weak monsoon; ~6% CPI peak expected Q3, rate cuts off the table, FY27 GDP 7.1%. With Brent now back near $100 (from the end-Oct ~$116 spike), the pressure on the rupee/import bill/FPI flows is easing, though the tightening stance remains.
-- INDIA MARKET & DEFENCE (4 Nov): the late-Oct oil-driven selloff has reversed — with crude back near $100 the broad market and the defence complex rebounded sharply (most defence names +5-13% off their late-Oct lows into 4 Nov). Fresh catalysts: GRSE won a ₹32,000 Cr Navy order for five Next-Generation Corvettes (2 Nov), on top of the DAC's ~₹2.12 lakh crore procurement clearance (late Oct). Q2 FY27 earnings are the swing factor: BEL (PAT +20% to ₹1,541 Cr) and Solar Industries (PAT ₹650 Cr, revenue +69% to ₹3,519 Cr) printed strong; Apollo Micro beat on revenue (+72%); Mazagon Dock missed hard (PAT -54% to ₹344 Cr on milestone timing); HAL (12 Nov), Bharat Forge (5 Nov), GRSE and Cochin Shipyard (11 Nov) report next.
+You have full knowledge of events as of 14 November 2026, including:
+- US-IRAN / OIL (UNRESOLVED but oil sliding on a supply glut, Brent ~$96, 14 Nov): the war has not been settled and diplomacy has hardened (Trump says the US 'no longer needs a deal with Iran'; Tehran wants the blockade and sanctions lifted first and won't surrender enriched material; the US blockade persists), yet Brent has fallen to ~$96/bbl (a 10-week low ~$91.5 on 10 Nov, down ~9% on the month from the ~$116 end-Oct peak) as supply loosens (Saudi Oct +26%, Iraq up, Gulf crude rerouting via STS transfers, biggest US inventory build since August). For India this is continued macro relief (import bill, rupee, inflation, FPI) even without a ceasefire; the structural domestic thesis stays intact and independent.
+- RBI (7 Oct, still in force): repo rate hiked 25bp to 5.50%, stance 'calibrated tightening' (4-2), citing oil-driven inflation and a weak monsoon; ~6% CPI peak expected Q3, rate cuts off the table, FY27 GDP 7.1%. With Brent now down near $96 (from the end-Oct ~$116 spike), the pressure on the rupee/import bill/FPI flows has eased further, though the tightening stance remains.
+- INDIA MARKET & DEFENCE (14 Nov): the market has held its recovery with crude down near $96; Nifty 50 is around 25,150 (flat but volatile, helped by the US government shutdown ending) and defence is steady after the late-Oct rebound. Q2 FY27 earnings are now largely in: HAL strong (PAT ₹1,936 Cr), GRSE steady (PAT ₹172 Cr) plus a ₹32,000 Cr Next-Generation Corvette order, Bharat Forge sees exports bottoming, Astra/Apollo/Zen broadly in line, while Cochin Shipyard (PAT ₹54 Cr, -8%), BDL (PAT ₹183 Cr) and Data Patterns were softer. The DAC's ~₹2.12 lakh crore procurement clearance (late Oct) underpins the pipeline.
 - INDIA DEFENCE (late Sep): BEL won fresh orders ~₹648 Cr (19 Sep; IR jammers/comms/cyber/thermal/AI), CLSA Outperform ₹522, HSBC initiated Buy on HAL ₹6,350; on 23 Sep Emkay published a constructive sector note (HAL & BEL top picks, Nifty India Defence +23% in 2026). Sector recovered from its 15 Sep dip before drifting with the broad market into early Oct.
 - MACRO (16 Sep): the Fed HIKED 25bp to 3.75-4% (first hike since 2023, 12-0) citing spiralling oil-driven inflation; dot plot signals another possible in December; US 10y yield touched 5% then eased to ~4.93% as oil pulled back. Hawkish Fed + high oil pressures the rupee/FPI flows.
 - INDIA DEFENCE (volatile fortnight): 8 Sep govt gave initial approval for ~$11bn of military purchases (BSE Defence +2.1%, HAL/BEL led); 11 Sep Nifty logged its 8th straight gain, defence rallied on govt talks for six next-gen submarines (P-75I follow-on); 15 Sep defence fell sharply (Defence index -5.5% to ~9,190, Solar -14%) breaching its 2-month MA amid a broad selloff (Sensex -2,200 pts in Sept); recovered up to 5% on 17 Sep on value buying. Order-pipeline thesis intact.
@@ -156,7 +156,7 @@ You have full knowledge of events as of 4 November 2026, including:
 - ICICI Securities (8 Jun): FY27 order build-up to outpace FY26; top picks HAL, Solar Industries, Astra Microwave, BEL; Buy on PTC Industries, MIDHANI
 - India–Vietnam BrahMos export deal SIGNED 30 May 2026 (~₹60,000 Cr / $629M, Block-3); Indonesia pact in final stages — bullish for BDL, HAL, BEL, DATAPATTNS, PARAS
 - FY26 results: HAL record order book ₹2.54L Cr + ₹9,115 Cr PAT, FY27 guidance 10–12% rev growth / 30–31% EBITDA; BEL FY26 revenue ₹27,480 Cr / PAT ₹6,048 Cr / order book ₹73,882 Cr / ROE ~29%
-- US–Iran war DE-ESCALATING (4 Nov) — Brent back to ~$100 from the 31 Oct ~$116 peak as Hormuz tensions ease after the US midterms; Trump signals no immediate strikes, Qatar mediating, no ceasefire yet; India's structural defence demand intact and independent of the oil price
+- US–Iran war UNRESOLVED but oil sliding (14 Nov), Brent ~$96 (10-week low ~$91.5 on 10 Nov) down ~9% on the month from the ~$116 end-Oct peak on a supply glut (Saudi +26%, Iraq up, US inventory build); diplomacy hardened (Trump: US 'no longer needs a deal'), blockade persists, no ceasefire; India's structural defence demand intact and independent of the oil price
 - Ukraine war in year 4 — on-off ceasefire talks; continued NATO/European rearmament
 - India FY27 defence budget ₹7.85L Cr (+15.2%); defence exports crossed ₹21,000+ Cr toward ₹50,000 Cr FY29 target
 - Nifty India Defence index consolidated off its ~9,400 mid-Jun high as the war premium faded, still outperforming Nifty 50 YTD; sector P/E ~52–54, backed by record order books, record ₹1.78L Cr FY26 production and the 3 Jul DAC clearances
