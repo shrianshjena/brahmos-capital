@@ -25,7 +25,7 @@ const STOCKS=[
   {ticker:"COCHINSHIP", name:"Cochin Shipyard",           sub:"Naval · Shipbuilding",         shares:120, buy:1100, px:1090.0, day:-3.11,pe:49.5,pb:5.1, roe:12.5,mc:311,  ob:220, seed:1004,sector:"Naval"},
   {ticker:"GRSE",       name:"Garden Reach Shipbuilders", sub:"Naval · Patrol Vessels",       shares:60,  buy:1900, px:2013.8, day:-2.32,pe:30.6,pb:8.6, roe:31.6,mc:251,  ob:250, seed:1005,sector:"Naval"},
   {ticker:"BDL",        name:"Bharat Dynamics",           sub:"Missiles · Munitions",         shares:150, buy:900,  px:1020.0, day:-1.4,pe:77.3,pb:8.3, roe:10.2,mc:378,  ob:225, seed:1006,sector:"Missiles"},
-  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4215.0, day:2.48,pe:98.6,pb:13.9, roe:15.9,mc:240,  ob:14,  seed:1007,sector:"Electronics"},
+  {ticker:"DATAPATTNS", name:"Data Patterns India",       sub:"Defence Electronics · Radar",  shares:30,  buy:2500, px:4225.0, day:0.24,pe:98.6,pb:13.9, roe:15.9,mc:240,  ob:14,  seed:1007,sector:"Electronics"},
   {ticker:"PARAS",      name:"Paras Defence & Space",     sub:"Optics · Space · EMP",         shares:200, buy:500,  px:1257.9, day:0.67,pe:107.0,pb:13.6, roe:12.2,mc:104,  ob:8,  seed:1008,sector:"Space"},
   {ticker:"ZENTEC",     name:"Zen Technologies",           sub:"Training · Anti-Drone",        shares:100, buy:900,  px:1694.6, day:0.82,pe:74.1,pb:7.9, roe:10.7,mc:156,  ob:12,  seed:1009,sector:"Electronics"},
   {ticker:"SOLARINDS",  name:"Solar Industries India",    sub:"Explosives · Propellants",     shares:15,  buy:10500,px:18178.0, day:-2.84,pe:77.5,pb:22.8, roe:32.6,mc:1751,  ob:54,seed:2001,sector:"Explosives"},
